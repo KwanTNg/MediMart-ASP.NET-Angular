@@ -1,6 +1,20 @@
-@API_HostAddress = http://localhost:5142
+@API_HostAddress = https://localhost:5001
 
 GET {{API_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+POST {{API_HostAddress}}/api/products
+Content-Type: application/json
+Accept: application/json
+
+{
+    "name": "Paracetomol2",
+    "description": "Pain Killer",
+    "price": 0.39,
+    "pictureUrl": "TBC",
+    "type": "OTD",
+    "brand": "Bell",
+    "quantityInStock": 10
+}
+
