@@ -1,5 +1,3 @@
-using System;
-
 namespace Core.Entities;
 
 public class Product : BaseEntity
@@ -11,5 +9,12 @@ public class Product : BaseEntity
     public required string Type { get; set; }
     public required string Brand { get; set; }
     public int QuantityInStock { get; set; }
+
+    //Foreign key and navigation property for Category
+    public int CategoryId { get; set; }
+    public Category Category { get; set; } = null!;
+
+    //Navigation property for many-to-many symptoms
+    public ICollection<ProductSymptom> ProductSymptoms { get; set; } = new List<ProductSymptom>();
 
 }
