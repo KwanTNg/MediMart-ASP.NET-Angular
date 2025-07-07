@@ -1,3 +1,4 @@
+using API.DTOs;
 using API.RequestHelpers;
 using Core.Entities;
 using Core.Interfaces;
@@ -19,20 +20,64 @@ public class ProductsController(IGenericRepository<Product> repo) : BaseApiContr
     }
 
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<Product>> GetProduct(int id)
+    public async Task<ActionResult<ProductDto>> GetProduct(int id)
     {
         var product = await repo.GetByIdAsync(id);
         if (product == null) return NotFound();
-        return product;
+        var productDto = new ProductDto
+        {
+            Id = product.Id,
+            Name = product.Name,
+            Description = product.Description,
+            Price = product.Price,
+            PictureUrl = product.PictureUrl,
+            Type = product.Type,
+            Brand = product.Brand,
+            QuantityInStock = product.QuantityInStock,
+            CategoryId = product.CategoryId,           
+            SymptomIds = product.ProductSymptoms
+                        .Select(ps => ps.SymptomId)
+                        .ToList()
+        };
+        return productDto;
     }
 
     [HttpPost]
-    public async Task<ActionResult<Product>> CreateProduct(Product product)
+    public async Task<ActionResult<Product>> CreateProduct(CreateProductDto dto)
     {
+        var product = new Product
+    {
+        Name = dto.Name,
+        Description = dto.Description,
+        Price = dto.Price,
+        PictureUrl = dto.PictureUrl,
+        Type = dto.Type,
+        Brand = dto.Brand,
+        QuantityInStock = dto.QuantityInStock,
+        CategoryId = dto.CategoryId,
+        ProductSymptoms = dto.SymptomIds.Select(sid => new ProductSymptom
+        {
+            SymptomId = sid
+        }).ToList()
+    };
+
         repo.Add(product);
         if (await repo.SaveAllAsync())
         {
-            return CreatedAtAction("GetProduct", new { id = product.Id }, product);
+        var productDto = new ProductDto
+        {
+            Id = product.Id,
+            Name = product.Name,
+            Description = product.Description,
+            Price = product.Price,
+            PictureUrl = product.PictureUrl,
+            Type = product.Type,
+            Brand = product.Brand,
+            QuantityInStock = product.QuantityInStock,
+            CategoryId = product.CategoryId,
+            SymptomIds = product.ProductSymptoms.Select(ps => ps.SymptomId).ToList()
+        };
+            return CreatedAtAction("GetProduct", new { id = product.Id }, productDto);
         }
         return BadRequest("Problem creating product");
     }

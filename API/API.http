@@ -1,7 +1,21 @@
 @API_HostAddress = https://localhost:5001
 
-GET {{API_HostAddress}}/weatherforecast/
+###
+POST {{API_HostAddress}}/api/products
+Content-Type: application/json
 Accept: application/json
+
+{
+    "Name": "Panadol Extra",
+    "Description": "Relieves headaches, fever, and body aches.",
+    "Price": 5.99,
+    "PictureUrl": "/images/products/panadol_extra.jpg",
+    "Type": "Tablet",
+    "Brand": "GSK",
+    "QuantityInStock": 100,
+    "CategoryId": 1,
+    "symptomIds": [1, 2]
+}
 
 ###
 POST {{API_HostAddress}}/api/products
@@ -9,12 +23,53 @@ Content-Type: application/json
 Accept: application/json
 
 {
-    "name": "Paracetomol2",
-    "description": "Pain Killer",
-    "price": 0.39,
-    "pictureUrl": "TBC",
-    "type": "OTD",
-    "brand": "Bell",
-    "quantityInStock": 10
+    "Name": "Ibuprofen 200mg",
+    "Description": "Reduces inflammation, pain, and fever.",
+    "Price": 6.49,
+    "PictureUrl": "/images/products/ibuprofen.jpg",
+    "Type": "Tablet",
+    "Brand": "Advil",
+    "QuantityInStock": 120,
+    "CategoryId": 1,
+    "symptomIds": [1, 3]
 }
 
+###
+POST {{API_HostAddress}}/api/categorys
+Content-Type: application/json
+Accept: application/json
+
+{
+    "CategoryName": "Pain Relief",
+    "Description": "Medications to relieve headaches, body pain, and inflammation."
+}
+
+###
+POST {{API_HostAddress}}/api/symptoms
+Content-Type: application/json
+Accept: application/json
+
+{
+    "SymptomName": "Headache",
+    "Description": "A continuous pain in the head."
+}
+
+###
+POST {{API_HostAddress}}/api/symptoms
+Content-Type: application/json
+Accept: application/json
+
+{
+    "SymptomName": "Fever",
+    "Description": "Elevated body temperature, often due to infection."
+}
+
+###
+POST {{API_HostAddress}}/api/symptoms
+Content-Type: application/json
+Accept: application/json
+
+{
+    "SymptomName": "Cough",
+    "Description": "A reflex action to clear your airways of mucus and irritants."
+}
