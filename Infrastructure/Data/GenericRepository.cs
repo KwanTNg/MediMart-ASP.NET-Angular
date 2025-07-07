@@ -75,8 +75,19 @@ public class GenericRepository<T>(StoreContext context) : IGenericRepository<T> 
 
     private IQueryable<T> ApplySpecification(ISpecification<T> spec)
     {
+        IQueryable<T> query = context.Set<T>();
+
+        foreach (var include in spec.Includes)
+        {
+            query = query.Include(include);
+        }
+
+        foreach (var includeString in spec.IncludeStrings)
+        {
+            query = query.Include(includeString); // EF handles nested paths here
+        }
         //in GetQuery, first params is query, second is spec
-        return SpecificationEvaluator<T>.GetQuery(context.Set<T>().AsQueryable(), spec);
+        return SpecificationEvaluator<T>.GetQuery(query.AsQueryable(), spec);
     }
     private IQueryable<TResult> ApplySpecification<TResult>(ISpecification<T, TResult> spec)
     {

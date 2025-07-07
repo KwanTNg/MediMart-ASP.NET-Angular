@@ -14,5 +14,19 @@ public class StoreContext(DbContextOptions options) : IdentityDbContext<AppUser>
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ProductConfiguration).Assembly);
+
+        modelBuilder.Entity<ProductSymptom>()
+            .HasKey(ps => new { ps.ProductId, ps.SymptomId });
+
+        modelBuilder.Entity<ProductSymptom>()
+            .HasOne(ps => ps.Product)
+            .WithMany(p => p.ProductSymptoms)
+            .HasForeignKey(ps => ps.ProductId);
+
+        modelBuilder.Entity<ProductSymptom>()
+            .HasOne(ps => ps.Symptom)
+            .WithMany(s => s.ProductSymptoms)
+            .HasForeignKey(ps => ps.SymptomId);
+
     }
 }

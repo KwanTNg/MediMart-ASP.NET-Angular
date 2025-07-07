@@ -1,0 +1,122 @@
+[
+  {
+    "Id": 1,
+    "Name": "Panadol Extra",
+    "Description": "Relieves headaches, fever, and body aches.",
+    "Price": 5.99,
+    "PictureUrl": "/images/products/panadol_extra.jpg",
+    "Type": "Tablet",
+    "Brand": "GSK",
+    "QuantityInStock": 100,
+    "CategoryId": 1,
+    "symptomIds": [1, 2]
+  },
+  {
+    "Id": 2,
+    "Name": "Ibuprofen 200mg",
+    "Description": "Reduces inflammation, pain, and fever.",
+    "Price": 6.49,
+    "PictureUrl": "/images/products/ibuprofen.jpg",
+    "Type": "Tablet",
+    "Brand": "Advil",
+    "QuantityInStock": 120,
+    "CategoryId": 1,
+    "symptomIds": [1, 3]
+  },
+  {
+    "Id": 3,
+    "Name": "Benadryl Allergy Relief",
+    "Description": "Antihistamine that relieves sneezing, runny nose, and itchy eyes.",
+    "Price": 7.25,
+    "PictureUrl": "/images/products/benadryl.jpg",
+    "Type": "Capsule",
+    "Brand": "Benadryl",
+    "QuantityInStock": 80,
+    "CategoryId": 2,
+    "symptomIds": [4, 5]
+  },
+  {
+    "Id": 4,
+    "Name": "Tums Antacid",
+    "Description": "Provides fast relief from heartburn and indigestion.",
+    "Price": 4.30,
+    "PictureUrl": "/images/products/tums.jpg",
+    "Type": "Chewable",
+    "Brand": "Tums",
+    "QuantityInStock": 150,
+    "CategoryId": 3,
+    "symptomIds": [6]
+  },
+  {
+    "Id": 5,
+    "Name": "Robitussin Cough Syrup",
+    "Description": "Relieves cough and chest congestion.",
+    "Price": 8.99,
+    "PictureUrl": "/images/products/robitussin.jpg",
+    "Type": "Syrup",
+    "Brand": "Robitussin",
+    "QuantityInStock": 60,
+    "CategoryId": 4,
+    "symptomIds": [7]
+  },
+  {
+    "Id": 6,
+    "Name": "Imodium A-D",
+    "Description": "Controls diarrhea symptoms fast.",
+    "Price": 6.89,
+    "PictureUrl": "/images/products/imodium.jpg",
+    "Type": "Caplet",
+    "Brand": "Imodium",
+    "QuantityInStock": 90,
+    "CategoryId": 3,
+    "symptomIds": [8]
+  },
+  {
+    "Id": 7,
+    "Name": "Claritin 24-Hour",
+    "Description": "Non-drowsy allergy relief from sneezing and itchy throat.",
+    "Price": 9.99,
+    "PictureUrl": "/images/products/claritin.jpg",
+    "Type": "Tablet",
+    "Brand": "Claritin",
+    "QuantityInStock": 110,
+    "CategoryId": 2,
+    "symptomIds": [4, 9]
+  },
+  {
+    "Id": 8,
+    "Name": "Dulcolax Laxative",
+    "Description": "Relieves occasional constipation.",
+    "Price": 5.55,
+    "PictureUrl": "/images/products/dulcolax.jpg",
+    "Type": "Tablet",
+    "Brand": "Dulcolax",
+    "QuantityInStock": 75,
+    "CategoryId": 5,
+    "symptomIds": [10]
+  },
+  {
+    "Id": 9,
+    "Name": "Neosporin Ointment",
+    "Description": "Antibiotic ointment for minor cuts and wounds.",
+    "Price": 6.20,
+    "PictureUrl": "/images/products/neosporin.jpg",
+    "Type": "Ointment",
+    "Brand": "Neosporin",
+    "QuantityInStock": 45,
+    "CategoryId": 6,
+    "symptomIds": [11]
+  },
+  {
+    "Id": 10,
+    "Name": "Zyrtec Allergy Relief",
+    "Description": "Treats hay fever and other respiratory allergies.",
+    "Price": 8.75,
+    "PictureUrl": "/images/products/zyrtec.jpg",
+    "Type": "Tablet",
+    "Brand": "Zyrtec",
+    "QuantityInStock": 95,
+    "CategoryId": 2,
+    "symptomIds": [4, 5]
+  }
+]

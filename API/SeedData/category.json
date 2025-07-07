@@ -1,0 +1,32 @@
+[
+  {
+    "Id": 1,
+    "CategoryName": "Pain Relief",
+    "Description": "Medications to relieve headaches, body pain, and inflammation."
+  },
+  {
+    "Id": 2,
+    "CategoryName": "Allergy",
+    "Description": "Antihistamines and allergy-relieving drugs for seasonal or environmental allergies."
+  },
+  {
+    "Id": 3,
+    "CategoryName": "Digestive Health",
+    "Description": "OTC drugs for indigestion, heartburn, and diarrhea."
+  },
+  {
+    "Id": 4,
+    "CategoryName": "Cold and Cough",
+    "Description": "Relief for symptoms like coughing, congestion, and sore throat."
+  },
+  {
+    "Id": 5,
+    "CategoryName": "Laxatives",
+    "Description": "Products that relieve occasional constipation."
+  },
+  {
+    "Id": 6,
+    "CategoryName": "First Aid",
+    "Description": "Ointments and treatments for minor wounds and cuts."
+  }
+]

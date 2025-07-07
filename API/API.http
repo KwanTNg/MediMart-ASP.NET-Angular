@@ -1,6 +1,11 @@
 @API_HostAddress = https://localhost:5001
 
 ###
+GET {{API_HostAddress}}/api/products
+Content-Type: application/json
+Accept: application/json
+
+###
 POST {{API_HostAddress}}/api/products
 Content-Type: application/json
 Accept: application/json
@@ -9,7 +14,7 @@ Accept: application/json
     "Name": "Panadol Extra",
     "Description": "Relieves headaches, fever, and body aches.",
     "Price": 5.99,
-    "PictureUrl": "/images/products/panadol_extra.jpg",
+    "PictureUrl": "/images/products/panadol_extra.png",
     "Type": "Tablet",
     "Brand": "GSK",
     "QuantityInStock": 100,
@@ -26,7 +31,7 @@ Accept: application/json
     "Name": "Ibuprofen 200mg",
     "Description": "Reduces inflammation, pain, and fever.",
     "Price": 6.49,
-    "PictureUrl": "/images/products/ibuprofen.jpg",
+    "PictureUrl": "/images/products/ibuprofen.png",
     "Type": "Tablet",
     "Brand": "Advil",
     "QuantityInStock": 120,
@@ -72,4 +77,21 @@ Accept: application/json
 {
     "SymptomName": "Cough",
     "Description": "A reflex action to clear your airways of mucus and irritants."
+}
+
+###
+PUT {{API_HostAddress}}/api/products/1
+Content-Type: application/json
+Accept: application/json
+
+{
+    "Name": "Panadol Extra",
+    "Description": "Relieves headaches, fever, and body aches.",
+    "Price": 5.99,
+    "PictureUrl": "/images/products/panadol_extra.png",
+    "Type": "Tablet",
+    "Brand": "GSK",
+    "QuantityInStock": 100,
+    "CategoryId": 1,
+    "symptomIds": [1, 2]
 }

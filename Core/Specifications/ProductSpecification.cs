@@ -9,7 +9,12 @@ public class ProductSpecification : BaseSpecification<Product>
         (!specParams.Brands.Any() || specParams.Brands.Contains(x.Brand)) &&
         (!specParams.Types.Any() || specParams.Types.Contains(x.Type))
     )
-    {   //skip and take
+    {
+        //eager loading
+        AddInclude(p => p.Category);
+        AddInclude(p => p.ProductSymptoms);                     // Include the join table
+        AddThenInclude("ProductSymptoms.Symptom"); // Include the related Symptom entity
+        //skip and take
         ApplyPaging(specParams.PageSize * (specParams.PageIndex - 1), specParams.PageSize);
 
         switch (specParams.Sort)

@@ -11,12 +11,25 @@ namespace API.Controllers;
 public class ProductsController(IGenericRepository<Product> repo) : BaseApiController
 {
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts([FromQuery]ProductSpecParams specParams)
+    public async Task<ActionResult<IReadOnlyList<ProductDto>>> GetProducts([FromQuery]ProductSpecParams specParams)
     {
         var spec = new ProductSpecification(specParams);
 
 
-        return await CreatePagedResult(repo, spec, specParams.PageIndex, specParams.PageSize);
+        return await CreatePagedResult(repo, spec, specParams.PageIndex, specParams.PageSize,
+        product => new ProductDto
+        {
+            Id = product.Id,
+            Name = product.Name,
+            Description = product.Description,
+            Price = product.Price,
+            PictureUrl = product.PictureUrl,
+            Type = product.Type,
+            Brand = product.Brand,
+            QuantityInStock = product.QuantityInStock,
+            CategoryId = product.CategoryId,
+            SymptomIds = product.ProductSymptoms?.Select(ps => ps.SymptomId).ToList() ?? new List<int>()
+        });
     }
 
     [HttpGet("{id:int}")]
@@ -83,10 +96,32 @@ public class ProductsController(IGenericRepository<Product> repo) : BaseApiContr
     }
 
     [HttpPut("{id:int}")]
-    public async Task<ActionResult> UpdateProduct(int id, Product product)
+    public async Task<ActionResult> UpdateProduct(int id, CreateProductDto dto)
     {
-        if (product.Id != id || !ProductExists(id))
-            return BadRequest("Cannot update this product");
+        var product = await repo.GetByIdAsync(id);
+        if (product == null)
+            return NotFound("Product not found");
+
+        // Update fields
+        product.Name = dto.Name;
+        product.Description = dto.Description;
+        product.Price = dto.Price;
+        product.PictureUrl = dto.PictureUrl;
+        product.Type = dto.Type;
+        product.Brand = dto.Brand;
+        product.QuantityInStock = dto.QuantityInStock;
+        product.CategoryId = dto.CategoryId;
+
+        // Update many-to-many symptoms
+        product.ProductSymptoms.Clear();
+        foreach (var sid in dto.SymptomIds)
+        {
+            product.ProductSymptoms.Add(new ProductSymptom
+            {
+                SymptomId = sid,
+                ProductId = product.Id
+            });
+        }
 
         repo.Update(product);
         if (await repo.SaveAllAsync())

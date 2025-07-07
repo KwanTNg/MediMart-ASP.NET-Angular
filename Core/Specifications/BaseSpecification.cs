@@ -53,6 +53,19 @@ public class BaseSpecification<T>(Expression<Func<T, bool>>? criteria) : ISpecif
         IsPagingEnabled = true;
     }
 
+    public List<Expression<Func<T, object>>> Includes { get; } = new();
+
+    public List<string> IncludeStrings { get; } = new();
+
+    protected void AddInclude(Expression<Func<T, object>> includeExpression)
+    {
+        Includes.Add(includeExpression);
+    }  
+    protected void AddThenInclude(string includeString)
+    {
+        IncludeStrings.Add(includeString);
+    }  
+
 }
 
 public class BaseSpecification<T, TResult>(Expression<Func<T, bool>>? criteria)
