@@ -7,7 +7,8 @@ public class ProductSpecification : BaseSpecification<Product>
     public ProductSpecification(ProductSpecParams specParams) : base(x =>
         (string.IsNullOrWhiteSpace(specParams.Search) || x.Name.ToLower().Contains(specParams.Search)) &&
         (!specParams.Brands.Any() || specParams.Brands.Contains(x.Brand)) &&
-        (!specParams.Types.Any() || specParams.Types.Contains(x.Type))
+        (!specParams.Types.Any() || specParams.Types.Contains(x.Type)) &&
+        (!specParams.SymptomIds.Any() || x.ProductSymptoms.Any(ps => specParams.SymptomIds.Contains(ps.SymptomId)))
     )
     {
         //eager loading

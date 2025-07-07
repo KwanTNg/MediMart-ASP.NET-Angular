@@ -6,6 +6,11 @@ Content-Type: application/json
 Accept: application/json
 
 ###
+GET {{API_HostAddress}}/api/products?symptomIds=1&symptomIds=3
+Content-Type: application/json
+Accept: application/json
+
+###
 POST {{API_HostAddress}}/api/products
 Content-Type: application/json
 Accept: application/json
