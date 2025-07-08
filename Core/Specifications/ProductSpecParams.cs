@@ -35,6 +35,17 @@ public class ProductSpecParams
         }
     }
 
+    private List<string> _categorys = [];
+    public List<string> Categorys
+    {
+        get => _categorys;
+        set
+        {
+            _categorys = value.SelectMany(x => x.Split(',',
+            StringSplitOptions.RemoveEmptyEntries)).ToList();
+        }
+    }
+
     // private List<int> _symtomIds = [];
     public List<int> SymptomIds = [];
     // {

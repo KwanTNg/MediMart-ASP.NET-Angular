@@ -18,7 +18,9 @@ public class CreateProductDto
     public string Brand { get; set; } = string.Empty;
     [Range(1, int.MaxValue, ErrorMessage = "Quantity in stock must be at least 1")]
     public int QuantityInStock { get; set; }
-    public int CategoryId { get; set; }
+
+    [Required]
+    public string Category { get; set; } = string.Empty;
     public List<int> SymptomIds { get; set; } = new();
 
 }

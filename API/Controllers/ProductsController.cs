@@ -27,7 +27,7 @@ public class ProductsController(IGenericRepository<Product> repo) : BaseApiContr
             Type = product.Type,
             Brand = product.Brand,
             QuantityInStock = product.QuantityInStock,
-            CategoryId = product.CategoryId,
+            Category = product.Category,
             SymptomIds = product.ProductSymptoms?.Select(ps => ps.SymptomId).ToList() ?? new List<int>()
         });
     }
@@ -47,7 +47,7 @@ public class ProductsController(IGenericRepository<Product> repo) : BaseApiContr
             Type = product.Type,
             Brand = product.Brand,
             QuantityInStock = product.QuantityInStock,
-            CategoryId = product.CategoryId,           
+            Category = product.Category,           
             SymptomIds = product.ProductSymptoms
                         .Select(ps => ps.SymptomId)
                         .ToList()
@@ -67,7 +67,7 @@ public class ProductsController(IGenericRepository<Product> repo) : BaseApiContr
         Type = dto.Type,
         Brand = dto.Brand,
         QuantityInStock = dto.QuantityInStock,
-        CategoryId = dto.CategoryId,
+        Category = dto.Category,
         ProductSymptoms = dto.SymptomIds.Select(sid => new ProductSymptom
         {
             SymptomId = sid
@@ -87,7 +87,7 @@ public class ProductsController(IGenericRepository<Product> repo) : BaseApiContr
             Type = product.Type,
             Brand = product.Brand,
             QuantityInStock = product.QuantityInStock,
-            CategoryId = product.CategoryId,
+            Category = product.Category,
             SymptomIds = product.ProductSymptoms.Select(ps => ps.SymptomId).ToList()
         };
             return CreatedAtAction("GetProduct", new { id = product.Id }, productDto);
@@ -110,7 +110,7 @@ public class ProductsController(IGenericRepository<Product> repo) : BaseApiContr
         product.Type = dto.Type;
         product.Brand = dto.Brand;
         product.QuantityInStock = dto.QuantityInStock;
-        product.CategoryId = dto.CategoryId;
+        product.Category = dto.Category;
 
         // Update many-to-many symptoms
         product.ProductSymptoms.Clear();

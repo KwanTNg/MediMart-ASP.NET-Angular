@@ -8,11 +8,11 @@ public class ProductSpecification : BaseSpecification<Product>
         (string.IsNullOrWhiteSpace(specParams.Search) || x.Name.ToLower().Contains(specParams.Search)) &&
         (!specParams.Brands.Any() || specParams.Brands.Contains(x.Brand)) &&
         (!specParams.Types.Any() || specParams.Types.Contains(x.Type)) &&
+        (!specParams.Categorys.Any() || specParams.Categorys.Contains(x.Category)) &&
         (!specParams.SymptomIds.Any() || x.ProductSymptoms.Any(ps => specParams.SymptomIds.Contains(ps.SymptomId)))
     )
     {
         //eager loading
-        AddInclude(p => p.Category);
         AddInclude(p => p.ProductSymptoms);                     // Include the join table
         AddThenInclude("ProductSymptoms.Symptom"); // Include the related Symptom entity
         //skip and take

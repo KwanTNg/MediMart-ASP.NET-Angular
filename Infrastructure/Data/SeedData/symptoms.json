@@ -1,57 +1,46 @@
 [
   {
-    "Id": 1,
-    "Name": "Headache",
+    "SymptomName": "Headache",
     "Description": "Pain or discomfort in the head or scalp, often caused by stress, tension, or illness."
   },
   {
-    "Id": 2,
-    "Name": "Fever",
+    "SymptomName": "Fever",
     "Description": "A temporary increase in body temperature, often due to infection or inflammation."
   },
   {
-    "Id": 3,
-    "Name": "Body Pain",
+    "SymptomName": "Body Pain",
     "Description": "Generalized muscle or joint pain throughout the body, typically associated with flu or fatigue."
   },
   {
-    "Id": 4,
-    "Name": "Sneezing",
+    "SymptomName": "Sneezing",
     "Description": "A sudden, forceful expulsion of air through the nose and mouth, commonly due to allergies or a cold."
   },
   {
-    "Id": 5,
-    "Name": "Itchy Eyes",
+    "SymptomName": "Itchy Eyes",
     "Description": "Irritation or discomfort in the eyes often caused by allergies, dryness, or infection."
   },
   {
-    "Id": 6,
-    "Name": "Heartburn",
+    "SymptomName": "Heartburn",
     "Description": "A burning sensation in the chest caused by acid reflux or indigestion."
   },
   {
-    "Id": 7,
-    "Name": "Cough",
+    "SymptomName": "Cough",
     "Description": "A reflex action to clear your airways of mucus or irritants, commonly due to cold or flu."
   },
   {
-    "Id": 8,
-    "Name": "Diarrhea",
+    "SymptomName": "Diarrhea",
     "Description": "Frequent, loose, or watery bowel movements often caused by infection or food intolerance."
   },
   {
-    "Id": 9,
-    "Name": "Throat Irritation",
+    "SymptomName": "Throat Irritation",
     "Description": "Soreness or discomfort in the throat, usually caused by infections, allergies, or dryness."
   },
   {
-    "Id": 10,
-    "Name": "Constipation",
+    "SymptomName": "Constipation",
     "Description": "Difficulty or infrequent bowel movements, typically due to poor diet, dehydration, or medication."
   },
   {
-    "Id": 11,
-    "Name": "Skin Cuts",
+    "SymptomName": "Skin Cuts",
     "Description": "Breaks or tears in the skin usually caused by injury, requiring cleaning and protection."
   }
 ]

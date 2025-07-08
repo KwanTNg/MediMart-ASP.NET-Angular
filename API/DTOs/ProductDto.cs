@@ -10,7 +10,7 @@ public class ProductDto
     public string Type { get; set; } = string.Empty;
     public string Brand { get; set; } = string.Empty;
     public int QuantityInStock { get; set; }
-    public int CategoryId { get; set; }
+    public string Category { get; set; } = string.Empty;
     public List<int> SymptomIds { get; set; } = new();
 
 }

@@ -1,0 +1,222 @@
+[
+  {
+    "Name": "Panadol Extra",
+    "Description": "Relieves headaches, fever, and body aches.",
+    "Price": 5.99,
+    "PictureUrl": "/images/products/panadol_extra.png",
+    "Type": "Tablet",
+    "Brand": "GSK",
+    "QuantityInStock": 100,
+    "Category": "OverTheCounter",
+    "symptomIds": [1, 2]
+  },
+  {
+    "Name": "Ibuprofen 200mg",
+    "Description": "Reduces inflammation, pain, and fever.",
+    "Price": 6.49,
+    "PictureUrl": "/images/products/ibuprofen.png",
+    "Type": "Tablet",
+    "Brand": "Advil",
+    "QuantityInStock": 120,
+    "Category": "OverTheCounter",
+    "symptomIds": [1, 3]
+  },
+  {
+    "Name": "Benadryl Allergy Relief",
+    "Description": "Antihistamine that relieves sneezing, runny nose, and itchy eyes.",
+    "Price": 7.25,
+    "PictureUrl": "/images/products/benadryl.jpg",
+    "Type": "Capsule",
+    "Brand": "Benadryl",
+    "QuantityInStock": 80,
+    "Category": "OverTheCounter",
+    "symptomIds": [4, 5]
+  },
+  {
+    "Name": "Tums Antacid",
+    "Description": "Provides fast relief from heartburn and indigestion.",
+    "Price": 4.30,
+    "PictureUrl": "/images/products/tums.jpg",
+    "Type": "Chewable",
+    "Brand": "Tums",
+    "QuantityInStock": 150,
+    "Category": "OverTheCounter",
+    "symptomIds": [6]
+  },
+  {
+    "Name": "Robitussin Cough Syrup",
+    "Description": "Relieves cough and chest congestion.",
+    "Price": 8.99,
+    "PictureUrl": "/images/products/robitussin.jpg",
+    "Type": "Syrup",
+    "Brand": "Robitussin",
+    "QuantityInStock": 60,
+    "Category": "OverTheCounter",
+    "symptomIds": [7]
+  },
+  {
+    "Name": "Imodium A-D",
+    "Description": "Controls diarrhea symptoms fast.",
+    "Price": 6.89,
+    "PictureUrl": "/images/products/imodium.jpg",
+    "Type": "Caplet",
+    "Brand": "Imodium",
+    "QuantityInStock": 90,
+    "Category": "OverTheCounter",
+    "symptomIds": [8]
+  },
+  {
+    "Name": "Claritin 24-Hour",
+    "Description": "Non-drowsy allergy relief from sneezing and itchy throat.",
+    "Price": 9.99,
+    "PictureUrl": "/images/products/claritin.jpg",
+    "Type": "Tablet",
+    "Brand": "Claritin",
+    "QuantityInStock": 110,
+    "Category": "OverTheCounter",
+    "symptomIds": [4, 9]
+  },
+  {
+    "Name": "Dulcolax Laxative",
+    "Description": "Relieves occasional constipation.",
+    "Price": 5.55,
+    "PictureUrl": "/images/products/dulcolax.jpg",
+    "Type": "Tablet",
+    "Brand": "Dulcolax",
+    "QuantityInStock": 75,
+    "Category": "OverTheCounter",
+    "symptomIds": [10]
+  },
+  {
+    "Name": "Neosporin Ointment",
+    "Description": "Antibiotic ointment for minor cuts and wounds.",
+    "Price": 6.20,
+    "PictureUrl": "/images/products/neosporin.jpg",
+    "Type": "Ointment",
+    "Brand": "Neosporin",
+    "QuantityInStock": 45,
+    "Category": "OverTheCounter",
+    "symptomIds": [11]
+  },
+  {
+    "Name": "Zyrtec Allergy Relief",
+    "Description": "Treats hay fever and other respiratory allergies.",
+    "Price": 8.75,
+    "PictureUrl": "/images/products/zyrtec.jpg",
+    "Type": "Tablet",
+    "Brand": "Zyrtec",
+    "QuantityInStock": 95,
+    "Category": "OverTheCounter",
+    "symptomIds": [4, 5]
+  },
+  {
+    "Name": "Augmentin 625mg",
+    "Description": "Broad-spectrum antibiotic used to treat bacterial infections.",
+    "Price": 12.99,
+    "PictureUrl": "/images/products/augmentin.jpg",
+    "Type": "Tablet",
+    "Brand": "GSK",
+    "QuantityInStock": 70,
+    "Category": "Prescription",
+    "symptomIds": [2, 11]
+  },
+  {
+    "Name": "Paracetamol 500mg",
+    "Description": "Effective pain reliever and fever reducer.",
+    "Price": 4.80,
+    "PictureUrl": "/images/products/paracetamol.jpg",
+    "Type": "Tablet",
+    "Brand": "Tylenol",
+    "QuantityInStock": 200,
+    "Category": "Prescription",
+    "symptomIds": [1, 2, 3]
+  },
+  {
+    "Name": "Cetirizine 10mg",
+    "Description": "Antihistamine for allergic reactions and hay fever.",
+    "Price": 5.95,
+    "PictureUrl": "/images/products/cetirizine.jpg",
+    "Type": "Tablet",
+    "Brand": "Zyrtec",
+    "QuantityInStock": 85,
+    "Category": "Prescription",
+    "symptomIds": [4, 5, 9]
+  },
+  {
+    "Name": "Dextromethorphan Syrup",
+    "Description": "Suppresses dry coughs without causing drowsiness.",
+    "Price": 7.40,
+    "PictureUrl": "/images/products/dextromethorphan.jpg",
+    "Type": "Syrup",
+    "Brand": "Delsym",
+    "QuantityInStock": 55,
+    "Category": "Prescription",
+    "symptomIds": [7, 9]
+  },
+  {
+    "Name": "Omeprazole 20mg",
+    "Description": "Reduces stomach acid for relief from heartburn and GERD.",
+    "Price": 6.70,
+    "PictureUrl": "/images/products/omeprazole.jpg",
+    "Type": "Capsule",
+    "Brand": "Prilosec",
+    "QuantityInStock": 100,
+    "Category": "Prescription",
+    "symptomIds": [6]
+  },
+  {
+    "Name": "Metronidazole 400mg",
+    "Description": "Antibiotic and antiprotozoal for GI and skin infections.",
+    "Price": 9.20,
+    "PictureUrl": "/images/products/metronidazole.jpg",
+    "Type": "Tablet",
+    "Brand": "Flagyl",
+    "QuantityInStock": 60,
+    "Category": "Prescription",
+    "symptomIds": [8, 11]
+  },
+  {
+    "Name": "Loratadine Syrup",
+    "Description": "Children’s allergy relief for sneezing and itchy eyes.",
+    "Price": 6.25,
+    "PictureUrl": "/images/products/loratadine_syrup.jpg",
+    "Type": "Syrup",
+    "Brand": "Claritin",
+    "QuantityInStock": 40,
+    "Category": "Prescription",
+    "symptomIds": [4, 5]
+  },
+  {
+    "Name": "Bisacodyl Suppository",
+    "Description": "Stimulant laxative for fast constipation relief.",
+    "Price": 3.90,
+    "PictureUrl": "/images/products/bisacodyl.jpg",
+    "Type": "Suppository",
+    "Brand": "Dulcolax",
+    "QuantityInStock": 50,
+    "Category": "Prescription",
+    "symptomIds": [10]
+  },
+  {
+    "Name": "Hydrocortisone Cream",
+    "Description": "Topical steroid for reducing skin inflammation and itching.",
+    "Price": 4.99,
+    "PictureUrl": "/images/products/hydrocortisone.jpg",
+    "Type": "Cream",
+    "Brand": "Cortizone-10",
+    "QuantityInStock": 65,
+    "Category": "Prescription",
+    "symptomIds": [11]
+  },
+  {
+    "Name": "Azithromycin 250mg",
+    "Description": "Antibiotic used to treat respiratory and skin infections.",
+    "Price": 13.50,
+    "PictureUrl": "/images/products/azithromycin.jpg",
+    "Type": "Tablet",
+    "Brand": "Zithromax",
+    "QuantityInStock": 75,
+    "Category": "Prescription",
+    "symptomIds": [2, 7, 9]
+  }
+]

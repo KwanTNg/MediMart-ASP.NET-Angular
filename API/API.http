@@ -45,16 +45,6 @@ Accept: application/json
 }
 
 ###
-POST {{API_HostAddress}}/api/categorys
-Content-Type: application/json
-Accept: application/json
-
-{
-    "CategoryName": "Pain Relief",
-    "Description": "Medications to relieve headaches, body pain, and inflammation."
-}
-
-###
 POST {{API_HostAddress}}/api/symptoms
 Content-Type: application/json
 Accept: application/json

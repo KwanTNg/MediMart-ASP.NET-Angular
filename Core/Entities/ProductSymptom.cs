@@ -1,7 +1,7 @@
 namespace Core.Entities;
 
 //Join table for Product ↔ Symptom (many-to-many)
-public class ProductSymptom : BaseEntity
+public class ProductSymptom
 {
     public int ProductId { get; set; }
     public Product Product { get; set; } = null!;
