@@ -1,5 +1,9 @@
 <div class="flex flex-col gap-3">
-    <div class="flex justify-end">
+    <div class="flex justify-end gap-x-3">
+        <button mat-stroked-button (click)="openSymptomFilterDialog()">
+            <mat-icon>local_hospital</mat-icon>
+            Symptoms
+        </button>
         <button mat-stroked-button (click)="openFilterDialog()">
             <mat-icon>filter_list</mat-icon>
             Filters

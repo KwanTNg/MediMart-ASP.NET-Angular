@@ -6,6 +6,14 @@ namespace API.Controllers;
 
 public class SymptomsController(IGenericRepository<Symptom> repo) : BaseApiController
 {
+    [HttpGet]
+    public async Task<ActionResult<Symptom>> GetSymptoms()
+    {
+        var symptoms = await repo.ListAllAsync();
+        if (symptoms == null) return NotFound();
+        return Ok(symptoms);
+    }
+
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Symptom>> GetSymptom(int id)
     {

@@ -156,6 +156,12 @@ public class ProductsController(IGenericRepository<Product> repo) : BaseApiContr
         var spec = new TypeListSpecification();
         return Ok(await repo.ListAsync(spec));
     }
+    [HttpGet("categories")]
+    public async Task<ActionResult<IReadOnlyList<string>>> GetCategories()
+    {
+        var spec = new CategoryListSpecification();
+        return Ok(await repo.ListAsync(spec));
+    }
 
     private bool ProductExists(int id)
     {

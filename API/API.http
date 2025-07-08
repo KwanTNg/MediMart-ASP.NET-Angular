@@ -6,7 +6,17 @@ Content-Type: application/json
 Accept: application/json
 
 ###
-GET {{API_HostAddress}}/api/products?symptomIds=1&symptomIds=3
+GET {{API_HostAddress}}/api/products?symptomIds=3&symptomIds=4&pageSize=20
+Content-Type: application/json
+Accept: application/json
+
+###
+GET {{API_HostAddress}}/api/products?categories=Prescription&pageSize=20
+Content-Type: application/json
+Accept: application/json
+
+###
+GET {{API_HostAddress}}/api/symptoms
 Content-Type: application/json
 Accept: application/json
 

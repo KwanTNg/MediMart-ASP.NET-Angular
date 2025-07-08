@@ -1,0 +1,11 @@
+<div class="p-4">
+  <h2 class="text-xl font-semibold mb-2">Symptom Question {{currentQuestionIndex + 1}} of {{symptoms.length}}</h2>
+  <p class="text-lg mb-4">Are you currently experiencing or have you recently experienced <strong>{{currentSymptom.symptomName}}</strong>?</p>
+  <p class="mb-6 text-gray-600">{{currentSymptom.description}}</p>
+
+  <div class="flex justify-end gap-4">
+    <button mat-stroked-button color="primary" (click)="answerNo()">No</button>
+    <button mat-flat-button color="primary" (click)="answerYes()">Yes</button>
+  </div>
+</div>
+

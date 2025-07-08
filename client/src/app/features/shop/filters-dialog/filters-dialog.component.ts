@@ -25,11 +25,13 @@ export class FiltersDialogComponent {
 
   selectedBrands: string[] = this.data.selectedBrands;
   selectedTypes: string[] = this.data.selectedTypes;
+  selectedCategories: string[] = this.data.selectedCategories;
 
   applyFilters() {
     this.dialogRef.close({
       selectedBrands: this.selectedBrands,
-      selectedTypes: this.selectedTypes
+      selectedTypes: this.selectedTypes,
+      selectedCategories: this.selectedCategories
     })
   }
 }

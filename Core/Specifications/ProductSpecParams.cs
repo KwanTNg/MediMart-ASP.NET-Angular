@@ -35,28 +35,28 @@ public class ProductSpecParams
         }
     }
 
-    private List<string> _categorys = [];
-    public List<string> Categorys
+    private List<string> _categories = [];
+    public List<string> Categories
     {
-        get => _categorys;
+        get => _categories;
         set
         {
-            _categorys = value.SelectMany(x => x.Split(',',
+            _categories = value.SelectMany(x => x.Split(',',
             StringSplitOptions.RemoveEmptyEntries)).ToList();
         }
     }
 
-    // private List<int> _symtomIds = [];
-    public List<int> SymptomIds = [];
-    // {
-    //     get => _symtomIds;
-    //     set
-    //     {
-    //         _symtomIds = value.SelectMany(x => x.ToString().Split(',',
-    //         StringSplitOptions.RemoveEmptyEntries)).Select(int.Parse)
-    //         .ToList();
-    //     }
-    // }
+    private List<int> _symtomIds = [];
+    public List<int> SymptomIds
+    {
+        get => _symtomIds;
+        set
+        {
+            _symtomIds = value.SelectMany(x => x.ToString().Split(',',
+            StringSplitOptions.RemoveEmptyEntries)).Select(int.Parse)
+            .ToList();
+        }
+    }
 
     public string? Sort { get; set; }
 
