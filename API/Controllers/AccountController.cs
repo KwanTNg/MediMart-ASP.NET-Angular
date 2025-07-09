@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using API.DTOs;
 using API.Extensions;
 using Core.Entities;
@@ -7,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
-public class AccountController(SignInManager<AppUser> signInManager) : BaseApiController
+public class AccountController(SignInManager<AppUser> signInManager, UserManager<AppUser> userManager) : BaseApiController
 {
     [HttpPost("register")]
     public async Task<ActionResult> Register(RegisterDto registerDto)
@@ -28,6 +29,13 @@ public class AccountController(SignInManager<AppUser> signInManager) : BaseApiCo
             }
             return ValidationProblem();
         }
+        
+         var roleResult = await signInManager.UserManager.AddToRoleAsync(user, "Patient");
+            if (!roleResult.Succeeded)
+            {
+                return BadRequest("Failed to assign role");
+            }
+
         return Ok();
     }
 
@@ -51,7 +59,8 @@ public class AccountController(SignInManager<AppUser> signInManager) : BaseApiCo
             user.FirstName,
             user.LastName,
             user.Email,
-            Address = user.Address?.ToDto()
+            Address = user.Address?.ToDto(),
+            Roles = User.FindFirstValue(ClaimTypes.Role)
         });
     }
 
@@ -81,5 +90,24 @@ public class AccountController(SignInManager<AppUser> signInManager) : BaseApiCo
         return Ok(user.Address.ToDto());
     }
 
+    [Authorize(Roles = "Admin")]
+    [HttpPost("change-role")]
+    public async Task<ActionResult> ChangeUserRole(ChangeUserRoleDto dto)
+    {
+        var user = await userManager.FindByEmailAsync(dto.Email);
+        if (user == null) return NotFound("User not found");
+
+        var currentRoles = await userManager.GetRolesAsync(user);
+        var removeResult = await userManager.RemoveFromRolesAsync(user, currentRoles);
+
+        if (!removeResult.Succeeded)
+        return BadRequest("Failed to remove current roles");
+
+        var addResult = await userManager.AddToRoleAsync(user, dto.NewRole);
+        if (!addResult.Succeeded)
+        return BadRequest("Failed to assign new role");
+
+        return Ok($"Role updated to {dto.NewRole} for user {dto.Email}");
+    }
 
 }

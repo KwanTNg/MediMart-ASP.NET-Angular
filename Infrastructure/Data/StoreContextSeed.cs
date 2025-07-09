@@ -1,20 +1,32 @@
 using System.Text.Json;
 using Core.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Data;
 
 public class StoreContextSeed
 {
-    public static async Task SeedAsync(StoreContext context)
+    public static async Task SeedAsync(StoreContext context, UserManager<AppUser> userManager)
     {
-        if (!context.Symptoms.Any())
+        if (!userManager.Users.Any(x => x.UserName == "admin@medimart.com"))
         {
-            var symptomsData = await File.ReadAllTextAsync("../Infrastructure/Data/SeedData/symptoms.json");
-            var symptoms = JsonSerializer.Deserialize<List<Symptom>>(symptomsData);
-            if (symptoms == null) return;
-            context.Symptoms.AddRange(symptoms);
-            await context.SaveChangesAsync();
+            var user = new AppUser
+            {
+                UserName = "admin@medimart.com",
+                Email = "admin@medimart.com"
+            };
+            await userManager.CreateAsync(user, "Pa$$w0rd");
+            await userManager.AddToRoleAsync(user, "Admin");
         }
+
+        if (!context.Symptoms.Any())
+            {
+                var symptomsData = await File.ReadAllTextAsync("../Infrastructure/Data/SeedData/symptoms.json");
+                var symptoms = JsonSerializer.Deserialize<List<Symptom>>(symptomsData);
+                if (symptoms == null) return;
+                context.Symptoms.AddRange(symptoms);
+                await context.SaveChangesAsync();
+            }
         if (!context.Products.Any())
         {
             var productsData = await File.ReadAllTextAsync("../Infrastructure/Data/SeedData/products.json");

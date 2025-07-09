@@ -100,3 +100,13 @@ Accept: application/json
     "CategoryId": 1,
     "symptomIds": [1, 2]
 }
+
+###
+POST {{API_HostAddress}}/api/account/change-role
+Content-Type: application/json
+Accept: application/json
+
+{
+  "email": "bob@test.com",
+  "newRole": "Pharmacist"    
+}

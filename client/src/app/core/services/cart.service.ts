@@ -4,6 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { Cart, CartItem } from '../../shared/models/cart';
 import { Product } from '../../shared/models/product';
 import { map } from 'rxjs';
+import { UserInfo } from '../../shared/models/userInfo';
+import { SnackbarService } from './snackbar.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +13,9 @@ import { map } from 'rxjs';
 export class CartService {
   baseUrl = environment.apiUrl;
   private http = inject(HttpClient);
+  private snackbar = inject(SnackbarService);
   cart = signal<Cart | null>(null);
+  userInfo?: UserInfo;
 
   itemCount = computed(() => {
   return this.cart()?.items.reduce((sum, item) => sum + item.quantity, 0)
@@ -31,6 +35,12 @@ export class CartService {
     }   
   })
 
+  getUserInfo(){
+    return this.http.get<any>(this.baseUrl + 'account/user-info').subscribe({
+      next: response => this.userInfo = response
+    })
+  }
+
   getCart(id: string) {
     return this.http.get<Cart>(this.baseUrl + 'cart?id=' + id).pipe(
         map(cart => {
@@ -48,6 +58,10 @@ export class CartService {
 
   addItemToCart(item: CartItem | Product, quantity = 1) {
     const cart = this.cart() ?? this.createCart()
+    if (this.userInfo?.roles !== "Pharmacist" && item.category === "Prescription") {
+      this.snackbar.error("Please ask for prescription!");
+      return;
+    }
     if (this.isProduct(item)) {
       item = this.mapProductToCartItem(item);
     }
@@ -105,7 +119,8 @@ export class CartService {
       quantity: 0,
       pictureUrl: item.pictureUrl,
       brand: item.brand,
-      type: item.type
+      type: item.type,
+      category: item.category
     }
   }
 

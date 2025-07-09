@@ -13,6 +13,7 @@ import { ShopParams } from '../../shared/models/shopParams';
 import { MatPaginator, PageEvent } from '@angular/material/paginator'
 import { Pagination } from '../../shared/models/pagination';
 import { FormsModule } from '@angular/forms';
+import { CartService } from '../../core/services/cart.service';
 
 @Component({
   selector: 'app-shop',
@@ -32,6 +33,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class ShopComponent implements OnInit {
   private shopService = inject(ShopService);
+  private cartService = inject(CartService);
   private dialogService = inject(MatDialog);
   products?: Pagination<Product>;
 
@@ -52,6 +54,7 @@ initializeShop() {
   this.shopService.getTypes();
   this.shopService.getCategories();
   this.shopService.getSymptoms();
+  this.cartService.getUserInfo();
   this.getProducts();
   }
 
