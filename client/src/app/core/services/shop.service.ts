@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Pagination } from '../../shared/models/pagination';
 import { Product } from '../../shared/models/product';
 import { ShopParams } from '../../shared/models/shopParams';
+import { Symptom } from '../../shared/models/symptom';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ types: string[] = [];
 brands: string[] = [];
 categories: string[] = [];
 symptomIds: number[] = [];
-symptoms: any[] = [];
+symptoms: Symptom[] = [];
 
 getProducts(shopParams: ShopParams) {
   let params = new HttpParams();
@@ -45,6 +46,10 @@ getProducts(shopParams: ShopParams) {
   return this.http.get<Pagination<Product>>(this.baseUrl + 'products', {params})
 }
 
+getProduct(id: number) {
+  return this.http.get<Product>(this.baseUrl + 'products/' + id);
+}
+
 getBrands() {
   //It will only execute once
   if (this.brands.length > 0) return;
@@ -69,7 +74,7 @@ getCategories() {
 
 getSymptoms() {
   if (this.symptoms.length > 0) return;
-  return this.http.get<any[]>(this.baseUrl + 'symptoms').subscribe({
+  return this.http.get<Symptom[]>(this.baseUrl + 'symptoms').subscribe({
     next: response => this.symptoms = response
   })
 }
