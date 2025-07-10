@@ -1,5 +1,5 @@
 <div class="flex items-center justify-between gap-6">
-        <a routerLink="/shop/{{item().productId}}" class="shrink order-1">
+        <a routerLink="/product/{{item().productId}}" class="shrink order-1">
             <img src="{{item().pictureUrl}}" alt="product image" class="h-20 w-20">
         </a>
         <div class="flex items-center justify-between order-3">
@@ -17,7 +17,7 @@
             </div>
         </div>
         <div class="w-full flex-1 space-y-4 order-2 max-w-md">
-            <a routerLink="/shop/{{item().productId}}" class="font-medium">
+            <a routerLink="/product/{{item().productId}}" class="font-medium">
                 {{item().productName}}
             </a>
             <div class="flex items-center gap-4">

@@ -1,10 +1,13 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
 import { MatBadge } from '@angular/material/badge';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { MatProgressBar } from '@angular/material/progress-bar'
 import { CartService } from '../../core/services/cart.service';
+import { MatMenu, MatMenuItem, MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
+import { AccountService } from '../../core/services/account.service';
+import { MatDivider } from "@angular/material/divider";
 
 
 @Component({
@@ -15,12 +18,30 @@ import { CartService } from '../../core/services/cart.service';
     MatBadge,
     RouterLink,
     RouterLinkActive,
-    MatProgressBar
-  ],
+    MatProgressBar,
+    MatMenuModule,
+    MatDivider,
+    MatMenu,
+    MatMenuItem
+],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
-loading = false;
-cartService = inject(CartService);
+  cartService = inject(CartService);
+  @ViewChild(MatMenuTrigger) trigger!: MatMenuTrigger;
+  loading = false;
+
+  accountService = inject(AccountService);
+  private router = inject(Router);
+
+  logout() {
+    this.accountService.logout().subscribe({
+      next: () => {
+        this.accountService.currentUser.set(null);
+        this.router.navigateByUrl('/');
+      }
+    })
+  }
+
 }

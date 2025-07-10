@@ -4,8 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { Cart, CartItem } from '../../shared/models/cart';
 import { Product } from '../../shared/models/product';
 import { map } from 'rxjs';
-import { UserInfo } from '../../shared/models/userInfo';
 import { SnackbarService } from './snackbar.service';
+import { AccountService } from './account.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,9 +13,9 @@ import { SnackbarService } from './snackbar.service';
 export class CartService {
   baseUrl = environment.apiUrl;
   private http = inject(HttpClient);
+  private accountService = inject(AccountService);
   private snackbar = inject(SnackbarService);
   cart = signal<Cart | null>(null);
-  userInfo?: UserInfo;
 
   itemCount = computed(() => {
   return this.cart()?.items.reduce((sum, item) => sum + item.quantity, 0)
@@ -35,11 +35,6 @@ export class CartService {
     }   
   })
 
-  getUserInfo(){
-    return this.http.get<any>(this.baseUrl + 'account/user-info').subscribe({
-      next: response => this.userInfo = response
-    })
-  }
 
   getCart(id: string) {
     return this.http.get<Cart>(this.baseUrl + 'cart?id=' + id).pipe(
@@ -58,7 +53,7 @@ export class CartService {
 
   addItemToCart(item: CartItem | Product, quantity = 1) {
     const cart = this.cart() ?? this.createCart()
-    if (this.userInfo?.roles !== "Pharmacist" && item.category === "Prescription") {
+    if (this.accountService.currentUser()?.roles !== "Pharmacist" && item.category === "Prescription") {
       this.snackbar.error("Please ask for prescription!");
       return;
     }

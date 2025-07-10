@@ -20,13 +20,13 @@ public class StoreContextSeed
         }
 
         if (!context.Symptoms.Any())
-            {
-                var symptomsData = await File.ReadAllTextAsync("../Infrastructure/Data/SeedData/symptoms.json");
-                var symptoms = JsonSerializer.Deserialize<List<Symptom>>(symptomsData);
-                if (symptoms == null) return;
-                context.Symptoms.AddRange(symptoms);
-                await context.SaveChangesAsync();
-            }
+        {
+            var symptomsData = await File.ReadAllTextAsync("../Infrastructure/Data/SeedData/symptoms.json");
+            var symptoms = JsonSerializer.Deserialize<List<Symptom>>(symptomsData);
+            if (symptoms == null) return;
+            context.Symptoms.AddRange(symptoms);
+            await context.SaveChangesAsync();
+        }
         if (!context.Products.Any())
         {
             var productsData = await File.ReadAllTextAsync("../Infrastructure/Data/SeedData/products.json");
@@ -34,7 +34,7 @@ public class StoreContextSeed
             if (products == null) return;
             context.Products.AddRange(products);
             await context.SaveChangesAsync();
-        }  
+        }
         if (!context.ProductSymptoms.Any())
         {
             var productSymptomData = await File.ReadAllTextAsync("../Infrastructure/Data/SeedData/productSymptoms.json");
@@ -42,8 +42,14 @@ public class StoreContextSeed
             if (productSymptoms == null) return;
             context.ProductSymptoms.AddRange(productSymptoms);
             await context.SaveChangesAsync();
-        }    
-
+        }
+        if (!context.DeliveryMethods.Any())
+        {
+            var dmData = await File.ReadAllTextAsync("../Infrastructure/Data/SeedData/delivery.json");
+            var methods = JsonSerializer.Deserialize<List<DeliveryMethod>>(dmData);
+            if (methods == null) return;
+            context.DeliveryMethods.AddRange(methods);
+            await context.SaveChangesAsync();
+        }
     }
-    
 }
