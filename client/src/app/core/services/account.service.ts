@@ -2,7 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Address, User } from '../../shared/models/users';
-import { map } from 'rxjs';
+import { map, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class AccountService {
     let params = new HttpParams();
     params = params.append('useCookies', true);
     //It uses the default identity route
-    return this.http.post<User>(this.baseUrl + 'login' + values, {params, withCredentials: true});
+    return this.http.post<User>(this.baseUrl + 'login', values, {params, withCredentials: true});
   }
 
   register(values: any) {
@@ -31,7 +31,7 @@ export class AccountService {
       })
     )
   }
-  
+
   getAuthState() {
     return this.http.get<{isAuthenticated: boolean}>(this.baseUrl + 'account/auth-status');
   }
@@ -41,7 +41,14 @@ export class AccountService {
   }
 
   updateAddress(address: Address) {
-    return this.http.post(this.baseUrl + 'account/address', address);
+    return this.http.post(this.baseUrl + 'account/address', address).pipe(
+      tap(() => {
+        this.currentUser.update(user => {
+          if (user) user.address = address;
+          return user;
+        })
+      })
+    )
   }
 
   
