@@ -3,6 +3,8 @@ import { environment } from '../../../environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Address, User } from '../../shared/models/users';
 import { map, tap } from 'rxjs';
+import { Injector } from '@angular/core';
+import { CartService } from './cart.service'; // still import normally
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +12,7 @@ import { map, tap } from 'rxjs';
 export class AccountService {
   baseUrl = environment.apiUrl;
   private http = inject(HttpClient);
+  private injector = inject(Injector);
   currentUser = signal<User | null>(null);
   
   login(values: any) {
@@ -37,6 +40,8 @@ export class AccountService {
   }
 
   logout() {
+    const cartService = this.injector.get(CartService); // Lazy injection
+    cartService.cart.set(null); // Access the signal safely
     return this.http.post(this.baseUrl + 'account/logout', {}, {withCredentials: true});
   }
 

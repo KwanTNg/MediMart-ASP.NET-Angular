@@ -68,7 +68,8 @@ getProducts() {
 
 openFilterDialog() {
   const dialogRef = this.dialogService.open(FiltersDialogComponent, {
-    minWidth: '700px',
+    width: '90vw',
+    maxWidth: '850px',
     maxHeight: '90vh',
     height: 'auto',
     data: {

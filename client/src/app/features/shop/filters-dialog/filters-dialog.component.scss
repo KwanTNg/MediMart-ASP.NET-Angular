@@ -1,0 +1,6 @@
+.brand-list-grid mat-selection-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two columns */
+  gap: 0.5rem; /* Optional spacing between columns */
+  overflow-y: auto;
+}

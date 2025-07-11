@@ -19,6 +19,7 @@ export class CheckoutDeliveryComponent implements OnInit {
   cartService = inject(CartService);
   //emit the state to parent component, i.e. checkout component
   deliveryComplete = output<boolean>();
+  
 
   ngOnInit(): void {
       this.checkoutService.getDeliveryMethods().subscribe({

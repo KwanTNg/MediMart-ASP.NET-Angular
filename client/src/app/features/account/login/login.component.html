@@ -11,6 +11,6 @@
             <mat-label>Password</mat-label>
             <input formControlName="password" type="password" placeholder="Password" matInput />
         </mat-form-field>
-        <button mat-flat-button type="submit" class="w-full py-2">Sigin in</button>
+        <button [disabled]="loginForm.invalid" mat-flat-button type="submit" class="w-full py-2">Sigin in</button>
     </form>
 </mat-card>

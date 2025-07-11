@@ -36,6 +36,9 @@ export class ProductDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadProduct();
+    this.cartService.cartChanges?.subscribe(() => {
+    this.updateQuantityInCart();
+  });
   }
 
   loadProduct() {
@@ -54,19 +57,23 @@ export class ProductDetailsComponent implements OnInit {
     if (!this.product) return;
     if (this.quantity > this.quantityInCart) {
       const itemsToAdd = this.quantity - this.quantityInCart;
-      this.quantityInCart += itemsToAdd;
+      // this.quantityInCart += itemsToAdd;
       this.cartService.addItemToCart(this.product, itemsToAdd);
     } else {
       const itemsToRemove = this.quantityInCart - this.quantity;
-      this.quantityInCart -= itemsToRemove;
+      // this.quantityInCart -= itemsToRemove;
       this.cartService.removeItemFromCart(this.product.id, itemsToRemove);
     }
   }
 
   updateQuantityInCart() {
-    this.quantityInCart = this.cartService.cart()?.items
-    .find(x => x.productId === this.product?.id)?.quantity || 0;
+    const cartItem = this.cartService.cart()?.items
+    .find(x => x.productId === this.product?.id);
+    // this.quantityInCart = this.cartService.cart()?.items
+    // .find(x => x.productId === this.product?.id)?.quantity || 0;
     //if item not in cart yet, set to 1
+
+    this.quantityInCart = cartItem?.quantity || 0;
     this.quantity = this.quantityInCart || 1;
   }
 

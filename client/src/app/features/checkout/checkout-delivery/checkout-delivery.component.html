@@ -1,6 +1,6 @@
 <div class="w-full">
     <!-- we have 2 columns and 2 rows -->
-     <mat-radio-group [value]="cartService.selectedDelivery()?.id"
+     <mat-radio-group [value]="cartService.selectedDelivery()"
      (change)="updateDeliveryMethod($event.value)" class="grid grid-cols-2 gap-4">
         @for (method of checkoutService.deliveryMethods; track method.id) {
             <label 

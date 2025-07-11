@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers;
 
 
-public class ProductsController(IGenericRepository<Product> repo) : BaseApiController
+public class ProductsController(IUnitOfWork unit) : BaseApiController
 {
     [HttpGet]
     public async Task<ActionResult<IReadOnlyList<ProductDto>>> GetProducts([FromQuery]ProductSpecParams specParams)
@@ -17,7 +17,7 @@ public class ProductsController(IGenericRepository<Product> repo) : BaseApiContr
         var spec = new ProductSpecification(specParams);
 
 
-        return await CreatePagedResult(repo, spec, specParams.PageIndex, specParams.PageSize,
+        return await CreatePagedResult(unit.Repository<Product>(), spec, specParams.PageIndex, specParams.PageSize,
         product => new ProductDto
         {
             Id = product.Id,
@@ -36,7 +36,7 @@ public class ProductsController(IGenericRepository<Product> repo) : BaseApiContr
     [HttpGet("{id:int}")]
     public async Task<ActionResult<ProductDto>> GetProduct(int id)
     {
-        var product = await repo.GetByIdAsync(id);
+        var product = await unit.Repository<Product>().GetByIdAsync(id);
         if (product == null) return NotFound();
         var productDto = new ProductDto
         {
@@ -76,8 +76,8 @@ public class ProductsController(IGenericRepository<Product> repo) : BaseApiContr
         }).ToList()
     };
 
-        repo.Add(product);
-        if (await repo.SaveAllAsync())
+        unit.Repository<Product>().Add(product);
+        if (await unit.Complete())
         {
         var productDto = new ProductDto
         {
@@ -101,7 +101,7 @@ public class ProductsController(IGenericRepository<Product> repo) : BaseApiContr
     [HttpPut("{id:int}")]
     public async Task<ActionResult> UpdateProduct(int id, CreateProductDto dto)
     {
-        var product = await repo.GetByIdAsync(id);
+        var product = await unit.Repository<Product>().GetByIdAsync(id);
         if (product == null)
             return NotFound("Product not found");
 
@@ -126,8 +126,8 @@ public class ProductsController(IGenericRepository<Product> repo) : BaseApiContr
             });
         }
 
-        repo.Update(product);
-        if (await repo.SaveAllAsync())
+        unit.Repository<Product>().Update(product);
+        if (await unit.Complete())
         {
             return NoContent();
         }
@@ -138,10 +138,10 @@ public class ProductsController(IGenericRepository<Product> repo) : BaseApiContr
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteProduct(int id)
     {
-        var product = await repo.GetByIdAsync(id);
+        var product = await unit.Repository<Product>().GetByIdAsync(id);
         if (product == null) return NotFound();
-        repo.Remove(product);
-        if (await repo.SaveAllAsync())
+        unit.Repository<Product>().Remove(product);
+        if (await unit.Complete())
         {
             return NoContent();
         }
@@ -152,23 +152,23 @@ public class ProductsController(IGenericRepository<Product> repo) : BaseApiContr
     public async Task<ActionResult<IReadOnlyList<string>>> GetBrands()
     {
         var spec = new BrandListSpecification();
-        return Ok(await repo.ListAsync(spec));
+        return Ok(await unit.Repository<Product>().ListAsync(spec));
     }
     [HttpGet("types")]
     public async Task<ActionResult<IReadOnlyList<string>>> GetTypes()
     {
         var spec = new TypeListSpecification();
-        return Ok(await repo.ListAsync(spec));
+        return Ok(await unit.Repository<Product>().ListAsync(spec));
     }
     [HttpGet("categories")]
     public async Task<ActionResult<IReadOnlyList<string>>> GetCategories()
     {
         var spec = new CategoryListSpecification();
-        return Ok(await repo.ListAsync(spec));
+        return Ok(await unit.Repository<Product>().ListAsync(spec));
     }
 
     private bool ProductExists(int id)
     {
-        return repo.Exists(id);
+        return unit.Repository<Product>().Exists(id);
     }
 }

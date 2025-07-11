@@ -14,6 +14,12 @@
                             {{product.price | currency:'GBP':'symbol'}}
                         </p>
                     </div>
+                    <div class="mt-2">
+                        <p class="text-sm text-gray-600">
+                        {{ product.quantityInStock }} item{{ product.quantityInStock === 1 ? '' : 's' }} available
+                        </p>
+                    </div>
+
                     <div class="flex gap-4 mt-6">
                         <button [disabled]="quantity === quantityInCart" 
                             (click)="updateCart()"

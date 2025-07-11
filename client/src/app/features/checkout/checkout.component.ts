@@ -16,6 +16,7 @@ import { CheckoutReviewComponent } from "../checkout-review/checkout-review.comp
 import { CurrencyPipe } from '@angular/common';
 import { CartService } from '../../core/services/cart.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { CheckoutService } from '../../core/services/checkout.service';
 
 @Component({
   selector: 'app-checkout',

@@ -4,6 +4,9 @@
     <mat-card-content class="mt-1">
         <p class="text-sm font-semibold uppercase">{{product.name}}</p>
         <p class="font-light">{{product.price | currency:'GBP':'symbol'}}</p>
+        @if (product.category === "Prescription") {
+            <span class="bg-blue-700 text-white px-2 py-1 text-xs rounded-full">Prescription Required</span>
+        }
     </mat-card-content>
     <mat-card-actions (click)="$event.stopPropagation()">
         <button mat-stroked-button class="w-full" (click)="cartService.addItemToCart(product)">
