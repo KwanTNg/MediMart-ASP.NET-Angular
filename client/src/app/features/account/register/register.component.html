@@ -7,7 +7,13 @@
         <app-text-input label="Last name" formControlName="lastName" />
         <app-text-input label="Email address" formControlName="email" />
         <app-text-input label="Password" formControlName="password" type="password" />
-        <button [disabled]="registerForm.invalid" mat-flat-button type="submit" class="w-full py-2">Register</button>
+        <div class="flex justify-end">
+                    <mat-checkbox formControlName="agree"
+                        >
+                        I am at least 18 years old and that I agree to the Terms and Policies and Privacy Policy.
+                    </mat-checkbox>
+                </div>  
+        <button [disabled]="registerForm.invalid" mat-flat-button type="submit" class="w-full py-2 mt-4">Register</button>
     </form>
 </mat-card>
 

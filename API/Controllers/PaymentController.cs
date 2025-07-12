@@ -11,7 +11,7 @@ using API.Extensions;
 
 namespace API.Controllers;
 
-public class PaymentsController(IPaymentService paymentService,
+public class PaymentsController(IPaymentService paymentService, IOrderService orderService,
     IUnitOfWork unit, ILogger<PaymentsController> logger, IConfiguration config,
     IHubContext<NotificationHub> hubContext) : BaseApiController
 {
@@ -23,7 +23,7 @@ public class PaymentsController(IPaymentService paymentService,
     {
         var cart = await paymentService.CreateOrUpdatePaymentIntent(cartId);
         //if client change the product id or delivery method id, it will return null
-        if (cart == null) return BadRequest("Problem with your cart");
+        if (cart == null) return BadRequest("Some items are sold out!");
         return Ok(cart);
     }
 
@@ -67,6 +67,8 @@ public class PaymentsController(IPaymentService paymentService,
             var spec = new OrderSpecification(intent.Id, true);
             var order = await unit.Repository<Order>().GetEntityWithSpec(spec)
             ?? throw new Exception("Order not found");
+            
+            var connectionId = NotificationHub.GetConnectionIdByEmail(order.BuyerEmail);
 
             //check if the amount in stripe is same as in the database
             if ((long)(order.GetTotal() * 100) != intent.Amount)
@@ -76,13 +78,32 @@ public class PaymentsController(IPaymentService paymentService,
             }
             else
             {
-                //it will update in db
-                order.Status = OrderStatus.PaymentReceived;
+                try
+                {
+                    await orderService.ConfirmOrderAndReduceStockAsync(order);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    logger.LogError(ex, "Stock issue after payment succeeded");
+
+                    // Update order status and persist
+                    order.Status = OrderStatus.StockIssue;
+                    await unit.Complete();
+
+                    // Notify user via SignalR
+                    
+                    if (!string.IsNullOrEmpty(connectionId))
+                    {
+                        await hubContext.Clients.Client(connectionId).SendAsync("OrderStockIssue", ex.Message);
+                    }
+            
+                }
+
             }
+            
             await unit.Complete();
 
             //TODO: SignalR
-            var connectionId = NotificationHub.GetConnectionIdByEmail(order.BuyerEmail);
             if (!string.IsNullOrEmpty(connectionId))
             {
                 await hubContext.Clients.Client(connectionId).SendAsync("OrderCompleteNotification", order.ToDto());

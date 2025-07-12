@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { AccountService } from '../../../core/services/account.service';
 import { SnackbarService } from '../../../core/services/snackbar.service';
 import { TextInputComponent } from '../../../shared/components/text-input/text-input.component';
+import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-register',
@@ -13,7 +14,8 @@ import { TextInputComponent } from '../../../shared/components/text-input/text-i
     ReactiveFormsModule,
     MatCard,
     MatButton,
-    TextInputComponent
+    TextInputComponent,
+    MatCheckbox
 ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
@@ -29,7 +31,8 @@ export class RegisterComponent {
     firstName: ['', Validators.required],
     lastName: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
-    password: ['', Validators.required]
+    password: ['', Validators.required],
+    agree: [false, Validators.requiredTrue]
   });
 
   onSubmit() {

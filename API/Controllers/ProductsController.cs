@@ -101,7 +101,8 @@ public class ProductsController(IUnitOfWork unit) : BaseApiController
     [HttpPut("{id:int}")]
     public async Task<ActionResult> UpdateProduct(int id, CreateProductDto dto)
     {
-        var product = await unit.Repository<Product>().GetByIdAsync(id);
+        var product = await unit.Repository<Product>()
+            .GetEntityWithSpec(new ProductWithSymptomsSpecification(id));
         if (product == null)
             return NotFound("Product not found");
 
@@ -115,16 +116,13 @@ public class ProductsController(IUnitOfWork unit) : BaseApiController
         product.QuantityInStock = dto.QuantityInStock;
         product.Category = dto.Category;
 
-        // Update many-to-many symptoms
-        product.ProductSymptoms.Clear();
-        foreach (var sid in dto.SymptomIds)
-        {
-            product.ProductSymptoms.Add(new ProductSymptom
+        // Update symptoms (many-to-many)
+        product.ProductSymptoms = dto.SymptomIds
+            .Select(sid => new ProductSymptom
             {
                 SymptomId = sid,
                 ProductId = product.Id
-            });
-        }
+            }).ToList();
 
         unit.Repository<Product>().Update(product);
         if (await unit.Complete())

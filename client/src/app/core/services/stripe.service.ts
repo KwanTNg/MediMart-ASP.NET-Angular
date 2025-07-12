@@ -32,7 +32,14 @@ export class StripeService {
     if (!this.elements) {
       const stripe = await this.getStripeInstance();
       if (stripe) {
-        const cart = await firstValueFrom(this.createOrUpdatePaymentIntent());
+       let cart; 
+        try{
+        cart = await firstValueFrom(this.createOrUpdatePaymentIntent());
+      } catch (error:any) {
+        const message =
+        error?.error?.message || error?.message || 'Some items are out of stock!';
+        throw new Error(message);
+      }
         this.elements = stripe.elements(
           {clientSecret: cart.clientSecret, appearance: {labels: 'floating'}})
       } else {
@@ -54,6 +61,7 @@ export class StripeService {
       })
     )
   }
+  
 
   disposeElements() {
     this.elements = undefined;

@@ -16,9 +16,9 @@ import { CheckoutReviewComponent } from "../checkout-review/checkout-review.comp
 import { CurrencyPipe } from '@angular/common';
 import { CartService } from '../../core/services/cart.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { CheckoutService } from '../../core/services/checkout.service';
 import { OrderService } from '../../core/services/order.service';
 import { OrderToCreate, ShippingAddress } from '../../shared/models/order';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-checkout',
@@ -42,6 +42,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   private orderService = inject(OrderService);
   private snackbar = inject(SnackbarService);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
   cartService = inject(CartService);
   addressElement?: StripeAddressElement;
   paymentElement?: StripePaymentElement;
@@ -66,26 +67,36 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
     }catch (error:any) {
       this.snackbar.error(error.message);
+      this.router.navigateByUrl('/cart');
     }
   }
 
    handleAddressChange = (event: StripeAddressElementChangeEvent) => {
+    setTimeout(() => {
     this.completionStatus.update(state => {
       state.address = event.complete;
       return state;
-    })
+    });
+      this.cdr.detectChanges();
+    });
   }
   handlePaymentChange = (event: StripePaymentElementChangeEvent) => {
+    setTimeout(() => {
     this.completionStatus.update(state => {
       state.card = event.complete;
       return state;
-    })
+    });
+    this.cdr.detectChanges();
+    });
   }
   handleDeliveryChange(event: boolean) {
+    setTimeout(() => {
     this.completionStatus.update(state => {
       state.delivery = event;
       return state;
-    })
+    });
+    this.cdr.detectChanges();
+    });
   } 
   //the address will be reset whenever checkout component is disposed of
   //so user cannot get other's address even he has same stripe element
@@ -101,7 +112,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         address && firstValueFrom(this.accountService.updateAddress(address));
       }
     }
-    if (event.selectedIndex === 2) {
+    if (event.selectedIndex === 2) {   
       await firstValueFrom(this.stripeService.createOrUpdatePaymentIntent());
     }
     if (event.selectedIndex === 3) {
@@ -176,15 +187,20 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         if (result.paymentIntent?.status === 'succeeded') {
           const order = await this.createOrderModel();
           const orderResult = await firstValueFrom(this.orderService.createOrder(order));
-          if (orderResult) {
+          if (!orderResult) {
+            throw new Error('Order creation failed');
+          }
           this.orderService.orderComplete = true;
           //if sucess, remove the cart and delivery method
           this.cartService.deleteCart();
           this.cartService.selectedDelivery.set(null);
+          console.log(orderResult.status);
+          if (orderResult.status === 'StockIssue') {
+          this.router.navigateByUrl(`/orders/${orderResult.id}`);
+        } else {
           this.router.navigateByUrl('/checkout/success');
-          } else {
-            throw new Error('Order creation failed');
-          } 
+        }
+        
         } else if (result.error) {
             throw new Error(result.error.message);
         } else {

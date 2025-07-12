@@ -1,4 +1,4 @@
-import { DatePipe, CurrencyPipe } from '@angular/common';
+import { DatePipe, CurrencyPipe, NgIf } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -17,7 +17,7 @@ import { PaymentCardPipe } from '../../../shared/pipes/payment-card.pipe';
     CurrencyPipe,
     PaymentCardPipe,
     AddressPipe,
-    RouterLink
+    RouterLink,NgIf
   ],
   templateUrl: './order-detail.component.html',
   styleUrl: './order-detail.component.scss'

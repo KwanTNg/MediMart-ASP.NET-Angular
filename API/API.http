@@ -1,7 +1,12 @@
 @API_HostAddress = https://localhost:5001
 
 ###
-GET {{API_HostAddress}}/api/products
+GET {{API_HostAddress}}/api/products?pageSize=20
+Content-Type: application/json
+Accept: application/json
+
+### Get 1 product
+GET {{API_HostAddress}}/api/products/1
 Content-Type: application/json
 Accept: application/json
 
@@ -109,4 +114,32 @@ Accept: application/json
 {
   "email": "bob@test.com",
   "newRole": "Pharmacist"    
+}
+
+### Login in as Admin
+POST {{API_HostAddress}}/api/login
+Content-Type: application/json
+Accept: application/json
+
+{
+    "email": "admin@medimart.com",
+    "password": "Pa$$w0rd"
+}
+
+### Update the inventory
+PUT {{API_HostAddress}}/api/products/1
+Authorization: Bearer CfDJ8ASy-R3YRN5Pj_vJkVi6PY9kwnjId2ICiynr7fUlnso1Gq7FYWL2dPMzDjdKLN2NjjJO1VA3RxFElBDwC5Co-aadSJZY5kJK_A9oS_58uGz0ntthE6Hq-xBtckUqvm89vzT7-ZxwXXoGB1-CZO3q62wKzEDf-FrmpnJ2x6e78K2BgJEZs3mdb_gU4yNKIAADwoi4Bp_BXBxFiPLI7BDsaVAxJc44OAyBU-wi7RlNfdmVw0mKIPnBXgy2hWxiWmQSj68chunyj3OQprYvILsBb5-3gJ9IYCWBPGtalUixclVJqBYnndLlDsvkD7nF_oCy5gQgILaLDdPzHPb6zZy6ih-PvlffsylLRXMOrkDkYONBkV11a9G9lUkNp8O5IxIGrL3OEZrjC_JmEoiEjqBVxPZklWgi_P4GFTCztZFwFM1Gq5CjFlQUFj90se-s_QPyf6nt0nZOW5EW6FWBd6kBE51apPzLBIU-ajpKjKb4BP_ejQs23kVBYpTTeCHcDRhoL94f4pJQMVyeOkNzLS-bnvCQvhmfWyh9qkMEPMClHnl6b7AILe63P6EFgSsfnqvMCXgSHvaMFRkHluSv8UihcaJujHDoWCSd6GfhDvxnm3aU0Cy5yfucJbNWZvt7FgSkvz1XAxukADsrT_78_7IhI8rUiUaYiilpoCpfQ0jgMS7XLEFR9-ScTS9uOinIamqMcn7HU7CqYaHxggaBnREq1X5JFiSr2fC4bwGILN1oOBo3lMzpUBV_XkSws8s7olnz0YJadDpvY_Lpqtj5f9jW5GbRYVS1lNrpdZqudu1kGKQx
+Content-Type: application/json
+Accept: application/json
+
+{
+    "Name": "Panadol Extra",
+    "Description": "Relieves headaches, fever, and body aches.",
+    "Price": 5.99,
+    "PictureUrl": "/images/products/panadol_extra.png",
+    "Type": "Tablet",
+    "Brand": "GSK",
+    "QuantityInStock": 0,
+    "Category": "OverTheCounter",
+    "symptomIds": [1, 2]
 }

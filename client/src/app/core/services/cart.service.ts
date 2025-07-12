@@ -63,41 +63,6 @@ export class CartService {
     })
   }
 
-  // async addItemToCart(item: CartItem | Product, quantity = 1) {
-  //   const cart = this.cart() ?? this.createCart()
-  //   // Check for prescription restriction
-  //   if (this.accountService.currentUser()?.roles !== "Pharmacist" && item.category === "Prescription") {
-  //     this.snackbar.error("Please ask for prescription!");
-  //     return;
-  //   }
-  //   // If it's a Product, check stock before adding
-  //   if (this.isProduct(item)) {
-  //     try {
-  //       //firstValueFrom turns the Observable into a Promise
-  //       const product = await firstValueFrom(this.shopService.getProduct(item.id));
-  //       const productId = item.id;
-  //       const existingItem = cart.items.find(i => i.productId === productId);
-  //       const currentQuantityInCart = existingItem?.quantity ?? 0;
-      
-  //     if (product.quantityInStock === 0) {
-  //       this.snackbar.error("This product is out of stock.");
-  //       return;
-  //     }
-
-  //     if (product.quantityInStock < currentQuantityInCart + quantity) {
-  //       this.snackbar.error(`Only ${product.quantityInStock} item(s) in stock.`);
-  //       return;
-  //     }      
-  //     item = this.mapProductToCartItem(item);
-  //   } catch (error) {
-  //     this.snackbar.error("Failed to check product stock.");
-  //     return;
-  //   }
-  // }
-  //   cart.items = this.addOrUpdateItem(cart.items, item, quantity);
-  //   this.setCart(cart);
-  // }
-
 async addItemToCart(item: CartItem | Product, quantity = 1) {
   const cart = this.cart() ?? this.createCart();
 
