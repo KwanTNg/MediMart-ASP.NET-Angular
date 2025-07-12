@@ -194,12 +194,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           //if sucess, remove the cart and delivery method
           this.cartService.deleteCart();
           this.cartService.selectedDelivery.set(null);
-          console.log(orderResult.status);
-          if (orderResult.status === 'StockIssue') {
-          this.router.navigateByUrl(`/orders/${orderResult.id}`);
-        } else {
+
           this.router.navigateByUrl('/checkout/success');
-        }
         
         } else if (result.error) {
             throw new Error(result.error.message);

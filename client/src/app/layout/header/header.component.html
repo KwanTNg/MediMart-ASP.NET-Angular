@@ -10,15 +10,16 @@
             <a routerLink="/delivery" routerLinkActive="active">Delivery</a>
             <a routerLink="faq" routerLinkActive="active">FAQ</a>
             <a routerLink="contactus" routerLinkActive="active">Contact Us</a>
+            <a *appIsAdmin routerLink="order-management" routerLinkActive="active">Order Management</a>
         </nav>
         <div class="flex gap-2 items-center ml-4">
             <a routerLink="/cart" routerLinkActive="active" matBadge="{{cartService.itemCount()}}" matBadgeSize="large" class="custom-badge mt-2 mr-2">
                 <mat-icon>shopping_cart</mat-icon>
             </a>
             @if (accountService.currentUser()) {
-                <button mat-button [matMenuTriggerFor]="loginedMenu">
-                    <mat-icon>arrow_drop_down</mat-icon>
-                    <span>{{accountService.currentUser()?.email}}</span>
+                <button mat-button [matMenuTriggerFor]="loginedMenu" class="custom-badge">
+                    <mat-icon>arrow_drop_down_circle</mat-icon>
+                    <span>{{accountService.currentUser()?.firstName ?? accountService.currentUser()?.email}}</span>
                 </button>
             } @else {
             <button routerLink="/account/login" mat-stroked-button class="text-sm lg:text-base w-28">Login</button>
