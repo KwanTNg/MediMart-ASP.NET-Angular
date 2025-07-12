@@ -20,6 +20,10 @@ import { orderCompleteGuard } from './core/guards/order-complete.guard';
 import { OrderManagementComponent } from './features/admin/order-management/order-management.component';
 import { adminGuard } from './core/guards/admin.guard';
 import { SalesChartComponent } from './features/admin/charts/sales-chart/sales-chart.component';
+import { TopSellingProductsComponent } from './features/admin/charts/top-selling-products/top-selling-products.component';
+import { SalesByStatusComponent } from './features/admin/charts/sales-by-status/sales-by-status.component';
+import { RevenuePerProductComponent } from './features/admin/charts/revenue-per-product/revenue-per-product.component';
+import { ChartSummaryComponent } from './features/admin/charts/chart-summary/chart-summary.component';
 
 export const routes: Routes = [
     {path: '', component: ShopComponent},
@@ -38,6 +42,6 @@ export const routes: Routes = [
     {path: 'not-found', component: NotFoundComponent},
     {path: 'server-error', component: ServerErrorComponent},
     {path: 'order-management', component: OrderManagementComponent, canActivate: [authGuard, adminGuard]},
-    {path: 'charts', component: SalesChartComponent},
+    {path: 'chart', component: ChartSummaryComponent},
     {path: '**', redirectTo: 'not-found', pathMatch: 'full'},
 ];

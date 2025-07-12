@@ -3,6 +3,9 @@ import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http'
 import { SalesOverTime } from '../../shared/models/salesOverTime';
 import { map, Observable } from 'rxjs';
+import { TopSellingProduct } from '../../shared/models/topSellingProduct';
+import { SalesByStatus } from '../../shared/models/salesByStatus';
+import { RevenuePerProduct } from '../../shared/models/RevenuePerProduct';
 
 @Injectable({
   providedIn: 'root'
@@ -20,5 +23,27 @@ getSalesOverTime(): Observable<SalesOverTime[]> {
       })))
     );
 }
+
+getTopSellingProducts(): Observable<TopSellingProduct[]> {
+  return this.http.get<TopSellingProduct[]>(
+    this.baseUrl + 'analytics/top-selling-products',
+    { withCredentials: true }
+  );
+}
+
+getSalesByStatus(): Observable<SalesByStatus[]> {
+  return this.http.get<SalesByStatus[]>(
+    this.baseUrl + 'analytics/sales-by-status',
+    { withCredentials: true }
+  );
+}
+
+getRevenuePerProduct(): Observable<RevenuePerProduct[]> {
+  return this.http.get<RevenuePerProduct[]>(this.baseUrl + 'analytics/revenue-per-product', {
+    withCredentials: true
+  });
+}
+
+
 
 }

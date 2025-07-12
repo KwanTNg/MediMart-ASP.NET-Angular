@@ -44,9 +44,14 @@ public class OrderSpecification : BaseSpecification<Order>
         return null;
     }
 
-    public OrderSpecification(OrderStatus status) 
+    public OrderSpecification(OrderStatus status)
     : base(o => o.Status == status)
-{
-    AddInclude(o => o.OrderItems);
-}
+    {
+        AddInclude(o => o.OrderItems);
+    }
+
+    public OrderSpecification()
+    {
+        AddInclude(o => o.OrderItems);
+    }
 }

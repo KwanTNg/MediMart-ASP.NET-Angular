@@ -60,6 +60,10 @@ public class BaseSpecification<T>(Expression<Func<T, bool>>? criteria) : ISpecif
     protected void AddInclude(Expression<Func<T, object>> includeExpression)
     {
         Includes.Add(includeExpression);
+    }
+    protected void AddInclude(string includeString)
+    {
+        IncludeStrings.Add(includeString);
     }  
     protected void AddThenInclude(string includeString)
     {
