@@ -110,9 +110,6 @@ public class AnalyticsController(IUnitOfWork unit) : BaseApiController
         return Ok(revenueByProduct);
     }
 
-
-
-
 }
 
 

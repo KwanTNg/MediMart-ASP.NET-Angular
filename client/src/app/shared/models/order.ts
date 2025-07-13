@@ -31,6 +31,7 @@ export type PaymentSummary = {
 }
 
 export type OrderItem = {
+  id: number
   productId: number
   productName: string
   pictureUrl: string

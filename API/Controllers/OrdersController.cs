@@ -71,6 +71,8 @@ public class OrdersController(ICartService cartService, IUnitOfWork unit) : Base
         return Ok(ordersToReturn);
     }
 
+    //This uses User.GetEmail() to only return an order if it belongs to the currently logged-in user.
+    //Even if a user manually changes the URL to /orders/123, they will only get that order if it matches their email.
     [HttpGet("{id:int}")]
     public async Task<ActionResult<OrderDto>> GetOrderById(int id)
     {

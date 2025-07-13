@@ -13,7 +13,6 @@ import { ShopParams } from '../../shared/models/shopParams';
 import { MatPaginator, PageEvent } from '@angular/material/paginator'
 import { Pagination } from '../../shared/models/pagination';
 import { FormsModule } from '@angular/forms';
-import { CartService } from '../../core/services/cart.service';
 import { AccountService } from '../../core/services/account.service';
 
 @Component({

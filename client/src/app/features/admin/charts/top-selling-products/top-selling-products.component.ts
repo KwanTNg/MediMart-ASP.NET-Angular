@@ -44,6 +44,7 @@ export class TopSellingProductsComponent implements OnInit {
 
   ngOnInit(): void {
     this.analyticsService.getTopSellingProducts().subscribe(data => {
+      console.log(data);
       this.chartData = {
         labels: data.map(p => p.productName),
         datasets: [

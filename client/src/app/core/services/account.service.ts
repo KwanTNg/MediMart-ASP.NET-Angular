@@ -34,6 +34,10 @@ export class AccountService {
     return this.http.post(this.baseUrl + 'account/register', values);
   }
 
+  roleUpgrade(values: any) {
+    return this.http.put(this.baseUrl + 'account/change-role', values, {withCredentials: true});
+  }
+
   getUserInfo() {
     return this.http.get<User>(this.baseUrl + 'account/user-info', {withCredentials: true}).pipe(
       map(user => {

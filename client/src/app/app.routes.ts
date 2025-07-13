@@ -19,11 +19,9 @@ import { OrderDetailComponent } from './features/orders/order-detail/order-detai
 import { orderCompleteGuard } from './core/guards/order-complete.guard';
 import { OrderManagementComponent } from './features/admin/order-management/order-management.component';
 import { adminGuard } from './core/guards/admin.guard';
-import { SalesChartComponent } from './features/admin/charts/sales-chart/sales-chart.component';
-import { TopSellingProductsComponent } from './features/admin/charts/top-selling-products/top-selling-products.component';
-import { SalesByStatusComponent } from './features/admin/charts/sales-by-status/sales-by-status.component';
-import { RevenuePerProductComponent } from './features/admin/charts/revenue-per-product/revenue-per-product.component';
 import { ChartSummaryComponent } from './features/admin/charts/chart-summary/chart-summary.component';
+import { OrderItemComponent } from './features/admin/order-item/order-item.component';
+import { RoleUpgradeComponent } from './features/admin/role-upgrade/role-upgrade.component';
 
 export const routes: Routes = [
     {path: '', component: ShopComponent},
@@ -41,7 +39,9 @@ export const routes: Routes = [
     {path: 'account/register', component: RegisterComponent},
     {path: 'not-found', component: NotFoundComponent},
     {path: 'server-error', component: ServerErrorComponent},
-    {path: 'order-management', component: OrderManagementComponent, canActivate: [authGuard, adminGuard]},
-    {path: 'chart', component: ChartSummaryComponent},
+    {path: 'order-summary', component: OrderManagementComponent, canActivate: [authGuard, adminGuard]},
+    {path: 'order-item', component: OrderItemComponent, canActivate: [authGuard, adminGuard]},
+    {path: 'chart', component: ChartSummaryComponent, canActivate: [authGuard, adminGuard]},
+    {path: 'role-upgrade', component: RoleUpgradeComponent, canActivate: [authGuard, adminGuard]},
     {path: '**', redirectTo: 'not-found', pathMatch: 'full'},
 ];

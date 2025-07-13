@@ -30,7 +30,15 @@ export class SalesChartComponent implements OnInit {
     title: {
       display: true,
       text: 'Sales Over Time'
-    }
+    },
+      tooltip: {
+      callbacks: {
+        label: function (context) {
+          const value = context.raw;
+          return `£${value}`;
+        }
+        }
+      }
   },
   scales: {
     x: {

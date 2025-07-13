@@ -27,8 +27,6 @@ import { RouterLink } from '@angular/router';
   styleUrl: './order-management.component.scss'
 })
 export class OrderManagementComponent implements OnInit {
-  displayedColumns: string[] = ['id', 'buyerEmail', 'orderDate', 'status', 'action', 'total'];
-  dataSource = new MatTableDataSource<Order>([]);
   private adminService = inject(AdminService);
   orderParams = new OrderParams();
   orders: Order[] = []
@@ -53,10 +51,10 @@ export class OrderManagementComponent implements OnInit {
     this.loadOrders();
   }
 
-    onFilterSelect(event: MatSelectChange) {
-      this.orderParams.filter = event.value;
-      this.orderParams.pageNumber = 1;
-      this.loadOrders();
+  onFilterSelect(event: MatSelectChange) {
+    this.orderParams.filter = event.value;
+    this.orderParams.pageNumber = 1;
+    this.loadOrders();
     }
 
 }

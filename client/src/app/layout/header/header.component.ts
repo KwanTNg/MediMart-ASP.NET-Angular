@@ -9,6 +9,7 @@ import { MatMenu, MatMenuItem, MatMenuModule, MatMenuTrigger } from '@angular/ma
 import { AccountService } from '../../core/services/account.service';
 import { MatDivider } from "@angular/material/divider";
 import { IsAdminDirective } from '../../shared/directives/is-admin.directive';
+import { NgClass } from '@angular/common';
 
 
 @Component({
@@ -24,7 +25,8 @@ import { IsAdminDirective } from '../../shared/directives/is-admin.directive';
     MatDivider,
     MatMenu,
     MatMenuItem,
-    IsAdminDirective
+    IsAdminDirective,
+    NgClass
 ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'

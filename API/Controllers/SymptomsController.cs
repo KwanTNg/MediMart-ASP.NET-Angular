@@ -1,11 +1,14 @@
+using API.RequestHelpers;
 using Core.Entities;
 using Core.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
 public class SymptomsController(IUnitOfWork unit) : BaseApiController
 {
+    [Cache(14400)] //6hr
     [HttpGet]
     public async Task<ActionResult<Symptom>> GetSymptoms()
     {
@@ -14,6 +17,7 @@ public class SymptomsController(IUnitOfWork unit) : BaseApiController
         return Ok(symptoms);
     }
 
+    [Cache(14400)]
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Symptom>> GetSymptom(int id)
     {
@@ -22,6 +26,8 @@ public class SymptomsController(IUnitOfWork unit) : BaseApiController
         return symptom;
     }
 
+    [InvalidateCache("api/symptoms|")]
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<ActionResult<Symptom>> CreateSymptom(Symptom symptom)
     {

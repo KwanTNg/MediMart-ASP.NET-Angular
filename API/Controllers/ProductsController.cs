@@ -11,6 +11,7 @@ namespace API.Controllers;
 
 public class ProductsController(IUnitOfWork unit) : BaseApiController
 {
+    [Cache(900)] //cache live for 15 minutes
     [HttpGet]
     public async Task<ActionResult<IReadOnlyList<ProductDto>>> GetProducts([FromQuery]ProductSpecParams specParams)
     {
@@ -33,6 +34,7 @@ public class ProductsController(IUnitOfWork unit) : BaseApiController
         });
     }
 
+    [Cache(900)]
     [HttpGet("{id:int}")]
     public async Task<ActionResult<ProductDto>> GetProduct(int id)
     {
@@ -56,6 +58,8 @@ public class ProductsController(IUnitOfWork unit) : BaseApiController
         return productDto;
     }
 
+    //When this is called, all keys with pattern "api/products" in redis will be removed
+    [InvalidateCache("api/products|")]
     [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<ActionResult<Product>> CreateProduct(CreateProductDto dto)
@@ -97,6 +101,7 @@ public class ProductsController(IUnitOfWork unit) : BaseApiController
         return BadRequest("Problem creating product");
     }
 
+    [InvalidateCache("api/products|")]
     [Authorize(Roles = "Admin")]
     [HttpPut("{id:int}")]
     public async Task<ActionResult> UpdateProduct(int id, CreateProductDto dto)
@@ -132,6 +137,7 @@ public class ProductsController(IUnitOfWork unit) : BaseApiController
         return BadRequest("Problem updating the product");
     }
 
+    [InvalidateCache("api/products|")]
     [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteProduct(int id)
@@ -146,18 +152,23 @@ public class ProductsController(IUnitOfWork unit) : BaseApiController
         return BadRequest("Problem deleting the product");
     }
 
+    [Cache(14400)] //Since it is a static list, can cache longer, 6hr
     [HttpGet("brands")]
     public async Task<ActionResult<IReadOnlyList<string>>> GetBrands()
     {
         var spec = new BrandListSpecification();
         return Ok(await unit.Repository<Product>().ListAsync(spec));
     }
+
+    [Cache(14400)] 
     [HttpGet("types")]
     public async Task<ActionResult<IReadOnlyList<string>>> GetTypes()
     {
         var spec = new TypeListSpecification();
         return Ok(await unit.Repository<Product>().ListAsync(spec));
     }
+
+    [Cache(14400)] 
     [HttpGet("categories")]
     public async Task<ActionResult<IReadOnlyList<string>>> GetCategories()
     {

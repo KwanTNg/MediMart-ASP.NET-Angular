@@ -4,9 +4,23 @@
     <mat-card-content class="mt-1">
         <p class="text-sm font-semibold uppercase">{{product.name}}</p>
         <p class="font-light">{{product.price | currency:'GBP':'symbol'}}</p>
+        <div class="mt-2 flex flex-col gap-1">
         @if (product.category === "Prescription") {
-            <span class="bg-blue-700 text-white px-2 py-1 text-xs rounded-full">Prescription Required</span>
+            <span class="bg-blue-700 text-white px-2 py-1 text-xs rounded-full text-center">Prescription Required</span>
         }
+        @if (product.quantityInStock <= 50) {
+    <span
+        *appIsAdmin 
+        class="text-white px-2 py-1 text-xs rounded-full text-center"
+        [ngClass]="{
+        'bg-red-600': product.quantityInStock <= 10,
+        'bg-orange-400': product.quantityInStock > 10 && product.quantityInStock <= 30,
+        'bg-yellow-400': product.quantityInStock > 30 && product.quantityInStock <= 50
+        }"
+    >
+        {{ product.quantityInStock === 0 ? 'Out of Stock' : 'Only ' + product.quantityInStock + ' Left In Stock' }}
+    </span>}
+        </div>
     </mat-card-content>
     <mat-card-actions (click)="$event.stopPropagation()">
         <button mat-stroked-button class="w-full" (click)="cartService.addItemToCart(product)">

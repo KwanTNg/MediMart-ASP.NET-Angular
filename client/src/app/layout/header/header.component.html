@@ -1,17 +1,20 @@
-<header class="border-b p-3 w-full max-h-20 fixed top-0 z-50 bg-white">
+<header class="border-b p-3 w-full fixed top-0 z-50 bg-white" 
+[ngClass]="{'max-h-24': accountService.isAdmin, 'max-h-20': !accountService.isAdmin}">
     <div class="flex align-middle items-center justify-between max-w-screen-2xl mx-auto">
         <img routerLink="/" src="/images/logo.png" alt="app logo" class="max-h-16">
         <button class="lg:hidden custom-badge mt-2 mr-2" [matMenuTriggerFor]="menu">
             <mat-icon >menu</mat-icon>
         </button>
-        <nav class="hidden lg:flex gap-6 uppercase text-xl">
+        <nav class="hidden lg:flex flex-wrap max-w-4xl gap-x-6 uppercase text-xl">
             <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
             <a routerLink="/aboutus" routerLinkActive="active">About Us</a>
             <a routerLink="/delivery" routerLinkActive="active">Delivery</a>
             <a routerLink="faq" routerLinkActive="active">FAQ</a>
             <a routerLink="contactus" routerLinkActive="active">Contact Us</a>
-            <a *appIsAdmin routerLink="order-management" routerLinkActive="active">Order Management</a>
+            <a *appIsAdmin routerLink="order-summary" routerLinkActive="active">Order Summary</a>
+            <a *appIsAdmin routerLink="order-item" routerLinkActive="active">Order Item</a>
             <a *appIsAdmin routerLink="chart" routerLinkActive="active">Chart</a>
+            <a *appIsAdmin routerLink="role-upgrade" routerLinkActive="active">Role Upgrade</a>
         </nav>
         <div class="flex gap-2 items-center ml-4">
             <a routerLink="/cart" routerLinkActive="active" matBadge="{{cartService.itemCount()}}" matBadgeSize="large" class="custom-badge mt-2 mr-2">
@@ -36,6 +39,10 @@
   <button mat-menu-item routerLink="/delivery" routerLinkActive="active">Delivery</button>
   <button mat-menu-item routerLink="/faq" routerLinkActive="active">FAQ</button>
   <button mat-menu-item routerLink="/contactus" routerLinkActive="active">Contact Us</button>
+  <button mat-menu-item *appIsAdmin routerLink="order-summary" routerLinkActive="active">Order Summary</button>
+  <button mat-menu-item *appIsAdmin routerLink="order-item" routerLinkActive="active">Order Item</button>
+  <button mat-menu-item *appIsAdmin routerLink="chart" routerLinkActive="active">Chart</button>
+  <button mat-menu-item *appIsAdmin routerLink="role-upgrade" routerLinkActive="active">Role Upgrade</button>
 </mat-menu>
 
 <mat-menu #loginedMenu="matMenu" class="px-5">

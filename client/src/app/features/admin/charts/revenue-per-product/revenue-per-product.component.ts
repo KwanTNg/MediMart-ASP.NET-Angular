@@ -21,6 +21,14 @@ export class RevenuePerProductComponent implements OnInit {
       title: {
         display: true,
         text: 'Revenue Contribution per Product'
+      },
+      tooltip: {
+      callbacks: {
+        label: function (context) {
+          const value = context.raw;
+          return `£${value}`;
+        }
+        }
       }
     }
   };

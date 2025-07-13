@@ -29,6 +29,7 @@ public static class OrderMappingExtensions
     {
         return new OrderItemDto
         {
+            Id = orderItem.Id,
             ProductId = orderItem.ItemOrdered.ProductId,
             ProductName = orderItem.ItemOrdered.ProductName,
             PictureUrl = orderItem.ItemOrdered.PictureUrl,

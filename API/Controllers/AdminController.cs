@@ -28,5 +28,13 @@ public class AdminController(IUnitOfWork unit) : BaseApiController
         return order.ToDto();
     }
 
+    [HttpGet("order-items")]
+    public async Task<ActionResult<IReadOnlyList<OrderItemDto>>> GetOrderItems([FromQuery] PagingParams specParams)
+    {
+        var spec = new OrderItemSpecification(specParams);
+        return await CreatePagedResult(unit.Repository<OrderItem>(), spec, specParams.PageIndex,
+            specParams.PageSize, o => o.ToDto());
+    }
+
 
 }

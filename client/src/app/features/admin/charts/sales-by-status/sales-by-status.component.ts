@@ -27,6 +27,14 @@ export class SalesByStatusComponent implements OnInit {
       title: {
         display: true,
         text: 'Sales Breakdown by Status'
+      },
+      tooltip: {
+      callbacks: {
+        label: function (context) {
+          const value = context.raw;
+          return `£${value}`;
+        }
+        }
       }
     }
   };
