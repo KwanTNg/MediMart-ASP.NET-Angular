@@ -55,7 +55,7 @@ public class ProductsController(IUnitOfWork unit) : BaseApiController
                         .Select(ps => ps.SymptomId)
                         .ToList()
         };
-        return productDto;
+        return Ok(productDto);
     }
 
     //When this is called, all keys with pattern "api/products" in redis will be removed

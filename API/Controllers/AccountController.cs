@@ -2,13 +2,19 @@ using System.Security.Claims;
 using API.DTOs;
 using API.Extensions;
 using Core.Entities;
+using Core.Interfaces;
+using Core.Specifications;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+
 
 namespace API.Controllers;
 
-public class AccountController(SignInManager<AppUser> signInManager, UserManager<AppUser> userManager) : BaseApiController
+public class AccountController(SignInManager<AppUser> signInManager,
+    UserManager<AppUser> userManager, IEmailService emailService,
+    IConfiguration configuration) : BaseApiController
 {
     [HttpPost("register")]
     public async Task<ActionResult> Register(RegisterDto registerDto)
@@ -29,12 +35,13 @@ public class AccountController(SignInManager<AppUser> signInManager, UserManager
             }
             return ValidationProblem();
         }
-        
-         var roleResult = await signInManager.UserManager.AddToRoleAsync(user, "Patient");
-            if (!roleResult.Succeeded)
-            {
-                return BadRequest("Failed to assign role");
-            }
+
+        var roleResult = await signInManager.UserManager.AddToRoleAsync(user, "Patient");
+        if (!roleResult.Succeeded)
+        {
+            return BadRequest("Failed to assign role");
+        }
+        await GenerateEmailConfirmationTokenAsync(user);
 
         return Ok();
     }
@@ -101,13 +108,96 @@ public class AccountController(SignInManager<AppUser> signInManager, UserManager
         var removeResult = await userManager.RemoveFromRolesAsync(user, currentRoles);
 
         if (!removeResult.Succeeded)
-        return BadRequest("Failed to remove current roles");
+            return BadRequest("Failed to remove current roles");
 
         var addResult = await userManager.AddToRoleAsync(user, dto.NewRole);
         if (!addResult.Succeeded)
-        return BadRequest("Failed to assign new role");
+            return BadRequest("Failed to assign new role");
 
-        return Ok($"Role updated to {dto.NewRole} for user {dto.Email}");
+        return Ok();
+    }
+
+    [HttpGet("test")]
+    public async Task<ActionResult> Index()
+    {
+        UserEmailOptions options = new UserEmailOptions
+        {
+            ToEmails = new List<string>() { "test@gmail.com" },
+            PlaceHolders = new List<KeyValuePair<string, string>>()
+            {
+                new KeyValuePair<string, string>("{{UserName}}", "Nitish")
+            }
+        };
+        await emailService.SendTestEmail(options);
+        return Ok();
+    }
+
+    [HttpGet("confirm-email")]
+    public async Task<IActionResult> ConfirmEmail(string uid, string token)
+    {
+
+        if (!string.IsNullOrEmpty(uid) && !string.IsNullOrEmpty(token))
+        {
+            token = token.Replace(' ', '+');
+            var result = await ConfirmEmailAsync(uid, token);
+            if (!result.Succeeded)
+            {
+                return BadRequest("Something went wrong!");
+            }
+            return Ok();
+        }
+        return BadRequest("Something went wrong!");
+
+    }
+
+    [HttpPost("confirm-email")]
+    public async Task<IActionResult> ConfirmEmail(EmailConfirm emailConfirm)
+    {
+        var user = await GetUserByEmailAsync(emailConfirm.Email);
+        if (user == null) return NotFound("User not found");
+        if (user.EmailConfirmed)
+        {
+            return BadRequest("Email was already confirmed.");
+        }
+        await GenerateEmailConfirmationTokenAsync(user);
+        return Ok();
+    }
+
+    private async Task SendEmailConfirmationEmail(AppUser user, string token)
+    {
+        string appDomain = configuration.GetSection("Application:AppDomain").Value;
+        string confirmationLink = configuration.GetSection("Application:EmailConfirmation").Value;
+
+        UserEmailOptions options = new UserEmailOptions
+        {
+            ToEmails = new List<string>() { user.Email },
+            PlaceHolders = new List<KeyValuePair<string, string>>()
+            {
+                new KeyValuePair<string, string>("{{UserName}}", user.FirstName),
+                new KeyValuePair<string, string>("{{Link}}", string.Format(appDomain + confirmationLink,
+                    user.Id, token))
+            }
+        };
+        await emailService.SendTestEmailConfirmation(options);
+    }
+
+    private async Task<IdentityResult> ConfirmEmailAsync(string uid, string token)
+    {
+        return await userManager.ConfirmEmailAsync(await userManager.FindByIdAsync(uid), token);
+    }
+
+    private async Task GenerateEmailConfirmationTokenAsync(AppUser user)
+    {
+        var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+        if (!string.IsNullOrEmpty(token))
+        {
+            await SendEmailConfirmationEmail(user, token);
+        }
+    }
+
+    private async Task<AppUser> GetUserByEmailAsync(string email)
+    {
+        return await userManager.FindByEmailAsync(email);
     }
 
 }

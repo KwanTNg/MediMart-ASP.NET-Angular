@@ -1,0 +1,20 @@
+<div class="flex flex-col items-center justify-between gap-y-6 mt-40">
+<p class="text-lg">We have sent an email to you. Click on the link to confirm.</p>
+<p class="text-lg">Did not get any email?</p>
+
+<form *ngIf="!form.get('email')?.value" [formGroup]="form" (ngSubmit)="resendConfirmationEmail()">
+  <input
+    formControlName="email"
+    type="email"
+    placeholder="Enter your email"
+  />
+</form>
+
+<button class="bg-blue-700 text-white px-2 py-1 text-base rounded-full text-center"
+  (click)="resendConfirmationEmail()"
+  *ngIf="form.get('email')?.value"
+  [disabled]="loading"
+>
+  Resend confirmation email to {{ form.get('email')?.value }}
+</button>
+</div>

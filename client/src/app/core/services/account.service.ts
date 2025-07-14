@@ -20,6 +20,7 @@ export class AccountService {
     const roles = this.currentUser()?.roles;
     return Array.isArray(roles) ? roles.includes('Admin') : roles === 'Admin';
   })
+  private emailKey = 'user-email';
   
   login(values: any) {
     let params = new HttpParams();
@@ -68,6 +69,29 @@ export class AccountService {
         })
       })
     )
+  }
+
+  confirmEmail(uid: string, token: string) {
+    console.log(uid);
+    console.log(token);
+    const params = {uid, token};
+    return this.http.get(this.baseUrl + 'account/confirm-email', {params});
+  }
+
+  resendConfirmationEmail(email: string) {
+    return this.http.post(this.baseUrl + 'account/confirm-email', { email });
+  }
+
+  setUserEmail(email: string) {
+    localStorage.setItem(this.emailKey, email);
+  }
+
+  getUserEmail(): string | null {
+    return localStorage.getItem(this.emailKey);
+  }
+
+  clearUserEmail() {
+    localStorage.removeItem(this.emailKey);
   }
 
   

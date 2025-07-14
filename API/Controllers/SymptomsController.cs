@@ -23,7 +23,7 @@ public class SymptomsController(IUnitOfWork unit) : BaseApiController
     {
         var symptom = await unit.Repository<Symptom>().GetByIdAsync(id);
         if (symptom == null) return NotFound();
-        return symptom;
+        return Ok(symptom);
     }
 
     [InvalidateCache("api/symptoms|")]

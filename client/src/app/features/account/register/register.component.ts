@@ -39,9 +39,21 @@ export class RegisterComponent {
     this.accountService.register(this.registerForm.value).subscribe({
       next: () => {
         this.snack.success('Registration successful - you can now login');
-        this.router.navigateByUrl('/account/login');
+        const email = this.registerForm.get('email')?.value;
+        if (email) {
+          this.accountService.setUserEmail(email);
+        }
+        this.router.navigateByUrl('/register-confirm');
       },
-      error: errors => this.validationErrors = errors
-    })
-  }
+      error: errors => {this.validationErrors = errors;
+        if (Array.isArray(errors)) {
+        errors.forEach(err => this.snack.error(err)); // or just show the first one
+        // this.snack.error(errors[0]);
+      } else {
+        this.snack.error('An unexpected error occurred');
+      }
+
+    }
+  })
+}
 }

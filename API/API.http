@@ -149,3 +149,8 @@ Accept: application/json
     "Category": "OverTheCounter",
     "symptomIds": [1, 2]
 }
+
+###
+GET {{API_HostAddress}}/api/account/test
+Content-Type: application/json
+Accept: application/json
