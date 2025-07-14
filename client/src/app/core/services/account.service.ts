@@ -94,5 +94,14 @@ export class AccountService {
     localStorage.removeItem(this.emailKey);
   }
 
+  forgotPassword(values: { email: string; emailSent: boolean }) {
+    return this.http.post(this.baseUrl + 'account/forgot-password', values);
+}
+
+  resetPassword(model: { userId: string, token: string, newPassword: string }) {
+  return this.http.post(this.baseUrl + 'account/reset-password', model);
+}
+
+
   
 }

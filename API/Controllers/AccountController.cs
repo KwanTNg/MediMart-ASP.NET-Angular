@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using System.Threading.Tasks;
 using API.DTOs;
 using API.Extensions;
 using Core.Entities;
@@ -163,6 +164,38 @@ public class AccountController(SignInManager<AppUser> signInManager,
         return Ok();
     }
 
+    [HttpPost("forgot-password")]
+    public async Task<IActionResult> ForgotPassword(ForgotPassword forgotPassword)
+    {
+        if (forgotPassword.EmailSent == false)
+        {
+            var user = await GetUserByEmailAsync(forgotPassword.Email);
+            if (user != null)
+            {
+                await GenerateForgotPasswordTokenAsync(user);
+            }
+            forgotPassword.EmailSent = true;
+        }
+        return Ok();
+    }
+
+    [HttpPost("reset-password")]
+    public async Task<IActionResult> ResetPassword(ResetPassword resetPassword)
+    {
+        if (ModelState.IsValid)
+        {
+            resetPassword.Token = resetPassword.Token.Replace(' ', '+');
+            var result = await ResetPasswordAsync(resetPassword);
+            if (result.Succeeded)
+            {
+                return Ok();
+            }
+            return BadRequest("Failed to reset password!");
+
+        }
+        return BadRequest("Something went wrong.");
+    }
+
     private async Task SendEmailConfirmationEmail(AppUser user, string token)
     {
         string appDomain = configuration.GetSection("Application:AppDomain").Value;
@@ -186,6 +219,12 @@ public class AccountController(SignInManager<AppUser> signInManager,
         return await userManager.ConfirmEmailAsync(await userManager.FindByIdAsync(uid), token);
     }
 
+    private async Task<IdentityResult> ResetPasswordAsync(ResetPassword resetPassword)
+    {
+        return await userManager.ResetPasswordAsync(await userManager.FindByIdAsync(resetPassword.UserId),
+            resetPassword.Token, resetPassword.NewPassword);
+    }
+
     private async Task GenerateEmailConfirmationTokenAsync(AppUser user)
     {
         var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -195,9 +234,36 @@ public class AccountController(SignInManager<AppUser> signInManager,
         }
     }
 
+    private async Task GenerateForgotPasswordTokenAsync(AppUser user)
+    {
+        var token = await userManager.GeneratePasswordResetTokenAsync(user);
+        if (!string.IsNullOrEmpty(token))
+        {
+            await SendForgotPasswordEmail(user, token);
+        }
+    }
+
     private async Task<AppUser> GetUserByEmailAsync(string email)
     {
         return await userManager.FindByEmailAsync(email);
+    }
+
+    private async Task SendForgotPasswordEmail(AppUser user, string token)
+    {
+        string appDomain = configuration.GetSection("Application:AppDomain").Value;
+        string confirmationLink = configuration.GetSection("Application:ForgotPassword").Value;
+
+        UserEmailOptions options = new UserEmailOptions
+        {
+            ToEmails = new List<string>() { user.Email },
+            PlaceHolders = new List<KeyValuePair<string, string>>()
+            {
+                new KeyValuePair<string, string>("{{UserName}}", user.FirstName),
+                new KeyValuePair<string, string>("{{Link}}", string.Format(appDomain + confirmationLink,
+                    user.Id, token))
+            }
+        };
+        await emailService.SendEmailForFogotPassword(options);
     }
 
 }

@@ -24,6 +24,8 @@ import { OrderItemComponent } from './features/admin/order-item/order-item.compo
 import { RoleUpgradeComponent } from './features/admin/role-upgrade/role-upgrade.component';
 import { ConfirmEmailComponent } from './features/account/email/confirm-email/confirm-email.component';
 import { RegisterConfirmComponent } from './features/account/email/register-confirm/register-confirm.component';
+import { ForgotPasswordComponent } from './features/account/email/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './features/account/email/reset-password/reset-password.component';
 
 export const routes: Routes = [
     {path: '', component: ShopComponent},
@@ -47,5 +49,7 @@ export const routes: Routes = [
     {path: 'role-upgrade', component: RoleUpgradeComponent, canActivate: [authGuard, adminGuard]},
     {path: 'confirm-email', component: ConfirmEmailComponent},
     {path: 'register-confirm', component: RegisterConfirmComponent},
+    {path: 'forgot-password', component: ForgotPasswordComponent},
+    {path: 'reset-password', component: ResetPasswordComponent},
     {path: '**', redirectTo: 'not-found', pathMatch: 'full'},
 ];

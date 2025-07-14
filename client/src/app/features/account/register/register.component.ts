@@ -7,6 +7,7 @@ import { AccountService } from '../../../core/services/account.service';
 import { SnackbarService } from '../../../core/services/snackbar.service';
 import { TextInputComponent } from '../../../shared/components/text-input/text-input.component';
 import { MatCheckbox } from '@angular/material/checkbox';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-register',
@@ -15,7 +16,8 @@ import { MatCheckbox } from '@angular/material/checkbox';
     MatCard,
     MatButton,
     TextInputComponent,
-    MatCheckbox
+    MatCheckbox,
+    MatProgressSpinnerModule
 ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
@@ -26,6 +28,7 @@ export class RegisterComponent {
   private router = inject(Router);
   private snack = inject(SnackbarService);
   validationErrors?: string[];
+  loading = false;
 
   registerForm = this.fb.group({
     firstName: ['', Validators.required],
@@ -36,6 +39,7 @@ export class RegisterComponent {
   });
 
   onSubmit() {
+    this.loading = true;
     this.accountService.register(this.registerForm.value).subscribe({
       next: () => {
         this.snack.success('Registration successful - you can now login');
@@ -53,6 +57,9 @@ export class RegisterComponent {
         this.snack.error('An unexpected error occurred');
       }
 
+    },
+    complete: () => {
+      this.loading = false;
     }
   })
 }
