@@ -26,6 +26,8 @@ import { ConfirmEmailComponent } from './features/account/email/confirm-email/co
 import { RegisterConfirmComponent } from './features/account/email/register-confirm/register-confirm.component';
 import { ForgotPasswordComponent } from './features/account/email/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './features/account/email/reset-password/reset-password.component';
+import { TwoFaSetupComponent } from './features/account/two-fa-setup/two-fa-setup.component';
+import { TwoFactorAuthComponent } from './features/account/two-factor-auth/two-factor-auth.component';
 
 export const routes: Routes = [
     {path: '', component: ShopComponent},
@@ -51,5 +53,7 @@ export const routes: Routes = [
     {path: 'register-confirm', component: RegisterConfirmComponent},
     {path: 'forgot-password', component: ForgotPasswordComponent},
     {path: 'reset-password', component: ResetPasswordComponent},
+    {path: 'two-fa-setup', component: TwoFaSetupComponent},
+    {path: 'two-factor-auth', component: TwoFactorAuthComponent},
     {path: '**', redirectTo: 'not-found', pathMatch: 'full'},
 ];

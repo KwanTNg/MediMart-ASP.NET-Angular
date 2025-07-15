@@ -1,0 +1,13 @@
+<mat-card class="max-w-lg mx-auto mt-32 p-8 custom-card">
+    <form [formGroup]="form" (ngSubmit)="verify2FA()">
+        <div class="text-center mb-6">
+            <h1 class="text-lg font-semibold text-primary">Open Microsoft Authenticator and enter the 6-digit code below</h1>
+        </div>
+        <input formControlName="email" type="hidden" />
+        <mat-form-field appearance="outline" class="w-full mb-4">
+            <mat-label>Code</mat-label>
+            <input formControlName="code" type="text" placeholder="Code" matInput />
+        </mat-form-field>
+        <button [disabled]="form.invalid" mat-flat-button type="submit" class="w-full py-2">Submit</button>
+    </form>
+</mat-card>

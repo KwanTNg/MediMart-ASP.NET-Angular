@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using System.Threading.Tasks;
 using API.DTOs;
 using API.Extensions;
 using Core.Entities;
@@ -8,7 +7,6 @@ using Core.Specifications;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 
 namespace API.Controllers;
@@ -48,6 +46,111 @@ public class AccountController(SignInManager<AppUser> signInManager,
     }
 
     [Authorize]
+    [HttpGet("enable-2fa")]
+    public async Task<IActionResult> Enable2FA()
+    {
+        var user = await userManager.GetUserAsync(User);
+        var key = await userManager.GetAuthenticatorKeyAsync(user);
+
+        if (string.IsNullOrEmpty(key))
+        {
+            await userManager.ResetAuthenticatorKeyAsync(user);
+            key = await userManager.GetAuthenticatorKeyAsync(user);
+        }
+
+        var email = await userManager.GetEmailAsync(user);
+        var authenticatorUri = $"otpauth://totp/Medimart:{email}?secret={key}&issuer=Medimart&digits=6";
+
+        return Ok(new { key, qrCodeUrl = authenticatorUri });
+    }
+
+    [Authorize]
+    [HttpPost("verify-2fa")]
+    public async Task<IActionResult> Verify2FA(TwoFAVerificationDto twoFAVerificationDto)
+    {
+        var user = await userManager.GetUserAsync(User);
+        if (user == null) return Unauthorized();
+        var result = await userManager.VerifyTwoFactorTokenAsync(user,
+            TokenOptions.DefaultAuthenticatorProvider, twoFAVerificationDto.Code);
+
+        if (!result) return BadRequest("Invalid verification code");
+
+        user.TwoFactorEnabled = true;
+        await userManager.UpdateAsync(user);
+
+        return Ok();
+    }
+
+    [Authorize]
+    [HttpPost("disable-2fa")]
+    public async Task<IActionResult> Disable2FA()
+    {
+        var user = await userManager.GetUserAsync(User);
+        if (user == null)
+            return Unauthorized();
+        var disableResult = await userManager.SetTwoFactorEnabledAsync(user, false);
+        if (!disableResult.Succeeded)
+            return BadRequest("Failed to disable 2FA");
+        // Reset authenticator key
+        await userManager.ResetAuthenticatorKeyAsync(user);
+        return Ok();
+    }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(LoginDto loginDto)
+    {
+        var user = await userManager.FindByEmailAsync(loginDto.Email);
+        if (user == null) return Unauthorized("Invalid email or password");
+        
+        if (!await userManager.IsEmailConfirmedAsync(user))
+                return BadRequest("Email not confirmed");
+
+        if (await userManager.IsLockedOutAsync(user))
+            return Unauthorized(new { message = "Account locked", accessFailedCount = user.AccessFailedCount, isLockedOut = true });
+
+        if (!await userManager.CheckPasswordAsync(user, loginDto.Password))
+        {
+            await userManager.AccessFailedAsync(user);
+            return Unauthorized(new { message = "Invalid email or password", accessFailedCount = user.AccessFailedCount });
+        }
+        
+        await userManager.ResetAccessFailedCountAsync(user);
+
+        if (await userManager.GetTwoFactorEnabledAsync(user))
+        {
+            // Temporarily sign in the user without persistence, pending 2FA verification
+            await signInManager.SignInAsync(user, isPersistent: false);
+            return Ok(new { require2FA = true, userId = user.Id });
+        }
+
+        // Normal Login
+        var result = await signInManager.PasswordSignInAsync(user, loginDto.Password,
+            isPersistent: true, lockoutOnFailure: false);
+        if (result.Succeeded)
+        {
+            return Ok(new { require2FA = false });
+        }
+
+        return BadRequest("Login failed");
+        
+    }
+
+    [HttpPost("2fa-login")]
+    public async Task<IActionResult> TwoFactorLogin(TwoFactorLoginDto twoFactorLoginDto)
+    {
+        var user = await userManager.FindByEmailAsync(twoFactorLoginDto.Email);
+        if (user == null) return Unauthorized("Invalid attempt");
+
+        var is2faTokenValid = await userManager.VerifyTwoFactorTokenAsync(user,
+            TokenOptions.DefaultAuthenticatorProvider, twoFactorLoginDto.Code);
+
+        if (!is2faTokenValid) return BadRequest("Invalid 2FA code");
+
+        await signInManager.SignInAsync(user, isPersistent: true);
+        return Ok();
+    }
+
+    [Authorize]
     [HttpPost("logout")]
     public async Task<ActionResult> Logout()
     {
@@ -67,6 +170,7 @@ public class AccountController(SignInManager<AppUser> signInManager,
             user.FirstName,
             user.LastName,
             user.Email,
+            user.TwoFactorEnabled,
             Address = user.Address?.ToDto(),
             Roles = User.FindFirstValue(ClaimTypes.Role)
         });

@@ -26,7 +26,7 @@ export class AccountService {
     let params = new HttpParams();
     params = params.append('useCookies', true);
     //It uses the default identity route
-    return this.http.post<User>(this.baseUrl + 'login', values, {params, withCredentials: true}).pipe(
+    return this.http.post<User>(this.baseUrl + 'account/login', values, {params, withCredentials: true}).pipe(
       tap(() => this.signalrService.createHubConnection())
     )
   }
@@ -34,6 +34,22 @@ export class AccountService {
   register(values: any) {
     return this.http.post(this.baseUrl + 'account/register', values);
   }
+
+  get2FASetUp() {
+    return this.http.get< {qrCodeUrl: string}>(this.baseUrl + 'account/enable-2fa', {withCredentials:true});
+  }
+
+  verify2FA(code: string) {
+    return this.http.post(this.baseUrl + 'account/verify-2fa', {code}, {withCredentials:true});
+  }
+
+  verify2FALogin(values: any) {
+    return this.http.post(this.baseUrl + 'account/2fa-login', values);
+  }
+
+  disable2FA() {
+    return this.http.post(this.baseUrl + 'account/disable-2fa', {}, { withCredentials: true });
+}
 
   roleUpgrade(values: any) {
     return this.http.put(this.baseUrl + 'account/change-role', values, {withCredentials: true});

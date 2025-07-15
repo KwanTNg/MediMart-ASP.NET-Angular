@@ -4,6 +4,8 @@ export type User = {
     email: string;
     address: Address;
     roles: string;
+    require2FA: boolean;
+    twoFactorEnabled: boolean;
 }
 
 export type Address = {
