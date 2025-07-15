@@ -28,6 +28,7 @@ import { ForgotPasswordComponent } from './features/account/email/forgot-passwor
 import { ResetPasswordComponent } from './features/account/email/reset-password/reset-password.component';
 import { TwoFaSetupComponent } from './features/account/two-fa-setup/two-fa-setup.component';
 import { TwoFactorAuthComponent } from './features/account/two-factor-auth/two-factor-auth.component';
+import { ChatbotComponent } from './features/chatbox/chatbox.component';
 
 export const routes: Routes = [
     {path: '', component: ShopComponent},
@@ -55,5 +56,6 @@ export const routes: Routes = [
     {path: 'reset-password', component: ResetPasswordComponent},
     {path: 'two-fa-setup', component: TwoFaSetupComponent},
     {path: 'two-factor-auth', component: TwoFactorAuthComponent},
+    {path: 'chatbot', component: ChatbotComponent},
     {path: '**', redirectTo: 'not-found', pathMatch: 'full'},
 ];

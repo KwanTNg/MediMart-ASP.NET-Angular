@@ -44,7 +44,7 @@ export class AccountService {
   }
 
   verify2FALogin(values: any) {
-    return this.http.post(this.baseUrl + 'account/2fa-login', values);
+    return this.http.post(this.baseUrl + 'account/2fa-login', values, { withCredentials: true });
   }
 
   disable2FA() {

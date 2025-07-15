@@ -4,6 +4,7 @@ using API.Extensions;
 using Core.Entities;
 using Core.Interfaces;
 using Core.Specifications;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -116,11 +117,15 @@ public class AccountController(SignInManager<AppUser> signInManager,
         
         await userManager.ResetAccessFailedCountAsync(user);
 
+        // Temporarily sign in the user without persistence, pending 2FA verification
         if (await userManager.GetTwoFactorEnabledAsync(user))
         {
-            // Temporarily sign in the user without persistence, pending 2FA verification
+            var isMachineRemembered = await signInManager.IsTwoFactorClientRememberedAsync(user);
+            if (!isMachineRemembered)
+            {
             await signInManager.SignInAsync(user, isPersistent: false);
-            return Ok(new { require2FA = true, userId = user.Id });
+            return Ok(new { require2FA = true, email = user.Email });
+            }
         }
 
         // Normal Login
@@ -154,7 +159,7 @@ public class AccountController(SignInManager<AppUser> signInManager,
     [HttpPost("logout")]
     public async Task<ActionResult> Logout()
     {
-        await signInManager.SignOutAsync();
+        await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
         return NoContent();
     }
 

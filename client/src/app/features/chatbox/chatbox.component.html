@@ -1,0 +1,15 @@
+<div class="p-4 border rounded shadow max-w-xl mx-auto">
+  <h2 class="text-lg font-bold mb-4">Ask our AI Assistant</h2>
+
+  <div *ngFor="let msg of messages" [ngClass]="msg.from === 'user' ? 'text-right' : 'text-left'" class="mb-2">
+    <span class="inline-block px-4 py-2 rounded" [ngClass]="msg.from === 'user' ? 'bg-blue-100' : 'bg-gray-100'">
+      {{ msg.text }}
+    </span>
+  </div>
+
+  <div class="flex mt-4 gap-2">
+    <input [(ngModel)]="userInput" class="border p-2 flex-grow rounded" placeholder="Type a message..." />
+    <button (click)="sendMessage()" class="bg-blue-500 text-white px-4 py-2 rounded">Send</button>
+  </div>
+</div>
+

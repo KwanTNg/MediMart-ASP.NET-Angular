@@ -17,8 +17,7 @@ import { NgIf } from '@angular/common';
     MatFormField,
     MatInput,
     MatLabel,
-    MatButton,
-    NgIf
+    MatButton
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'

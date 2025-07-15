@@ -45,6 +45,7 @@ export class TwoFactorAuthComponent implements OnInit {
   }
 
   verify2FA() {
+    console.log(this.form.value);
     this.accountService.verify2FALogin(this.form.value).subscribe({
       next: () => {
       this.accountService.getUserInfo().subscribe();
