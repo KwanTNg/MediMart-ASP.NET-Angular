@@ -29,6 +29,10 @@ import { ResetPasswordComponent } from './features/account/email/reset-password/
 import { TwoFaSetupComponent } from './features/account/two-fa-setup/two-fa-setup.component';
 import { TwoFactorAuthComponent } from './features/account/two-factor-auth/two-factor-auth.component';
 import { ChatbotComponent } from './features/chatbox/chatbox.component';
+import { SalesChartComponent } from './features/admin/charts/sales-chart/sales-chart.component';
+import { TopSellingProductsComponent } from './features/admin/charts/top-selling-products/top-selling-products.component';
+import { SalesByStatusComponent } from './features/admin/charts/sales-by-status/sales-by-status.component';
+import { RevenuePerProductComponent } from './features/admin/charts/revenue-per-product/revenue-per-product.component';
 
 export const routes: Routes = [
     {path: '', component: ShopComponent},
@@ -57,5 +61,9 @@ export const routes: Routes = [
     {path: 'two-fa-setup', component: TwoFaSetupComponent},
     {path: 'two-factor-auth', component: TwoFactorAuthComponent},
     {path: 'chatbot', component: ChatbotComponent},
+    {path: 'sales-over-time', component: SalesChartComponent},
+    {path: 'top-selling-products', component: TopSellingProductsComponent},
+    {path: 'sales-by-status', component: SalesByStatusComponent},
+    {path: 'revenue-per-product', component: RevenuePerProductComponent},
     {path: '**', redirectTo: 'not-found', pathMatch: 'full'},
 ];

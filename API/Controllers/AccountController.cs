@@ -120,12 +120,8 @@ public class AccountController(SignInManager<AppUser> signInManager,
         // Temporarily sign in the user without persistence, pending 2FA verification
         if (await userManager.GetTwoFactorEnabledAsync(user))
         {
-            var isMachineRemembered = await signInManager.IsTwoFactorClientRememberedAsync(user);
-            if (!isMachineRemembered)
-            {
             await signInManager.SignInAsync(user, isPersistent: false);
             return Ok(new { require2FA = true, email = user.Email });
-            }
         }
 
         // Normal Login

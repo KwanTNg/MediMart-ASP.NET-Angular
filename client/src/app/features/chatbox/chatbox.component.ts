@@ -1,12 +1,13 @@
 import { Component, inject } from '@angular/core';
 import { ChatbotService } from '../../core/services/chatbot.service';
-import { NgClass, NgFor } from '@angular/common';
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
 
 
 @Component({
   selector: 'app-chatbox',
-  imports: [NgFor, NgClass, FormsModule],
+  imports: [NgFor, NgClass, FormsModule, NgIf, MatButton],
   templateUrl: './chatbox.component.html',
   styleUrl: './chatbox.component.scss'
 })
@@ -14,6 +15,7 @@ export class ChatbotComponent {
   private chatbotService = inject(ChatbotService);
   userInput = '';
   messages: { from: 'user' | 'bot', text: string }[] = [];
+  isOpen = false;
 
 
   sendMessage() {
@@ -28,4 +30,8 @@ export class ChatbotComponent {
       this.messages.push({ from: 'bot', text: reply });
     });
   }
+
+  toggleChat() {
+    this.isOpen = !this.isOpen;
+}
 }

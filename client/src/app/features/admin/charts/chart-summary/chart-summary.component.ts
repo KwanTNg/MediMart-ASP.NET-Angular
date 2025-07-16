@@ -3,10 +3,11 @@ import { SalesChartComponent } from "../sales-chart/sales-chart.component";
 import { TopSellingProductsComponent } from "../top-selling-products/top-selling-products.component";
 import { SalesByStatusComponent } from "../sales-by-status/sales-by-status.component";
 import { RevenuePerProductComponent } from "../revenue-per-product/revenue-per-product.component";
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-chart-summary',
-  imports: [SalesChartComponent, TopSellingProductsComponent, SalesByStatusComponent, RevenuePerProductComponent],
+  imports: [SalesChartComponent, TopSellingProductsComponent, SalesByStatusComponent, RevenuePerProductComponent, RouterLink],
   templateUrl: './chart-summary.component.html',
   styleUrl: './chart-summary.component.scss'
 })
