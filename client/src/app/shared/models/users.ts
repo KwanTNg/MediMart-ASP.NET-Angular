@@ -6,6 +6,7 @@ export type User = {
     roles: string;
     require2FA: boolean;
     twoFactorEnabled: boolean;
+    id: string;
 }
 
 export type Address = {

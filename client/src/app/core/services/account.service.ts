@@ -6,6 +6,8 @@ import { map, tap } from 'rxjs';
 import { Injector } from '@angular/core';
 import { CartService } from './cart.service'; // still import normally
 import { SignalrService } from './signalr.service';
+import { PresenceService } from './presence.service';
+import { HubConnectionState } from '@microsoft/signalr';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +17,7 @@ export class AccountService {
   private http = inject(HttpClient);
   private injector = inject(Injector);
   private signalrService = inject(SignalrService); 
+  private presenceService = inject(PresenceService)
   currentUser = signal<User | null>(null);
   isAdmin = computed(() => {
     const roles = this.currentUser()?.roles;
@@ -27,7 +30,16 @@ export class AccountService {
     params = params.append('useCookies', true);
     //It uses the default identity route
     return this.http.post<User>(this.baseUrl + 'account/login', values, {params, withCredentials: true}).pipe(
-      tap(() => this.signalrService.createHubConnection())
+      tap(() => {
+        // this.signalrService.createHubConnection()
+      // this.getUserInfo().subscribe()
+      {this.signalrService.createHubConnection()
+        if (this.presenceService.hubConnection?.state !== HubConnectionState.Connected) {
+          this.presenceService.createHubConnection()
+        }
+      }
+      }
+    )
     )
   }
 
@@ -59,6 +71,9 @@ export class AccountService {
     return this.http.get<User>(this.baseUrl + 'account/user-info', {withCredentials: true}).pipe(
       map(user => {
         this.currentUser.set(user);
+        // if (this.presenceService.hubConnection?.state !== HubConnectionState.Connected) {
+        //   this.presenceService.createHubConnection(user)
+        // }
         return user;
       })
     )

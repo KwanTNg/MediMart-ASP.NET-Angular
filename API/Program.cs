@@ -4,10 +4,13 @@ using Core.Entities;
 using Core.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Services;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +36,38 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(config =>
 });
 builder.Services.AddSingleton<ICartService, CartService>();
 builder.Services.AddSingleton<IResponseCacheService, ResponseCacheService>();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["TokenKey"] ?? throw new Exception("TokenKey missing"))
+            ),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+
+        // Enable token reading from SignalR query string
+        // options.Events = new JwtBearerEvents
+        // {
+        //     OnMessageReceived = context =>
+        //     {
+        //         var accessToken = context.Request.Query["access_token"];
+        //         var path = context.HttpContext.Request.Path;
+
+        //         if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
+        //         {
+        //             context.Token = accessToken;
+        //         }
+
+        //         return Task.CompletedTask;
+        //     }
+        // };
+    });
+
+
 builder.Services.AddAuthorization();
 builder.Services.AddIdentityApiEndpoints<AppUser>()
     .AddRoles<IdentityRole>()
@@ -61,6 +96,7 @@ builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
     options.TokenLifespan = TimeSpan.FromMinutes(30);
 });
 builder.Services.AddSignalR();
+builder.Services.AddSingleton<PresenceTracker>();
 builder.Services.AddHttpClient();
 
 var app = builder.Build();
@@ -76,6 +112,7 @@ app.MapControllers();
 //Change to customer router with api/
 app.MapGroup("api").MapIdentityApi<AppUser>();
 app.MapHub<NotificationHub>("/hub/notifications");
+app.MapHub<PresenceHub>("hubs/presence");
 
 try
 {
@@ -93,3 +130,17 @@ catch (Exception ex)
 }
 
 app.Run();
+
+// options.Events = new JwtBearerEvents
+// {
+//     OnMessageReceived = ContextBoundObject =>
+//     {
+//         var accessToken = context.Request.Query["access_token"];
+//         var path = context.HttpContext.Request.Path;
+//         if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
+//         {
+//             ContextBoundObject.Token = accessToken;
+//         }
+//         return Task.CompletedTask;
+//     }
+// };
