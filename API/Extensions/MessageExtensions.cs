@@ -28,9 +28,9 @@ public static class MessageExtensions
         {
             Id = message.Id,
             SenderId = message.SenderId,
-            SenderDisplayName = message.Sender.FirstName,
+            SenderDisplayName = message.Sender.FirstName ?? "No Name",
             RecipientId = message.RecipientId,
-            RecipientDisplayName = message.Recipient.FirstName,
+            RecipientDisplayName = message.Recipient.FirstName ?? "No Name",
             Content = message.Content,
             DateRead = message.DateRead,
             MessageSent = message.MessageSent

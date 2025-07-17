@@ -34,12 +34,12 @@
 }
 
 .mat-mdc-snack-bar-container.snack-error {
-    --mdc-snackbar-container-color: rgb(243, 96, 96);
+    --mdc-snackbar-container-color: red;
     --mat-snack-bar-button-color: #fff;
     --mdc-snackbar-supporting-text-color: #fff;
 }
 .mat-mdc-snack-bar-container.snack-success {
-    --mdc-snackbar-container-color: rgb(51, 234, 51);
+    --mdc-snackbar-container-color: rgb(25, 217, 25);
     --mat-snack-bar-button-color: #fff;
     --mdc-snackbar-supporting-text-color: #fff;
 }

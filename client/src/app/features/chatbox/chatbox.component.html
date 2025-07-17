@@ -20,7 +20,7 @@
     </div>
 
     <div class="flex gap-2">
-      <input [(ngModel)]="userInput" class="text-sm pl-3 text-gray-950 border border-gray-300 rounded-full flex-1" placeholder="Type a message..." />
+      <input [(ngModel)]="userInput" (keydown.enter)="sendMessage()" class="text-sm pl-3 text-gray-950 border border-gray-300 rounded-full flex-1" placeholder="Type a message..." />
       <button mat-flat-button (click)="sendMessage()">Send</button>
     </div>
   </div>

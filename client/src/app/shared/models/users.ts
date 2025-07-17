@@ -7,6 +7,8 @@ export type User = {
     require2FA: boolean;
     twoFactorEnabled: boolean;
     id: string;
+    emailConfirmed: boolean;
+    
 }
 
 export type Address = {

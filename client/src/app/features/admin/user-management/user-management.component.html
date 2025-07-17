@@ -1,0 +1,44 @@
+<div class="mx-auto mt-10 min-h-screen">
+        <div class="flex justify-between items-center mt-2 max-w-screen-2xl mx-auto">
+             <h2 class="font-semibold text-2xl mb-6 text-center mt-7">Users</h2>
+                
+        </div>
+    <div class="flex flex-col">
+        <div class="w-full">
+            <table class="min-w-full divide-y divide-gray-200 cursor-pointer">
+                <thead class="bg-gray-50">
+                    <tr class="uppercase text-gray-600 text-sm">
+                        <th class="text-center px-6 py-3">User Id</th>
+                        <th class="text-left">First Name</th>
+                        <th class="text-left">Last Name</th>
+                        <th class="text-left">Email</th>
+                        <th class="text-left">Email Confirmed</th>       
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @for (user of users; track user.id) {
+                        <tr routerLink="/user-management/{{user.id}}" class="hover:bg-gray-100">
+                            <th class="px-6 py-3"># {{user.id}}</th>
+                            <td>{{user.firstName}}</td>
+                            <td>{{user.lastName}}</td>
+                            <td>{{user.email}}</td>
+                            <td>{{user.emailConfirmed ? "Yes" : "No"}}</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+                    <mat-paginator 
+                        class="custom-card"
+                        [pageSizeOptions]="[10, 100, 500]"
+                        [length]="totalUsers"
+                        [pageSize]="userParams.pageSize"
+                        (page) = onPageChange($event)
+                        showFirstLastButtons
+                        >
+                    </mat-paginator>
+        </div>
+    </div>
+</div>
+
+
+

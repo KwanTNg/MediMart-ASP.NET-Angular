@@ -1,0 +1,65 @@
+<div class="flex flex-col w-full h-[72vh]">
+  <div class="flex flex-col flex-grow overflow-auto space-y-3 pr-2">
+    @for (message of messages(); track message.id) {
+      <div
+        class="flex"
+        [ngClass]="{
+          'justify-start': !message.currentUserSender,
+          'justify-end': message.currentUserSender
+        }"
+      >
+  <div
+  class="flex"
+  [ngClass]="{
+    'justify-start': !message.currentUserSender,
+    'justify-end': message.currentUserSender
+  }"
+>
+  <div
+    class="inline-block px-3 py-2 rounded text-sm max-w-xs sm:max-w-md md:max-w-lg"
+    [ngClass]="{
+      'bg-gray-100 text-left': !message.currentUserSender,
+      'bg-blue-100 text-right': message.currentUserSender
+    }"
+  >
+    <div class="font-semibold mb-1">
+      {{ message.senderDisplayName }}
+      <span class="text-xs text-gray-500 ml-2">
+        {{ message.messageSent | date: 'short' }}
+      </span>
+    </div>
+
+    <div class="mb-1">{{ message.content }}</div>
+
+    <div class="text-xs text-gray-500">
+      @if (message.currentUserSender && message.dateRead) {
+        Seen {{ message.dateRead | timeAgo }}
+      } @else if (message.currentUserSender && !message.dateRead) {
+        Not read
+      } @else {
+        Delivered
+      }
+    </div>
+  </div>
+</div>
+      </div>
+    }
+    <div #messageEndRef></div>
+  </div>
+
+  <!-- Input and Send Button -->
+  <div class="flex w-full items-center gap-2 mt-3">
+   <input
+  [(ngModel)]="messageContent"
+  (keydown.enter)="sendMessage()"
+  placeholder="Type a message..."
+  class="text-sm pl-3 pr-4 py-2 text-gray-950 border border-gray-400 rounded-full flex-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
+    />
+
+
+    <button mat-icon-button color="primary" (click)="sendMessage()" class="rounded-full">
+      <mat-icon>send</mat-icon>
+    </button>
+  </div>
+</div>
+

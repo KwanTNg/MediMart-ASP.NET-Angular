@@ -5,12 +5,14 @@ using Core.Interfaces;
 using Core.Specifications;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace API.Controllers;
 
 
 public class ProductsController(IUnitOfWork unit) : BaseApiController
 {
+    [EnableRateLimiting("fixed")]
     [Cache(900)] //cache live for 15 minutes
     [HttpGet]
     public async Task<ActionResult<IReadOnlyList<ProductDto>>> GetProducts([FromQuery]ProductSpecParams specParams)

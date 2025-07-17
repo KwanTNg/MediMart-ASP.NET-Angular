@@ -10,6 +10,8 @@ using StackExchange.Redis;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.RateLimiting;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -98,6 +100,18 @@ builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
 builder.Services.AddSignalR();
 builder.Services.AddSingleton<PresenceTracker>();
 builder.Services.AddHttpClient();
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddFixedWindowLimiter("fixed", o =>
+    {
+        o.PermitLimit = 5;
+        o.Window = TimeSpan.FromSeconds(10);
+        o.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        o.QueueLimit = 2;
+    });
+    options.RejectionStatusCode = 429;
+});
+
 
 var app = builder.Build();
 
@@ -107,6 +121,7 @@ app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowCredentials()
     .WithOrigins("http://localhost:4200","https://localhost:4200"));
 
 app.UseAuthentication();
+app.UseRateLimiter();
 app.UseAuthorization();
 app.MapControllers();
 //Change to customer router with api/
@@ -130,17 +145,3 @@ catch (Exception ex)
 }
 
 app.Run();
-
-// options.Events = new JwtBearerEvents
-// {
-//     OnMessageReceived = ContextBoundObject =>
-//     {
-//         var accessToken = context.Request.Query["access_token"];
-//         var path = context.HttpContext.Request.Path;
-//         if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
-//         {
-//             ContextBoundObject.Token = accessToken;
-//         }
-//         return Task.CompletedTask;
-//     }
-// };

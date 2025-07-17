@@ -33,6 +33,10 @@ import { SalesChartComponent } from './features/admin/charts/sales-chart/sales-c
 import { TopSellingProductsComponent } from './features/admin/charts/top-selling-products/top-selling-products.component';
 import { SalesByStatusComponent } from './features/admin/charts/sales-by-status/sales-by-status.component';
 import { RevenuePerProductComponent } from './features/admin/charts/revenue-per-product/revenue-per-product.component';
+import { MemberMessagesComponent } from './features/message/member-messages/member-messages.component';
+import { Messages } from './features/message/messages/messages.component';
+import { UserManagementComponent } from './features/admin/user-management/user-management.component';
+import { UserDetailComponent } from './features/admin/user-detail/user-detail.component';
 
 export const routes: Routes = [
     {path: '', component: ShopComponent},
@@ -65,5 +69,10 @@ export const routes: Routes = [
     {path: 'top-selling-products', component: TopSellingProductsComponent},
     {path: 'sales-by-status', component: SalesByStatusComponent},
     {path: 'revenue-per-product', component: RevenuePerProductComponent},
+    {path: 'member-messages/:id', component: MemberMessagesComponent},
+    {path: 'support-messages', component: MemberMessagesComponent },
+    {path: 'messages', component: Messages},
+    {path: 'user-management', component: UserManagementComponent},
+    {path: 'user-management/:id', component: UserDetailComponent},
     {path: '**', redirectTo: 'not-found', pathMatch: 'full'},
 ];

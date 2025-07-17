@@ -29,6 +29,9 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       if (err.status === 404) {
         router.navigateByUrl('/not-found');
       }
+      if (err.status === 429) {
+        snackbar.error(err.error.title || err.error)
+      }
       if (err.status === 500) {
         const navigationExtras: NavigationExtras = { state: {error: err.error}}
         router.navigateByUrl('/server-error', navigationExtras);

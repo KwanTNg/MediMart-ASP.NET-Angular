@@ -13,6 +13,7 @@
             <a routerLink="/contactus" routerLinkActive="active">Contact Us</a>
             <a *appIsAdmin routerLink="order-summary" routerLinkActive="active">Order Summary</a>
             <a *appIsAdmin routerLink="order-item" routerLinkActive="active">Order Item</a>
+            <a *appIsAdmin routerLink="user-management" routerLinkActive="active">User Management</a>
             <a *appIsAdmin routerLink="chart" routerLinkActive="active">Chart</a>
             <a *appIsAdmin routerLink="role-upgrade" routerLinkActive="active">Role Upgrade</a>
         </nav>
@@ -57,6 +58,10 @@
     <button mat-menu-item class="px-3" routerLink="/two-fa-setup">
         <mat-icon>security</mat-icon>
         Security
+    </button>
+    <button mat-menu-item class="px-3" routerLink="/support-messages">
+        <mat-icon>contact_support</mat-icon>
+        Support
     </button>
     <mat-divider></mat-divider>
     <button mat-menu-item class="px-3" (click)="logout()">

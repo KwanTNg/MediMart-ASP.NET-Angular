@@ -1,3 +1,3 @@
 UPDATE AspNetUsers
-SET EmailConfirmed = 1
-WHERE Email = 'tom2@test.com';
+SET FirstName = 'Administrator'
+WHERE Email = 'admin@medimart.com';

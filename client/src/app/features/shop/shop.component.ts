@@ -14,6 +14,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator'
 import { Pagination } from '../../shared/models/pagination';
 import { FormsModule } from '@angular/forms';
 import { AccountService } from '../../core/services/account.service';
+import { SnackbarService } from '../../core/services/snackbar.service';
 
 @Component({
   selector: 'app-shop',
@@ -35,6 +36,7 @@ export class ShopComponent implements OnInit {
   private shopService = inject(ShopService);
   private accountService = inject(AccountService);
   private dialogService = inject(MatDialog);
+  private snack = inject(SnackbarService);
   products?: Pagination<Product>;
 
   sortOptions = [
@@ -61,7 +63,7 @@ initializeShop() {
 getProducts() {
   this.shopService.getProducts(this.shopParams).subscribe({
       next: response => this.products = response,
-      error: error => console.log(error),
+      error: error => this.snack.error("Too Many Requests!"),
   })
 }
 
