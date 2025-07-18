@@ -46,5 +46,11 @@ public class StoreContext(DbContextOptions options) : IdentityDbContext<AppUser>
             .WithMany(m => m.MessageSent)
             .OnDelete(DeleteBehavior.Restrict);
 
+        modelBuilder.Entity<Product>()
+            .HasOne(p => p.Photo)
+            .WithOne(p => p.Product)
+            .HasForeignKey<Photo>(p => p.ProductId)
+            .OnDelete(DeleteBehavior.Cascade);
+
     }
 }

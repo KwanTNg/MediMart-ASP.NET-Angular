@@ -13,6 +13,9 @@ using System.Text;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.SignalR;
+using Core.Settings;
+//Infrastructure references Core
+//API references both Infrastructure and Core
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -40,6 +43,8 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(config =>
 builder.Services.AddSingleton<ICartService, CartService>();
 builder.Services.AddSingleton<IResponseCacheService, ResponseCacheService>();
 builder.Services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
+builder.Services.AddScoped<IPhotoService, PhotoService>();
+builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -52,23 +57,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuer = false,
             ValidateAudience = false
         };
-
-        // Enable token reading from SignalR query string
-        // options.Events = new JwtBearerEvents
-        // {
-        //     OnMessageReceived = context =>
-        //     {
-        //         var accessToken = context.Request.Query["access_token"];
-        //         var path = context.HttpContext.Request.Path;
-
-        //         if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
-        //         {
-        //             context.Token = accessToken;
-        //         }
-
-        //         return Task.CompletedTask;
-        //     }
-        // };
     });
 
 
