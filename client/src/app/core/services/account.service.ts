@@ -8,6 +8,7 @@ import { CartService } from './cart.service'; // still import normally
 import { SignalrService } from './signalr.service';
 import { PresenceService } from './presence.service';
 import { HubConnectionState } from '@microsoft/signalr';
+import { MessageRService} from './message-r.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,8 @@ export class AccountService {
   private http = inject(HttpClient);
   private injector = inject(Injector);
   private signalrService = inject(SignalrService); 
-  private presenceService = inject(PresenceService)
+  private presenceService = inject(PresenceService);
+  private messageRService = inject(MessageRService);
   currentUser = signal<User | null>(null);
   isAdmin = computed(() => {
     const roles = this.currentUser()?.roles;
@@ -34,9 +36,10 @@ export class AccountService {
         // this.signalrService.createHubConnection()
       // this.getUserInfo().subscribe()
       {this.signalrService.createHubConnection()
-        if (this.presenceService.hubConnection?.state !== HubConnectionState.Connected) {
-          this.presenceService.createHubConnection()
-        }
+        // if (this.presenceService.hubConnection?.state !== HubConnectionState.Connected) {
+        //   this.presenceService.createHubConnection()
+        // }
+        this.messageRService.startConnection();
       }
       }
     )
@@ -87,7 +90,9 @@ export class AccountService {
     const cartService = this.injector.get(CartService); // Lazy injection
     cartService.cart.set(null); // Access the signal safely
     return this.http.post(this.baseUrl + 'account/logout', {}, {withCredentials: true}).pipe(
-      tap(() => this.signalrService.stopHubConnection())
+      tap(() => {this.signalrService.stopHubConnection()
+        this.messageRService.stopConnection()
+      })
     );
   }
 

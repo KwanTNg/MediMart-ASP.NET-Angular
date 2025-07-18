@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from "./layout/header/header.component";
 import { NgChartsModule } from 'ng2-charts';
 import { AccountService } from './core/services/account.service';
@@ -16,5 +16,13 @@ import { ChatbotComponent } from "./features/chatbox/chatbox.component";
 export class AppComponent {
   title = 'MediMart';
   accountService = inject(AccountService);
+  router = inject(Router);
+
+  shouldShowChatbox(): boolean {
+    // Routes hide the chatbot
+    const hiddenRoutes = ['/support-messages'];
+
+    return !hiddenRoutes.includes(this.router.url);
+  }
  
 }

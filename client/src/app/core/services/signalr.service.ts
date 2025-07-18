@@ -20,8 +20,10 @@ export class SignalrService {
     .withAutomaticReconnect()
     .build();
   
-    this.hubConnection.start()
-    .catch(error => console.log(error))
+    this.hubConnection.start().then(() => {
+    console.log('SignalR connection started');
+    }).
+    catch(error => console.log(error))
 
     this.hubConnection.on('OrderCompleteNotification', (order: Order) => {
       //once we get the order from backend, we set it here

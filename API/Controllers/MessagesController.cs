@@ -1,17 +1,19 @@
 using System;
 using API.DTOs;
 using API.Extensions;
+using API.SignalR;
 using Core.Entities;
 using Core.Interfaces;
 using Core.Specifications;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace API.Controllers;
 
 [Authorize]
-public class MessagesController(IUnitOfWork unit, UserManager<AppUser> userManager) : BaseApiController
+public class MessagesController(IUnitOfWork unit, UserManager<AppUser> userManager, IHubContext<MessageHub> hub) : BaseApiController
 {
     //Login as sender, need to provide recipient ID in order to send message
     [HttpPost]
@@ -37,10 +39,16 @@ public class MessagesController(IUnitOfWork unit, UserManager<AppUser> userManag
             Sender = senderUser,
             RecipientId = recipient.Id,
             Recipient = recipient,
-            Content = createMessageDto.Content
+            Content = createMessageDto.Content,
+            MessageSent = DateTime.UtcNow
         };
         unit.Repository<Message>().Add(message);
-        if (await unit.Complete()) return message.ToDto();
+        if (await unit.Complete())
+        {
+            Console.WriteLine($"Sending real-time message to: {recipient.Id} with content: {message.Content}");
+            await hub.Clients.User(recipient.Id).SendAsync("NewMessage", message.ToDto());
+            return message.ToDto();
+        }
         return BadRequest("Failed to send message");
     }
 
@@ -133,7 +141,12 @@ public class MessagesController(IUnitOfWork unit, UserManager<AppUser> userManag
         };
 
         unit.Repository<Message>().Add(message);
-        await unit.Complete();
+        if (await unit.Complete())
+        {
+        // Send the message to the admin in real time
+        await hub.Clients.User(admin.Id).SendAsync("NewMessage", message.ToDto());
+        return Ok(message.ToDto());
+        }
 
         return Ok(message.ToDto());
     }

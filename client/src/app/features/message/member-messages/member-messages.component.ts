@@ -7,6 +7,7 @@ import { TimeAgoPipe } from '../../../shared/pipes/time-ago.pipe';
 import { ActivatedRoute } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatIconButton } from '@angular/material/button';
+import { MessageRService } from '../../../core/services/message-r.service';
 
 
 @Component({
@@ -18,6 +19,7 @@ import { MatIconButton } from '@angular/material/button';
 export class MemberMessagesComponent implements OnInit {
   @ViewChild('messageEndRef') messageEndRef! : ElementRef;
   private messageService = inject(MessageService);
+  private messageRService = inject(MessageRService);
   private route = inject(ActivatedRoute);
   protected messages = signal<Message[]>([]);
   protected messageContent = '';
@@ -45,6 +47,26 @@ export class MemberMessagesComponent implements OnInit {
     this.recipientId = routeId;
     this.loadMessages();
   }
+
+  // Subscribe to real-time messages
+  this.messageRService.message$.subscribe(message => {
+    if (!message) return;
+
+   
+    console.log('Appended message:', message); // <-- Debug log
+  
+    // Support mode: Admin is sender
+    if (this.isSupportMode) {
+      this.messages.update(msgs => [...msgs, { ...message, currentUserSender: false }]);
+      this.scrollToBottom();
+    }
+
+    // Member-to-admin mode
+    if (!this.isSupportMode && message.senderId === this.recipientId) {
+      this.messages.update(msgs => [...msgs, { ...message, currentUserSender: false }]);
+      this.scrollToBottom();
+    }
+  });
 }
 
 

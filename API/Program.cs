@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.AspNetCore.SignalR;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -38,6 +39,7 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(config =>
 });
 builder.Services.AddSingleton<ICartService, CartService>();
 builder.Services.AddSingleton<IResponseCacheService, ResponseCacheService>();
+builder.Services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -98,7 +100,7 @@ builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
     options.TokenLifespan = TimeSpan.FromMinutes(30);
 });
 builder.Services.AddSignalR();
-builder.Services.AddSingleton<PresenceTracker>();
+// builder.Services.AddSingleton<PresenceTracker>();
 builder.Services.AddHttpClient();
 builder.Services.AddRateLimiter(options =>
 {
@@ -127,7 +129,8 @@ app.MapControllers();
 //Change to customer router with api/
 app.MapGroup("api").MapIdentityApi<AppUser>();
 app.MapHub<NotificationHub>("/hub/notifications");
-app.MapHub<PresenceHub>("hubs/presence");
+// app.MapHub<PresenceHub>("hubs/presence");
+app.MapHub<MessageHub>("/hubs/message");
 
 try
 {
