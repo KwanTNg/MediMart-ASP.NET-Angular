@@ -8,5 +8,7 @@ public class ProductWithSymptomsSpecification : BaseSpecification<Product>
         : base(p => p.Id == id)
     {
         AddInclude(p => p.ProductSymptoms);
+        AddThenInclude("ProductSymptoms.Symptom");
+        AddInclude(p => p.Photo); 
     }
 }

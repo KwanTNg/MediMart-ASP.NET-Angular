@@ -12,7 +12,7 @@ export const adminGuard: CanActivateFn = (route, state) => {
     return true;
   } else {
     snack.error('Nope');
-    router.navigateByUrl('/shop');
+    router.navigateByUrl('/');
     return false;
   }
 };

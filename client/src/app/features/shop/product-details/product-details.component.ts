@@ -10,6 +10,8 @@ import { MatDivider } from '@angular/material/divider';
 import { CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CartService } from '../../../core/services/cart.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ProductUpdateDialogComponent } from '../product-update-dialog/product-update-dialog.component';
 
 @Component({
   selector: 'app-product-details',
@@ -30,6 +32,7 @@ export class ProductDetailsComponent implements OnInit {
   private shopService = inject(ShopService);
   private activatedRoute = inject(ActivatedRoute);
   private cartService = inject(CartService);
+  private dialogService = inject(MatDialog);
   product?: Product;
   quantityInCart = 0;
   quantity = 0;
@@ -47,6 +50,7 @@ export class ProductDetailsComponent implements OnInit {
     this.shopService.getProduct(+id).subscribe({
       next: product => {
         this.product = product,
+        console.log(this.product);
         this.updateQuantityInCart();
       },
       error: error => console.log(error)
@@ -79,6 +83,24 @@ export class ProductDetailsComponent implements OnInit {
 
   getButtonText() {
     return this.quantityInCart > 0 ? 'Update cart' : 'Add to cart'
-  }  
+  } 
+
+  openProductUpdateDialog() {
+    const dialogRef = this.dialogService.open(ProductUpdateDialogComponent, {
+      width: '90vw',
+      maxWidth: '900px',
+      maxHeight: '90vh',
+      data: {
+        product: this.product
+      }
+    });
+    dialogRef.afterClosed().subscribe({
+      next: result => {
+        if (result) {
+          // this.shopService.updateProduct();
+        }
+      }
+    })
+  }
 
 }

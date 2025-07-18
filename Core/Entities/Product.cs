@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Core.Entities;
 
 public class Product : BaseEntity
@@ -11,6 +13,7 @@ public class Product : BaseEntity
     public int QuantityInStock { get; set; }
     public required string Category { get; set; }
     //One to one
+    [JsonIgnore]
     public Photo? Photo { get; set; }
 
     //Navigation property for many-to-many symptoms

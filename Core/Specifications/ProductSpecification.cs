@@ -30,7 +30,16 @@ public class ProductSpecification : BaseSpecification<Product>
                 AddOrderBy(x => x.Name);
                 break;
         }
-            
+
+    }
+    
+    // Constructor for fetching a single product by ID
+    public ProductSpecification(int id)
+        : base(p => p.Id == id)
+    {
+        AddInclude(p => p.ProductSymptoms);
+        AddThenInclude("ProductSymptoms.Symptom");
+        AddInclude(p => p.Photo); 
     }
 
 }

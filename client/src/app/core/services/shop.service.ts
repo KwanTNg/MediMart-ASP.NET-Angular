@@ -76,8 +76,16 @@ getCategories() {
 getSymptoms() {
   if (this.symptoms.length > 0) return;
   return this.http.get<Symptom[]>(this.baseUrl + 'symptoms').subscribe({
-    next: response => this.symptoms = response
+    next: response => {this.symptoms = response
+    console.log(this.symptoms)}
   })
+}
+
+updateProduct(id: number, formData: FormData) {
+  for (const [key, value] of formData.entries()) {
+  console.log(`${key}:`, value);
+}
+  return this.http.put(`${this.baseUrl}products/${id}`, formData, {withCredentials: true});
 }
 
 }

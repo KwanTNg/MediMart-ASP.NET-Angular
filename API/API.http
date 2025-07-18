@@ -12,7 +12,7 @@ Content-Type: application/json
 Accept: application/json
 
 ### Get 1 product
-GET {{API_HostAddress}}/api/products/1
+GET {{API_HostAddress}}/api/products/20
 Content-Type: application/json
 Accept: application/json
 

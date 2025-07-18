@@ -8,4 +8,5 @@ export type Product = {
     brand: string;
     quantityInStock: number;
     category: string;
+    symptomIds: number[];
 }

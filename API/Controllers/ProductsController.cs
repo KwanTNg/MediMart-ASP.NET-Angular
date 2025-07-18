@@ -3,6 +3,7 @@ using API.RequestHelpers;
 using Core.Entities;
 using Core.Interfaces;
 using Core.Specifications;
+using Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -36,11 +37,11 @@ public class ProductsController(IUnitOfWork unit, IPhotoService photoService) : 
         });
     }
 
-    [Cache(900)]
     [HttpGet("{id:int}")]
     public async Task<ActionResult<ProductDto>> GetProduct(int id)
     {
-        var product = await unit.Repository<Product>().GetByIdAsync(id);
+        var spec = new ProductSpecification(id);
+        var product = await unit.Repository<Product>().GetEntityWithSpec(spec);
         if (product == null) return NotFound();
         var productDto = new ProductDto
         {
@@ -127,7 +128,9 @@ public async Task<ActionResult<Product>> CreateProduct([FromForm] CreateProductD
 
     return BadRequest("Problem creating product");
 }
-
+ 
+    [InvalidateCache("api/products|")]
+    [Authorize(Roles = "Admin")]
     [HttpPut("{id:int}")]
     public async Task<ActionResult> UpdateProduct([FromForm] CreateProductDto dto, int id)
     {

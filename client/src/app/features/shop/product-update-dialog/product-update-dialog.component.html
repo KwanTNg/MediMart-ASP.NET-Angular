@@ -1,0 +1,87 @@
+@if(loading) {<mat-progress-spinner
+  *ngIf="loading"
+  mode="indeterminate"
+  diameter="40"
+  color="primary"
+  class="mx-auto my-4 block"
+></mat-progress-spinner>
+} @else {
+
+<div class="bg-white">
+<h2 class="text-xl font-semibold text-center my-4 ">Update Product</h2>
+<form #updateForm="ngForm" (ngSubmit)="updateProduct()" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-6 pb-6">
+
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>Name</mat-label>
+    <input matInput [(ngModel)]="product.name" name="name" required />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>Quantity In Stock</mat-label>
+    <input matInput type="number" [(ngModel)]="product.quantityInStock" name="quantityInStock" required />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>Price</mat-label>
+    <input matInput type="number" step="0.01" [(ngModel)]="product.price" name="price" required />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>Type</mat-label>
+    <input matInput [(ngModel)]="product.type" name="type" required />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>Brand</mat-label>
+    <input matInput [(ngModel)]="product.brand" name="brand" required />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>Category</mat-label>
+    <input matInput [(ngModel)]="product.category" name="category" required />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>Description</mat-label>
+    <textarea matInput [(ngModel)]="product.description" name="description" required ></textarea>
+  </mat-form-field>
+
+  <div
+  class="border-2 border-dashed rounded-md p-4 text-center bg-gray-50"
+  (drop)="onDrop($event)"
+  (dragover)="onDragOver($event)"
+  (dragleave)="onDragLeave($event)"
+  [class.border-blue-500]="isDragging"
+  [class.bg-blue-50]="isDragging"
+>
+  <p class="text-sm text-gray-500 pb-3">Drag & drop an image here, or click to select one</p>
+  <input type="file" (change)="onFileSelected($event)" accept="image/*" class="hidden" #fileInput />
+  <button mat-stroked-button type="button" (click)="fileInput.click()">Choose Image</button>
+
+  <div *ngIf="uploadingImage" class="text-sm text-blue-600 mt-2">Uploading...</div>
+  <img *ngIf="imagePreviewUrl || product.pictureUrl"
+  [src]="imagePreviewUrl || product.pictureUrl" class="mt-4 max-h-48 mx-auto rounded" />
+</div>
+
+<div class="md:col-span-2 lg:col-span-3">
+  <label class="block text-sm font-medium text-gray-700 mb-2">Symptoms</label>
+  <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+    <div *ngFor="let symptom of shopService.symptoms">
+      <mat-checkbox
+        [(ngModel)]="symptom.selected"
+        (change)="onSymptomChange(symptom)"
+        name="symptom-{{ symptom.id }}"
+      >
+        {{ symptom.symptomName }}
+      </mat-checkbox>
+    </div>
+  </div>
+</div>
+
+  <div class="text-center pt-4 flex justify-center gap-4">
+    <button [disabled]="loading" mat-flat-button color="primary" type="submit">Save Changes</button>
+    <button mat-stroked-button type="button" (click)="dialogRef.close()">Cancel</button>
+  </div>
+</form>
+</div>
+}
