@@ -7,7 +7,10 @@
                     <img class="w-full" src="{{product.pictureUrl}}" alt="product image">
                 </div>
                 <div>
-                    <button mat-stroked-button (click)="openProductUpdateDialog()" class="mb-2">Update Product</button>
+                    <div class="flex flex-row gap-x-6 mb-4">
+                    <button mat-stroked-button (click)="openProductUpdateDialog()" class="mb-2 w-28">Update</button>
+                    <button mat-stroked-button (click)="removeProduct(product.id)" class="mb-2 w-28">Delete</button>
+                    </div>
                     <h1 class="text-2xl font-semibold text-gray-900">{{product.name}}</h1>
                     <p>You have {{quantityInCart}} of this item in your cart</p>
                     <div class="mt-4 items-center gap-4 flex">

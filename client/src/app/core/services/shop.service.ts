@@ -81,11 +81,19 @@ getSymptoms() {
   })
 }
 
+createProduct(formData: FormData) {
+  return this.http.post<Product>(`${this.baseUrl}products`, formData, {withCredentials: true}); 
+}
+
 updateProduct(id: number, formData: FormData) {
   for (const [key, value] of formData.entries()) {
   console.log(`${key}:`, value);
 }
   return this.http.put(`${this.baseUrl}products/${id}`, formData, {withCredentials: true});
+}
+
+deleteProduct(id: number) {
+  return this.http.delete(`${this.baseUrl}products/${id}`, {withCredentials: true})
 }
 
 }

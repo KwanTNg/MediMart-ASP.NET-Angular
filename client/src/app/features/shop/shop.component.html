@@ -31,10 +31,17 @@
         </form>
         </div> 
         <div class="flex justify-center gap-x-3 flex-shrink-0 md:ml-auto">
+        @if (accountService.isAdmin()) {
+            <button mat-stroked-button (click)="openProductCreateDialog()" class="w-28">
+                <mat-icon>add</mat-icon>
+                Create
+            </button>
+        } @else {
         <button mat-stroked-button (click)="openSymptomFilterDialog()" class="w-28">
             <mat-icon>local_hospital</mat-icon>
             Symptoms
         </button>
+    }
         <button mat-stroked-button (click)="openFilterDialog()" class="w-28">
             <mat-icon>filter_list</mat-icon>
             Filters

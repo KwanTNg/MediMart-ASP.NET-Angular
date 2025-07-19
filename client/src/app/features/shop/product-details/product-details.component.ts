@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ShopService } from '../../../core/services/shop.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Product } from '../../../shared/models/product';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
@@ -12,6 +12,8 @@ import { FormsModule } from '@angular/forms';
 import { CartService } from '../../../core/services/cart.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ProductUpdateDialogComponent } from '../product-update-dialog/product-update-dialog.component';
+import { SnackbarService } from '../../../core/services/snackbar.service';
+import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-product-details',
@@ -33,6 +35,9 @@ export class ProductDetailsComponent implements OnInit {
   private activatedRoute = inject(ActivatedRoute);
   private cartService = inject(CartService);
   private dialogService = inject(MatDialog);
+  private dialog = inject(MatDialog);
+  private snack = inject(SnackbarService);
+  private router = inject(Router);
   product?: Product;
   quantityInCart = 0;
   quantity = 0;
@@ -88,19 +93,36 @@ export class ProductDetailsComponent implements OnInit {
   openProductUpdateDialog() {
     const dialogRef = this.dialogService.open(ProductUpdateDialogComponent, {
       width: '90vw',
-      maxWidth: '900px',
+      maxWidth: '1700px',
       maxHeight: '90vh',
       data: {
-        product: this.product
+        product: this.product,
+        mode: 'edit'
       }
     });
-    dialogRef.afterClosed().subscribe({
-      next: result => {
-        if (result) {
-          // this.shopService.updateProduct();
-        }
-      }
-    })
   }
+
+removeProduct(id: number) {
+  const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+    width: '350px',
+    data: {
+      title: 'Confirm Delete',
+      message: 'Are you sure you want to delete this product? This action cannot be undone.'
+    }
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+      this.shopService.deleteProduct(id).subscribe({
+        next: () => {
+          this.snack.success("Product Deleted!");
+          this.router.navigateByUrl('/');
+          },
+        error: () => this.snack.error("Cannot Delete Product!"),
+      });
+    }
+  });
+}
+
 
 }

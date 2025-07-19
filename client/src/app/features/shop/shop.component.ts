@@ -15,6 +15,7 @@ import { Pagination } from '../../shared/models/pagination';
 import { FormsModule } from '@angular/forms';
 import { AccountService } from '../../core/services/account.service';
 import { SnackbarService } from '../../core/services/snackbar.service';
+import { ProductUpdateDialogComponent } from './product-update-dialog/product-update-dialog.component';
 
 @Component({
   selector: 'app-shop',
@@ -34,7 +35,7 @@ import { SnackbarService } from '../../core/services/snackbar.service';
 })
 export class ShopComponent implements OnInit {
   private shopService = inject(ShopService);
-  private accountService = inject(AccountService);
+  protected accountService = inject(AccountService);
   private dialogService = inject(MatDialog);
   private snack = inject(SnackbarService);
   products?: Pagination<Product>;
@@ -128,5 +129,16 @@ onSearchChange() {
   this.shopParams.pageNumber = 1;
   this.getProducts();
 }
+
+openProductCreateDialog() {
+     const dialogRef = this.dialogService.open(ProductUpdateDialogComponent, {
+      width: '90vw',
+      maxWidth: '1100px',
+      maxHeight: '90vh',
+      data: {
+        mode: 'create'
+      }
+    });  
+  }
 
 }

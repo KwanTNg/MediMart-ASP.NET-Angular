@@ -11,6 +11,8 @@ import { MatCheckbox } from '@angular/material/checkbox';
 import { MatSelectionList } from '@angular/material/list';
 import { Router } from '@angular/router';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { SnackbarService } from '../../../core/services/snackbar.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-product-update-dialog',
@@ -32,16 +34,31 @@ export class ProductUpdateDialogComponent implements OnDestroy {
   shopService = inject(ShopService);
   dialogRef = inject(MatDialogRef<ProductUpdateDialogComponent>);
   router = inject(Router);
-  data = inject(MAT_DIALOG_DATA);
+  private snack = inject(SnackbarService);
+  data = inject(MAT_DIALOG_DATA) as {
+    product?: Product;
+    mode: 'create' | 'edit';
+  };
 
-  product: Product = this.data.product;
+  product: Product = this.data.product ?? {
+    id: 0,
+    name: '',
+    description: '',
+    price: 0,
+    brand: '',
+    type: '',
+    quantityInStock: 0,
+    category: '',
+    pictureUrl: '',
+    symptomIds: []
+  };
   imageFile?: File;
   isDragging = false;
   uploadingImage = false;
   imagePreviewUrl?: string;
   loading = false
 
-  updateProduct() {
+  submitProduct() {
   this.loading = true;
   const formData = new FormData();
 
@@ -64,16 +81,31 @@ export class ProductUpdateDialogComponent implements OnDestroy {
     formData.append('picture', this.imageFile);
   }
 
-  this.shopService.updateProduct(this.product.id, formData).subscribe({
-    next: () => {this.dialogRef.close(true);
-      this.loading = false;
-      this.router.navigateByUrl("/");
+  const request = this.data.mode === 'edit'
+    ? this.shopService.updateProduct(this.product.id, formData)
+    : this.shopService.createProduct(formData);
+
+  request.pipe(
+    finalize(() => this.loading = false) // Always run this
+  ).subscribe({
+    next: res => {
+      this.dialogRef.close(true);
+      this.snack.success(
+        this.data.mode === 'edit'
+          ? 'Product updated successfully'
+          : 'Product created successfully'
+      );
+      this.router.navigateByUrl('/');
     },
-    error: (err) => {console.error('Update failed', err);
-      this.loading = false;
+    error: err => {
+      console.error(`${this.data.mode} failed`, err);
+      const message = err?.error?.message || 'Something went wrong. Please try again.';
+      this.snack.error(message);
     }
   });
 }
+ 
+
 
   onDragOver(event: DragEvent) {
     event.preventDefault();
@@ -113,7 +145,7 @@ ngOnDestroy() {
   }
 }
 
-  onSymptomChange(symptom: any) {
+onSymptomChange(symptom: any) {
   const index = this.product.symptomIds.indexOf(symptom.id);
   if (symptom.selected && index === -1) {
     this.product.symptomIds.push(symptom.id);

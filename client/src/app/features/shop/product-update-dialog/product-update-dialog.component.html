@@ -1,15 +1,11 @@
-@if(loading) {<mat-progress-spinner
-  *ngIf="loading"
-  mode="indeterminate"
-  diameter="40"
-  color="primary"
-  class="mx-auto my-4 block"
-></mat-progress-spinner>
+@if(loading) {<div class="flex items-center justify-center min-h-screen">
+        <mat-spinner diameter="50"></mat-spinner>
+    </div>
 } @else {
 
 <div class="bg-white">
-<h2 class="text-xl font-semibold text-center my-4 ">Update Product</h2>
-<form #updateForm="ngForm" (ngSubmit)="updateProduct()" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-6 pb-6">
+<h2 class="text-xl font-semibold text-center my-4 ">{{ data.mode === 'edit' ? 'Update' : 'Create' }} Product</h2>
+<form #updateForm="ngForm" (ngSubmit)="submitProduct()" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 px-6 pb-6">
 
   <mat-form-field appearance="outline" class="w-full">
     <mat-label>Name</mat-label>
@@ -60,7 +56,7 @@
 
   <div *ngIf="uploadingImage" class="text-sm text-blue-600 mt-2">Uploading...</div>
   <img *ngIf="imagePreviewUrl || product.pictureUrl"
-  [src]="imagePreviewUrl || product.pictureUrl" class="mt-4 max-h-48 mx-auto rounded" />
+  [src]="imagePreviewUrl || product.pictureUrl" class="mt-4 max-h-32 mx-auto rounded" />
 </div>
 
 <div class="md:col-span-2 lg:col-span-3">
