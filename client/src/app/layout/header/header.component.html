@@ -11,11 +11,8 @@
             <a routerLink="/delivery" routerLinkActive="active">Delivery</a>
             <a routerLink="/faq" routerLinkActive="active">FAQ</a>
             <a routerLink="/contactus" routerLinkActive="active">Contact Us</a>
-            <a *appIsAdmin routerLink="order-summary" routerLinkActive="active">Order Summary</a>
-            <a *appIsAdmin routerLink="order-item" routerLinkActive="active">Order Item</a>
-            <a *appIsAdmin routerLink="user-management" routerLinkActive="active">User Management</a>
-            <a *appIsAdmin routerLink="chart" routerLinkActive="active">Chart</a>
-            <a *appIsAdmin routerLink="role-upgrade" routerLinkActive="active">Role Upgrade</a>
+            <a *appIsAdmin routerLink="/admin" routerLinkActive="active">Management</a>
+            <a *appIsAdmin routerLink="/chart" routerLinkActive="active">Data Visualisation</a>
         </nav>
         <div class="flex gap-2 items-center ml-4">
             <a routerLink="/cart" routerLinkActive="active" matBadge="{{cartService.itemCount()}}" matBadgeSize="large" class="custom-badge mt-2 mr-2">
@@ -40,10 +37,8 @@
   <button mat-menu-item routerLink="/delivery" routerLinkActive="active">Delivery</button>
   <button mat-menu-item routerLink="/faq" routerLinkActive="active">FAQ</button>
   <button mat-menu-item routerLink="/contactus" routerLinkActive="active">Contact Us</button>
-  <button mat-menu-item *appIsAdmin routerLink="order-summary" routerLinkActive="active">Order Summary</button>
-  <button mat-menu-item *appIsAdmin routerLink="order-item" routerLinkActive="active">Order Item</button>
-  <button mat-menu-item *appIsAdmin routerLink="chart" routerLinkActive="active">Chart</button>
-  <button mat-menu-item *appIsAdmin routerLink="role-upgrade" routerLinkActive="active">Role Upgrade</button>
+  <button mat-menu-item *appIsAdmin routerLink="/admin" routerLinkActive="active">Management</button>
+  <button mat-menu-item *appIsAdmin routerLink="/chart" routerLinkActive="active">Data Visualisation</button>
 </mat-menu>
 
 <mat-menu #loginedMenu="matMenu" class="px-5">
@@ -59,10 +54,12 @@
         <mat-icon>security</mat-icon>
         Security
     </button>
+    @if (!accountService.isAdmin) {
     <button mat-menu-item class="px-3" routerLink="/support-messages">
         <mat-icon>contact_support</mat-icon>
         Support
     </button>
+    }
     <mat-divider></mat-divider>
     <button mat-menu-item class="px-3" (click)="logout()">
         <mat-icon>logout</mat-icon>

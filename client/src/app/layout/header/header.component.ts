@@ -33,6 +33,7 @@ import { NgClass } from '@angular/common';
 })
 export class HeaderComponent {
   cartService = inject(CartService);
+  accountSevice = inject(AccountService);
   @ViewChild(MatMenuTrigger) trigger!: MatMenuTrigger;
   loading = false;
 

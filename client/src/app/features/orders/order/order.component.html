@@ -1,7 +1,15 @@
 <div class="mx-auto mt-32">
-    <h2 class="font-semibold text-2xl mb-6 text-center">My orders</h2>
+    @if (userEmail) {
+        <div class="flex justify-between mb-2">
+            <button mat-stroked-button (click)="goBackToUserManagement()" >Back to User Management</button>
+            <button mat-stroked-button (click)="goToMessages(userId!)">View Message Thread</button>
+            <button mat-stroked-button (click)="changeUserRole()">Change Role</button>
+        </div>
+    }
+    <h2 class="font-semibold text-2xl mb-6 text-center">{{userEmail ? userEmail + "'s orders" : "My orders"}}</h2>
     <div class="flex flex-col">
         <div class="w-full">
+            @if (orders && orders.length > 0) {
             <table class="min-w-full divide-y divide-gray-200 cursor-pointer">
                 <thead class="bg-gray-50">
                     <tr class="uppercase text-gray-600 text-sm">
@@ -20,8 +28,11 @@
                             <td>{{order.status}}</td>
                         </tr>
                     }
-                </tbody>
+                </tbody>         
             </table>
+        } @else {
+            <div class="text-center text-red-600 text-lg py-6">No orders found.</div>
+        }
         </div>
     </div>
 </div>

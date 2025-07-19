@@ -8,7 +8,6 @@ import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { NgFor, NgIf } from '@angular/common';
 import { MatCheckbox } from '@angular/material/checkbox';
-import { MatSelectionList } from '@angular/material/list';
 import { Router } from '@angular/router';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SnackbarService } from '../../../core/services/snackbar.service';

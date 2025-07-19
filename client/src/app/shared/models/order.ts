@@ -20,7 +20,8 @@ export type ShippingAddress = {
   city: string
   state: string
   postalCode: string
-  country: string
+  country: string,
+  phoneNumber: string
 }
 
 export type PaymentSummary = {

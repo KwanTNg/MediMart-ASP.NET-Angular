@@ -3,7 +3,7 @@ import { ShopService } from '../../../core/services/shop.service';
 import { MatDivider } from'@angular/material/divider';
 import { MatListOption, MatSelectionList } from '@angular/material/list';
 import { MatButton } from '@angular/material/button';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -13,7 +13,8 @@ import { FormsModule } from '@angular/forms';
     MatSelectionList,
     MatListOption,
     MatButton,
-    FormsModule
+    FormsModule,
+    MatDialogModule
   ],
   templateUrl: './filters-dialog.component.html',
   styleUrl: './filters-dialog.component.scss'

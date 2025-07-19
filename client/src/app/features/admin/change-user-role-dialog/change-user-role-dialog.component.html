@@ -1,0 +1,18 @@
+<div class="custom-card">
+<div class="text-center">
+  <h2 mat-dialog-title>Change Role for {{ data.email }}</h2>
+</div>
+<mat-dialog-content>
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>Select new role</mat-label>
+    <mat-select [(value)]="selectedRole">
+      <mat-option *ngFor="let role of roles" [value]="role">{{ role }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Cancel</button>
+  <button mat-flat-button color="primary" [disabled]="!selectedRole" (click)="submit()">Confirm</button>
+</mat-dialog-actions>
+</div>
+

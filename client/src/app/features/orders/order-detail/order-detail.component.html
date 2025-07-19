@@ -20,6 +20,10 @@
                         <dt class="font-medium">Payment info</dt>
                 <dd class="mt-1 font-light">{{order.paymentSummary | paymentCard}}</dd>
                     </dl>
+                    <dl>
+                        <dt class="font-medium">Phone Number</dt>
+                <dd class="mt-1 font-light">{{order.shippingAddress.phoneNumber || "N/A"}}</dd>
+                    </dl>
                 </div>
                 <div class="space-y-2">
                     <h4 class="text-lg font-semibold">Order details</h4>

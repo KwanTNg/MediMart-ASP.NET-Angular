@@ -4,6 +4,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { OrderParams } from '../../shared/models/orderParams';
 import { Pagination } from '../../shared/models/pagination';
 import { Order, OrderItem } from '../../shared/models/order';
+import { ChangeUserRoleDto } from '../../shared/models/changeUserRoleDto';
 
 @Injectable({
   providedIn: 'root'
@@ -36,4 +37,11 @@ export class AdminService {
     return this.http.get<Pagination<OrderItem>>(this.baseUrl + 'admin/order-items', {params, withCredentials: true});
   }
 
+  getOrdersForUser(email: string) {
+    return this.http.get<Order[]>(this.baseUrl + 'admin/orders/' + email, {withCredentials: true});
+  }
+
+  changeUserRole(dto: ChangeUserRoleDto) {
+    return this.http.post(this.baseUrl + 'account/change-role', dto, {withCredentials: true});
+  }
 }

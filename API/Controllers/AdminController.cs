@@ -78,7 +78,7 @@ public class AdminController(IUnitOfWork unit, UserManager<AppUser> userManager)
             PhoneNumber = u.PhoneNumber,
             FirstName = u.FirstName,
             LastName = u.LastName,
-            EmailConfirmed = u.EmailConfirmed
+            EmailConfirmed = u.EmailConfirmed,
         }).ToList();
 
         // Return paginated result
@@ -86,24 +86,38 @@ public class AdminController(IUnitOfWork unit, UserManager<AppUser> userManager)
         return Ok(pagination);
     }
 
-        [HttpGet("user/{id}")]
-        public async Task<ActionResult> GetUser(string id)
-        {
-         var user = await userManager.FindByIdAsync(id);
+    [HttpGet("user/{id}")]
+    public async Task<ActionResult> GetUser(string id)
+    {
+        var user = await userManager.FindByIdAsync(id);
         if (user == null) return NotFound();
 
-         var dto = new AppUserDto
-         {
-             Id = user.Id,
-             Email = user.Email,
-             PhoneNumber = user.PhoneNumber,
-             FirstName = user.FirstName,
-             LastName = user.LastName,
-             EmailConfirmed = user.EmailConfirmed
+        var dto = new AppUserDto
+        {
+            Id = user.Id,
+            Email = user.Email,
+            PhoneNumber = user.PhoneNumber,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            EmailConfirmed = user.EmailConfirmed
         };
 
         return Ok(dto);
-        }
+    }
+        
+    [HttpGet("orders/{email}")]
+    public async Task<ActionResult<IReadOnlyList<OrderDto>>> GetOrdersForUserByAdmin(string email)
+    {
+        if (string.IsNullOrWhiteSpace(email))
+            return BadRequest("Email is required.");
+
+        var spec = new OrderSpecification(email);
+        var orders = await unit.Repository<Order>().ListAsync(spec);
+
+        var ordersToReturn = orders.Select(o => o.ToDto()).ToList();
+        return Ok(ordersToReturn);
+    }
+    
 
 
 }

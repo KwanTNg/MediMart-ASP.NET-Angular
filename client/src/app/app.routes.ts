@@ -21,7 +21,6 @@ import { OrderManagementComponent } from './features/admin/order-management/orde
 import { adminGuard } from './core/guards/admin.guard';
 import { ChartSummaryComponent } from './features/admin/charts/chart-summary/chart-summary.component';
 import { OrderItemComponent } from './features/admin/order-item/order-item.component';
-import { RoleUpgradeComponent } from './features/admin/role-upgrade/role-upgrade.component';
 import { ConfirmEmailComponent } from './features/account/email/confirm-email/confirm-email.component';
 import { RegisterConfirmComponent } from './features/account/email/register-confirm/register-confirm.component';
 import { ForgotPasswordComponent } from './features/account/email/forgot-password/forgot-password.component';
@@ -36,7 +35,7 @@ import { RevenuePerProductComponent } from './features/admin/charts/revenue-per-
 import { MemberMessagesComponent } from './features/message/member-messages/member-messages.component';
 import { Messages } from './features/message/messages/messages.component';
 import { UserManagementComponent } from './features/admin/user-management/user-management.component';
-import { UserDetailComponent } from './features/admin/user-detail/user-detail.component';
+import { AdminComponent } from './features/admin/admin.component';
 
 export const routes: Routes = [
     {path: '', component: ShopComponent},
@@ -57,7 +56,7 @@ export const routes: Routes = [
     {path: 'order-summary', component: OrderManagementComponent, canActivate: [authGuard, adminGuard]},
     {path: 'order-item', component: OrderItemComponent, canActivate: [authGuard, adminGuard]},
     {path: 'chart', component: ChartSummaryComponent, canActivate: [authGuard, adminGuard]},
-    {path: 'role-upgrade', component: RoleUpgradeComponent, canActivate: [authGuard, adminGuard]},
+    {path: 'admin', component: AdminComponent, canActivate: [authGuard, adminGuard]},
     {path: 'confirm-email', component: ConfirmEmailComponent},
     {path: 'register-confirm', component: RegisterConfirmComponent},
     {path: 'forgot-password', component: ForgotPasswordComponent},
@@ -73,6 +72,6 @@ export const routes: Routes = [
     {path: 'support-messages', component: MemberMessagesComponent },
     {path: 'messages', component: Messages},
     {path: 'user-management', component: UserManagementComponent},
-    {path: 'user-management/:id', component: UserDetailComponent},
+    {path: 'admin/orders/:email/:id', component: OrderComponent, canActivate: [authGuard, adminGuard]},
     {path: '**', redirectTo: 'not-found', pathMatch: 'full'},
 ];

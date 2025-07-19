@@ -32,7 +32,7 @@ export class OrderDetailComponent implements OnInit {
   private adminService = inject(AdminService);
   private router = inject(Router);
   order?: Order;
-  buttonText = this.accountService.isAdmin() ? 'Return to admin' : 'Return to order'
+  buttonText = this.accountService.isAdmin() ? 'Return to management' : 'Return to order'
 
   ngOnInit(): void {
     this.loadOrder();
@@ -40,7 +40,7 @@ export class OrderDetailComponent implements OnInit {
 
   onReturnClick() {
     this.accountService.isAdmin()
-      ? this.router.navigateByUrl('/order-management')
+      ? this.router.navigateByUrl('/admin')
       : this.router.navigateByUrl('/orders')
   }
 

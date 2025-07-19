@@ -1,0 +1,13 @@
+<div class="min-h-screen">
+    <mat-tab-group class="bg-white" [selectedIndex]="selectedTabIndex">
+        <mat-tab label="Order Summary">
+            <app-order-management></app-order-management>
+        </mat-tab>
+        <mat-tab label="Order Items">
+            <app-order-item></app-order-item>
+        </mat-tab>
+        <mat-tab label="User Management">
+            <app-user-management></app-user-management>
+        </mat-tab>
+    </mat-tab-group>
+</div>

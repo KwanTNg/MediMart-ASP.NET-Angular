@@ -155,7 +155,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         city: address.city,
         country: address.country,
         state: address.state,
-        postalCode: address.postal_code
+        postalCode: address.postal_code,
+        phoneNumber: result.value.phone || undefined
       }
     } else {
       return null;

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using API.Extensions;
 using Core.Entities;
 using Core.Specifications;
+using Microsoft.AspNetCore.Identity;
 
 namespace API.Controllers;
 

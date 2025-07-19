@@ -8,20 +8,18 @@
             <table class="min-w-full divide-y divide-gray-200 cursor-pointer">
                 <thead class="bg-gray-50">
                     <tr class="uppercase text-gray-600 text-sm">
-                        <th class="text-center px-6 py-3">User Id</th>
+                        <th class="text-center px-6 py-3">Email</th>
                         <th class="text-left">First Name</th>
                         <th class="text-left">Last Name</th>
-                        <th class="text-left">Email</th>
                         <th class="text-left">Email Confirmed</th>       
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @for (user of users; track user.id) {
-                        <tr routerLink="/user-management/{{user.id}}" class="hover:bg-gray-100">
-                            <th class="px-6 py-3"># {{user.id}}</th>
+                        <tr [routerLink]="['/admin/orders', user.email, user.id]" class="hover:bg-gray-100">
+                            <th class="px-6 py-3">{{user.email}}</th>
                             <td>{{user.firstName}}</td>
                             <td>{{user.lastName}}</td>
-                            <td>{{user.email}}</td>
                             <td>{{user.emailConfirmed ? "Yes" : "No"}}</td>
                         </tr>
                     }

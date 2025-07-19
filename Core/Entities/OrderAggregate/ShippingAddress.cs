@@ -9,4 +9,5 @@ public class ShippingAddress
     public required string State { get; set; }
     public required string PostalCode { get; set; }
     public required string Country { get; set; }
+    public string? PhoneNumber { get; set; } 
 }
