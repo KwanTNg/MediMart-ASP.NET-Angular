@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Mail;
+using System.Reflection;
 using System.Text;
 using Core.Entities;
 using Core.Interfaces;
@@ -8,9 +9,21 @@ using Microsoft.Extensions.Options;
 
 namespace Infrastructure.Services;
 
-public class EmailService(IOptions<SMTP> smtpConfig) : IEmailService
+public class EmailService : IEmailService
 {
-    private const string templatePath = @"../Infrastructure/Data/EmailTemplate/{0}.html";
+    // private const string templatePath = @"../Infrastructure/Data/EmailTemplate/{0}.html";
+    private readonly SMTP _smtpConfig;
+    private readonly string _templateDirectory;
+
+    public EmailService(IOptions<SMTP> smtpConfig)
+    {
+        _smtpConfig = smtpConfig.Value;
+
+        // Initialize template directory path here (once)
+        var basePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
+        _templateDirectory = Path.Combine(basePath, "Infrastructure", "Data", "EmailTemplate");
+    }
+
 
     public async Task SendTestEmail(UserEmailOptions userEmailOptions)
     {
@@ -50,9 +63,9 @@ public class EmailService(IOptions<SMTP> smtpConfig) : IEmailService
         {
             Subject = userEmailOptions.Subject,
             Body = userEmailOptions.Body,
-            From = new MailAddress(smtpConfig.Value.SenderAddress,
-                smtpConfig.Value.SenderDisplayName),
-            IsBodyHtml = smtpConfig.Value.IsBodyHTML
+            From = new MailAddress(_smtpConfig.SenderAddress,
+                _smtpConfig.SenderDisplayName),
+            IsBodyHtml = _smtpConfig.IsBodyHTML
         };
 
         foreach (var toEmail in userEmailOptions.ToEmails)
@@ -61,16 +74,16 @@ public class EmailService(IOptions<SMTP> smtpConfig) : IEmailService
         }
 
         NetworkCredential networkCredential = new NetworkCredential(
-            smtpConfig.Value.UserName,
-            smtpConfig.Value.Password
+            _smtpConfig.UserName,
+            _smtpConfig.Password
         );
 
         SmtpClient smtpClient = new SmtpClient
         {
-            Host = smtpConfig.Value.Host,
-            Port = smtpConfig.Value.Port,
-            EnableSsl = smtpConfig.Value.EnableSSL,
-            UseDefaultCredentials = smtpConfig.Value.UseDefaultCredentials,
+            Host = _smtpConfig.Host,
+            Port = _smtpConfig.Port,
+            EnableSsl = _smtpConfig.EnableSSL,
+            UseDefaultCredentials = _smtpConfig.UseDefaultCredentials,
             Credentials = networkCredential
         };
 
@@ -82,8 +95,14 @@ public class EmailService(IOptions<SMTP> smtpConfig) : IEmailService
     }
     private string GetEmailBody(string templateName)
     {
-        var body = File.ReadAllText(string.Format(templatePath, templateName));
-        return body;
+        // var body = File.ReadAllText(string.Format(templatePath, templateName));
+        var fullPath = Path.Combine(_templateDirectory, $"{templateName}.html");
+
+        if (!File.Exists(fullPath))
+            throw new FileNotFoundException($"Email template not found: {fullPath}");
+
+        // return body;
+        return File.ReadAllText(fullPath);
     }
 
     private string UpdatePlaceHolders(string text, List<KeyValuePair<string, string>> keyValuePairs)
@@ -101,3 +120,4 @@ public class EmailService(IOptions<SMTP> smtpConfig) : IEmailService
         return text;
     }
 }
+

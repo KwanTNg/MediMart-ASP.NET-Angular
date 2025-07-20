@@ -14,7 +14,8 @@ public class StoreContextSeed
             var user = new AppUser
             {
                 UserName = "admin@medimart.com",
-                Email = "admin@medimart.com"
+                Email = "admin@medimart.com",
+                EmailConfirmed = true
             };
             await userManager.CreateAsync(user, "Pa$$w0rd");
             await userManager.AddToRoleAsync(user, "Admin");
