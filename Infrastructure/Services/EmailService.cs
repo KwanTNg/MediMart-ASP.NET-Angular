@@ -21,7 +21,7 @@ public class EmailService : IEmailService
 
         // Initialize template directory path here (once)
         var basePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
-        _templateDirectory = Path.Combine(basePath, "Infrastructure", "Data", "EmailTemplate");
+        _templateDirectory = Path.Combine(basePath, "Data", "EmailTemplate");
     }
 
 
