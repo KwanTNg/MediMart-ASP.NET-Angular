@@ -41,7 +41,7 @@ public class AccountController(SignInManager<AppUser> signInManager,
         {
             return BadRequest("Failed to assign role");
         }
-        // await GenerateEmailConfirmationTokenAsync(user);
+        await GenerateEmailConfirmationTokenAsync(user);
 
         return Ok();
     }
