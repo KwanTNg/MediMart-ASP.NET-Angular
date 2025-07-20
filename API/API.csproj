@@ -9,6 +9,7 @@
 
 
   <ItemGroup>
+    <None Include="App_Data\**" CopyToOutputDirectory="PreserveNewest" />
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
 

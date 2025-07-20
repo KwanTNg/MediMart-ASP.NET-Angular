@@ -113,11 +113,16 @@ app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowCredentials()
 app.UseAuthentication();
 app.UseRateLimiter();
 app.UseAuthorization();
+
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.MapControllers();
 //Change to customer router with api/
 app.MapGroup("api").MapIdentityApi<AppUser>();
 app.MapHub<NotificationHub>("/hub/notifications");
 app.MapHub<MessageHub>("/hubs/message");
+app.MapFallbackToController("Index", "Fallback");
 
 try
 {

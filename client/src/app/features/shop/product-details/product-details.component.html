@@ -8,8 +8,8 @@
                 </div>
                 <div>
                     <div class="flex flex-row gap-x-6 mb-4">
-                    <button mat-stroked-button (click)="openProductUpdateDialog()" class="mb-2 w-28">Update</button>
-                    <button mat-stroked-button (click)="removeProduct(product.id)" class="mb-2 w-28">Delete</button>
+                    <button *appIsAdmin mat-stroked-button (click)="openProductUpdateDialog()" class="mb-2 w-28">Update</button>
+                    <button *appIsAdmin mat-stroked-button (click)="removeProduct(product.id)" class="mb-2 w-28">Delete</button>
                     </div>
                     <h1 class="text-2xl font-semibold text-gray-900">{{product.name}}</h1>
                     <p>You have {{quantityInCart}} of this item in your cart</p>

@@ -14,6 +14,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ProductUpdateDialogComponent } from '../product-update-dialog/product-update-dialog.component';
 import { SnackbarService } from '../../../core/services/snackbar.service';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { IsAdminDirective } from '../../../shared/directives/is-admin.directive';
 
 @Component({
   selector: 'app-product-details',
@@ -25,7 +26,8 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
     MatDivider,
     MatLabel,
     CurrencyPipe,
-    FormsModule
+    FormsModule,
+    IsAdminDirective
   ],
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.scss'

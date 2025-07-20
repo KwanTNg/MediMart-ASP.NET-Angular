@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text.Json;
 using Core.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -19,9 +20,11 @@ public class StoreContextSeed
             await userManager.AddToRoleAsync(user, "Admin");
         }
 
+        var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
         if (!context.Symptoms.Any())
         {
-            var symptomsData = await File.ReadAllTextAsync("../Infrastructure/Data/SeedData/symptoms.json");
+            var symptomsData = await File.ReadAllTextAsync(path + @"/Data/SeedData/symptoms.json");
             var symptoms = JsonSerializer.Deserialize<List<Symptom>>(symptomsData);
             if (symptoms == null) return;
             context.Symptoms.AddRange(symptoms);
@@ -29,7 +32,7 @@ public class StoreContextSeed
         }
         if (!context.Products.Any())
         {
-            var productsData = await File.ReadAllTextAsync("../Infrastructure/Data/SeedData/products.json");
+            var productsData = await File.ReadAllTextAsync(path + @"/Data/SeedData/products.json");
             var products = JsonSerializer.Deserialize<List<Product>>(productsData);
             if (products == null) return;
             context.Products.AddRange(products);
@@ -37,7 +40,7 @@ public class StoreContextSeed
         }
         if (!context.ProductSymptoms.Any())
         {
-            var productSymptomData = await File.ReadAllTextAsync("../Infrastructure/Data/SeedData/productSymptoms.json");
+            var productSymptomData = await File.ReadAllTextAsync(path + @"/Data/SeedData/productSymptoms.json");
             var productSymptoms = JsonSerializer.Deserialize<List<ProductSymptom>>(productSymptomData);
             if (productSymptoms == null) return;
             context.ProductSymptoms.AddRange(productSymptoms);
@@ -45,7 +48,7 @@ public class StoreContextSeed
         }
         if (!context.DeliveryMethods.Any())
         {
-            var dmData = await File.ReadAllTextAsync("../Infrastructure/Data/SeedData/delivery.json");
+            var dmData = await File.ReadAllTextAsync(path + @"/Data/SeedData/delivery.json");
             var methods = JsonSerializer.Deserialize<List<DeliveryMethod>>(dmData);
             if (methods == null) return;
             context.DeliveryMethods.AddRange(methods);
