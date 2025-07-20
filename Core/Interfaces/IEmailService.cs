@@ -7,4 +7,5 @@ public interface IEmailService
     Task SendTestEmail(UserEmailOptions userEmailOptions);
     Task SendTestEmailConfirmation(UserEmailOptions userEmailOptions);
     Task SendEmailForFogotPassword(UserEmailOptions userEmailOptions);
+    Task SendOrderConfirmationEmail(UserEmailOptions userEmailOptions);
 }

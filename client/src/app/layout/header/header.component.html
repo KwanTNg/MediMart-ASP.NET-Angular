@@ -54,7 +54,7 @@
         <mat-icon>security</mat-icon>
         Security
     </button>
-    @if (!accountService.isAdmin) {
+    @if (!accountService.isAdmin()) {
     <button mat-menu-item class="px-3" routerLink="/support-messages">
         <mat-icon>contact_support</mat-icon>
         Support

@@ -117,7 +117,6 @@ app.MapControllers();
 //Change to customer router with api/
 app.MapGroup("api").MapIdentityApi<AppUser>();
 app.MapHub<NotificationHub>("/hub/notifications");
-// app.MapHub<PresenceHub>("hubs/presence");
 app.MapHub<MessageHub>("/hubs/message");
 
 try

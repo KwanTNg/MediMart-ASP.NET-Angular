@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Order Confirmation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
+      padding: 20px;
+    }
+
+    .container {
+      background-color: #ffffff;
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-bottom: 0;
+      text-align: center;
+      color: #2d3748;
+    }
+
+    .status {
+      margin: 10px 0;
+      color: #e53e3e;
+      font-weight: bold;
+    }
+
+    .section {
+      margin-top: 20px;
+    }
+
+    .section h4 {
+      margin-bottom: 10px;
+      color: #2d3748;
+    }
+
+    .details dt {
+      font-weight: bold;
+    }
+
+    .details dd {
+      margin: 0 0 10px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 8px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .summary {
+      background-color: #f7fafc;
+      padding: 15px;
+      border-radius: 6px;
+      margin-top: 20px;
+    }
+
+    .summary dl {
+      display: flex;
+      justify-content: space-between;
+      margin: 8px 0;
+    }
+
+    .total {
+      border-top: 1px solid #cbd5e0;
+      padding-top: 10px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    img {
+      vertical-align: middle;
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Order Summary for Order #{{OrderId}}</h2>
+
+    <div class="status">
+      {{OrderStatusMessage}}
+    </div>
+
+    <div class="section">
+      <h4>Billing and Delivery Information</h4>
+      <dl class="details">
+        <dt>Shipping Address:</dt>
+        <dd>{{ShippingAddress}}</dd>
+
+        <dt>Payment Info:</dt>
+        <dd>{{PaymentSummary}}</dd>
+
+        <dt>Phone Number:</dt>
+        <dd>{{PhoneNumber}}</dd>
+      </dl>
+    </div>
+
+    <div class="section">
+      <h4>Order Details</h4>
+      <dl class="details">
+        <dt>Email Address:</dt>
+        <dd>{{Email}}</dd>
+
+        <dt>Order Status:</dt>
+        <dd>{{OrderStatus}}</dd>
+
+        <dt>Order Date:</dt>
+        <dd>{{OrderDate}}</dd>
+      </dl>
+    </div>
+
+    <div class="section">
+      <h4>Order Items</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Qty</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{OrderItems}}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="summary">
+      <p><strong>Order Summary</strong></p>
+      <dl>
+        <dt>Subtotal:</dt>
+        <dd>{{Subtotal}}</dd>
+      </dl>
+      <dl>
+        <dt>Discount:</dt>
+        <dd>{{Discount}}</dd>
+      </dl>
+      <dl>
+        <dt>Delivery Fee:</dt>
+        <dd>{{ShippingPrice}}</dd>
+      </dl>
+      <dl class="total">
+        <dt>Total:</dt>
+        <dd>{{Total}}</dd>
+      </dl>
+    </div>
+  </div>
+</body>
+</html>

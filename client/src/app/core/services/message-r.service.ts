@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import * as signalR from '@microsoft/signalr';
+import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { Message } from '../../shared/models/message';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -8,21 +8,22 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root'
 })
 export class MessageRService {
-  private hubConnection?: signalR.HubConnection;
+  hubUrlChat = environment.hubUrlChat
+  hubConnection?: HubConnection;
   private messageSource = new BehaviorSubject<Message | null>(null);
   message$ = this.messageSource.asObservable();
 
   startConnection() {
-    this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(`${environment.hubUrlChat}message`, {
+    this.hubConnection = new HubConnectionBuilder()
+      .withUrl(this.hubUrlChat, {
         withCredentials: true
       })
       .withAutomaticReconnect()
       .build();
 
-    this.hubConnection
-      .start()
-      .catch(err => console.error('SignalR connection error: ', err));
+    this.hubConnection.start().then(() => {
+      console.log('MessageR connection started');
+    }).catch(err => console.error('SignalR connection error: ', err));
 
     this.hubConnection.on('NewMessage', (message: Message) => {
       this.messageSource.next(message);

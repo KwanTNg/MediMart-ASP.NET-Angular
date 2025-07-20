@@ -36,6 +36,14 @@ public class EmailService(IOptions<SMTP> smtpConfig) : IEmailService
         await SendEmail(userEmailOptions);
     }
 
+    public async Task SendOrderConfirmationEmail(UserEmailOptions userEmailOptions)
+    {
+        userEmailOptions.Subject = UpdatePlaceHolders("Order Confirmation - Order #{{OrderId}}", userEmailOptions.PlaceHolders);
+        userEmailOptions.Body = UpdatePlaceHolders(GetEmailBody("OrderConfirmation"), userEmailOptions.PlaceHolders);
+
+        await SendEmail(userEmailOptions);
+    }
+
     private async Task SendEmail(UserEmailOptions userEmailOptions)
     {
         MailMessage mail = new MailMessage
