@@ -43,7 +43,7 @@ public class AnalyticsController(IUnitOfWork unit, UserManager<AppUser> userMana
     public async Task<ActionResult<List<TopSellingProductDto>>> GetTopSellingProducts()
     {
         var orders = await unit.Repository<Order>()
-            .ListAsync(new OrderSpecification(OrderStatus.PaymentReceived));
+            .ListAsync(new OrderSpecification(OrderStatus.Delivered));
 
         var productSales = orders
             .SelectMany(o => o.OrderItems)
@@ -93,7 +93,7 @@ public class AnalyticsController(IUnitOfWork unit, UserManager<AppUser> userMana
     public async Task<ActionResult<List<RevenuePerProductDto>>> GetRevenuePerProduct()
     {
         var orders = await unit.Repository<Order>()
-            .ListAsync(new OrderSpecification(OrderStatus.PaymentReceived));
+            .ListAsync(new OrderSpecification(OrderStatus.Delivered));
 
         var revenueByProduct = orders
             .SelectMany(o => o.OrderItems.Select(oi => new
