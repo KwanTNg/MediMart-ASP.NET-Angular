@@ -36,6 +36,12 @@ import { MemberMessagesComponent } from './features/message/member-messages/memb
 import { Messages } from './features/message/messages/messages.component';
 import { UserManagementComponent } from './features/admin/user-management/user-management.component';
 import { AdminComponent } from './features/admin/admin.component';
+import { InventoryManagementComponent } from './features/admin/inventory-management/inventory-management.component';
+import { DeliveryDistributionComponent } from './features/admin/charts/delivery-distribution/delivery-distribution.component';
+import { OnTimeDispatchRateComponent } from './features/admin/charts/on-time-dispatch-rate/on-time-dispatch-rate.component';
+import { AverageDeliveryTimeComponent } from './features/admin/charts/average-delivery-time/average-delivery-time.component';
+import { RoleDistributionComponent } from './features/admin/charts/role-distribution/role-distribution.component';
+import { RegistrationsOverTimeComponent } from './features/admin/charts/registrations-over-time/registrations-over-time.component';
 
 export const routes: Routes = [
     {path: '', component: ShopComponent},
@@ -53,10 +59,10 @@ export const routes: Routes = [
     {path: 'account/register', component: RegisterComponent},
     {path: 'not-found', component: NotFoundComponent},
     {path: 'server-error', component: ServerErrorComponent},
-    {path: 'order-summary', component: OrderManagementComponent, canActivate: [authGuard, adminGuard]},
-    {path: 'order-item', component: OrderItemComponent, canActivate: [authGuard, adminGuard]},
-    {path: 'chart', component: ChartSummaryComponent, canActivate: [authGuard, adminGuard]},
-    {path: 'admin', component: AdminComponent, canActivate: [authGuard, adminGuard]},
+    {path: 'order-summary', component: OrderManagementComponent, canActivate: [authGuard]},
+    {path: 'order-item', component: OrderItemComponent, canActivate: [authGuard]},
+    {path: 'chart', component: ChartSummaryComponent, canActivate: [authGuard]},
+    {path: 'admin', component: AdminComponent, canActivate: [authGuard]},
     {path: 'confirm-email', component: ConfirmEmailComponent},
     {path: 'register-confirm', component: RegisterConfirmComponent},
     {path: 'forgot-password', component: ForgotPasswordComponent},
@@ -72,6 +78,12 @@ export const routes: Routes = [
     {path: 'support-messages', component: MemberMessagesComponent },
     {path: 'messages', component: Messages},
     {path: 'user-management', component: UserManagementComponent},
-    {path: 'admin/orders/:email/:id', component: OrderComponent, canActivate: [authGuard, adminGuard]},
-    {path: '**', redirectTo: 'not-found', pathMatch: 'full'},
+    {path: 'inventory-management', component: InventoryManagementComponent, canActivate: [authGuard]},
+    {path: 'admin/orders/:email/:id', component: OrderComponent, canActivate: [authGuard]},
+    {path: 'delivery-distribution', component: DeliveryDistributionComponent},
+    {path: 'on-time-dispatch-rate', component: OnTimeDispatchRateComponent},
+    {path: 'average-delivery-time', component: AverageDeliveryTimeComponent},
+    {path: 'role-distribution', component: RoleDistributionComponent},
+    {path: 'registrations-over-time', component: RegistrationsOverTimeComponent},
+    {path: '**', redirectTo: 'not-found', pathMatch: 'full'}
 ];

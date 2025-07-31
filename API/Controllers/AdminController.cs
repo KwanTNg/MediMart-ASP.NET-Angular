@@ -12,7 +12,7 @@ using Stripe;
 
 namespace API.Controllers;
 
-[Authorize(Roles = "Admin")]
+[Authorize(Roles = "Admin,Director")]
 public class AdminController(IUnitOfWork unit, UserManager<AppUser> userManager) : BaseApiController
 {
     [HttpGet("orders")]
@@ -32,6 +32,30 @@ public class AdminController(IUnitOfWork unit, UserManager<AppUser> userManager)
         return order.ToDto();
     }
 
+    [HttpPut("orders/{id:int}/deliver")]
+    public async Task<ActionResult> MarkOrderAsDelivered(int id)
+    {
+        var spec = new OrderSpecification(id);
+        var order = await unit.Repository<Order>().GetEntityWithSpec(spec);
+
+        if (order == null) return NotFound("Order not found");
+
+        if (order.Status == OrderStatus.Delivered)
+            return BadRequest("Order is already marked as delivered");
+
+        order.Status = OrderStatus.Delivered;
+        order.DeliveryDate = DateTime.UtcNow;
+
+        unit.Repository<Order>().Update(order);
+
+        if (await unit.Complete())
+        {
+            return NoContent();
+        }
+        return BadRequest("Problem updating the product");
+    }
+
+
     [HttpGet("order-items")]
     public async Task<ActionResult<IReadOnlyList<OrderItemDto>>> GetOrderItems([FromQuery] PagingParams specParams)
     {
@@ -43,7 +67,7 @@ public class AdminController(IUnitOfWork unit, UserManager<AppUser> userManager)
     [HttpGet("users")]
     public async Task<ActionResult> GetUsers([FromQuery] UserSpecParams specParams)
     {
-        var roles = new[] { "patient", "pharmacist" };
+        var roles = new[] { "patient", "pharmacist", "analyst", "director" };
         var users = new List<AppUser>();
 
         foreach (var role in roles)
@@ -70,16 +94,23 @@ public class AdminController(IUnitOfWork unit, UserManager<AppUser> userManager)
            .Take(specParams.PageSize)
            .ToList();
 
-        // Map to DTOs
-        var dtoItems = pagedUsers.Select(u => new AppUserDto
+        var dtoItems = new List<AppUserDto>();
+
+        foreach (var user in pagedUsers)
         {
-            Id = u.Id,
-            Email = u.Email,
-            PhoneNumber = u.PhoneNumber,
-            FirstName = u.FirstName,
-            LastName = u.LastName,
-            EmailConfirmed = u.EmailConfirmed,
-        }).ToList();
+            var userRoles = await userManager.GetRolesAsync(user);
+            dtoItems.Add(new AppUserDto
+            {
+                Id = user.Id,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                EmailConfirmed = user.EmailConfirmed,
+                Roles = userRoles
+            });
+        }
+
 
         // Return paginated result
         var pagination = new Pagination<AppUserDto>(specParams.PageIndex, specParams.PageSize, count, dtoItems);
@@ -104,7 +135,7 @@ public class AdminController(IUnitOfWork unit, UserManager<AppUser> userManager)
 
         return Ok(dto);
     }
-        
+
     [HttpGet("orders/{email}")]
     public async Task<ActionResult<IReadOnlyList<OrderDto>>> GetOrdersForUserByAdmin(string email)
     {
@@ -117,7 +148,7 @@ public class AdminController(IUnitOfWork unit, UserManager<AppUser> userManager)
         var ordersToReturn = orders.Select(o => o.ToDto()).ToList();
         return Ok(ordersToReturn);
     }
-    
+
 
 
 }

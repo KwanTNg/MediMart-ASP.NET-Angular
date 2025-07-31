@@ -1,6 +1,5 @@
-import { DatePipe, CurrencyPipe } from '@angular/common';
+import { CurrencyPipe } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { MatLabel } from '@angular/material/form-field';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
@@ -67,7 +66,7 @@ export class OrderItemComponent implements OnInit {
     }
 
     // Prepare CSV headers
-    const headers = ['Order Item', 'Product ID', 'Product Name', 'Price', 'Quantity'];
+    const headers = ['Order', 'Product ID', 'Product Name', 'Price', 'Quantity'];
 
     // Prepare CSV rows
     const rows = this.orderItems.map(orderItem => [

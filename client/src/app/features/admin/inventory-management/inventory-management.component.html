@@ -1,0 +1,52 @@
+<div class="mx-auto mt-10 min-h-screen">
+        <div class="flex justify-between items-center mt-2 max-w-screen-2xl mx-auto">
+             <h2 class="font-semibold text-2xl mb-6 text-center mt-7">Products (Quantity In Stock: Low - High)</h2>
+                <div class="text-center mb-4">
+                <button mat-stroked-button
+                    (click)="downloadCSV()"
+                    class="  text-white font-semibold px-4 py-2 rounded"
+                    >
+                     Download CSV
+                 </button>
+                </div>
+                
+        </div>
+    <div class="flex flex-col">
+        <div class="w-full">
+            <table class="min-w-full divide-y divide-gray-200 cursor-pointer">
+                <thead class="bg-gray-50">
+                    <tr class="uppercase text-gray-600 text-sm">
+                        <th class="text-center px-6 py-3">Id</th>
+                        <th class="text-left">Name</th>
+                        <th class="text-left">Price</th>
+                        <th class="text-left">Quantity In Stock</th>  
+                        <th class="text-left">Category</th>      
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @for (product of products?.data; track product.id) {
+                        <tr routerLink="/product/{{product.id}}" class="hover:bg-gray-100">
+                            <th class="px-6 py-3">{{product.id}}</th>
+                            <td>{{product.name}}</td>
+                            <td>{{product.price | currency:'GBP':'symbol'}}</td>
+                            <td>{{product.quantityInStock}}</td>
+                            <td>{{product.category}}</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+                    <mat-paginator 
+                        class="custom-card"
+                        [pageSizeOptions]="[10, 20, 100]"
+                        [length]="products?.count"
+                        [pageSize]="shopParams.pageSize"
+                        (page) = onPageChange($event)
+                        showFirstLastButtons
+                        >
+                    </mat-paginator>
+        </div>
+    </div>
+</div>
+
+
+

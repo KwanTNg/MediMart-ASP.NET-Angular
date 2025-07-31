@@ -24,6 +24,7 @@
                         </p>
                     </div>
 
+                     @if (accountService.currentUser()?.roles === "Pharmacist" || product.category !== "Prescription") {
                     <div class="flex gap-4 mt-6">
                         <button [disabled]="quantity === quantityInCart" 
                             (click)="updateCart()"
@@ -36,6 +37,7 @@
                             <input matInput min="0" [(ngModel)]="quantity" type="number">
                         </mat-form-field>
                     </div>
+                    }
 
                     <mat-divider></mat-divider>
 

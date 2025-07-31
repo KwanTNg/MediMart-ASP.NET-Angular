@@ -1,0 +1,18 @@
+ <div class="p-4 bg-white rounded border shadow">
+  <h2 class="text-xl font-semibold mb-4">User Registrations Over Time</h2>
+  <canvas baseChart [ngClass]="isInDashboard ? 'w-full h-auto max-h-[20vh]' : 'w-full h-auto max-h-[73vh]'"
+    [data]="{
+      labels: regLabels,
+      datasets: [{
+        data: regData,
+        label: 'Users',
+        fill: true,
+        borderColor: '#3b82f6',
+        backgroundColor: 'rgba(59,130,246,0.2)'
+      }]
+    }"
+    [type]="regChartType"
+    [options]="regChartOptions">
+  </canvas>
+</div>
+

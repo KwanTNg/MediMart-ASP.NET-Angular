@@ -78,6 +78,7 @@ namespace API.Controllers
         {termsText}
 
         Customer question: {request.Message}
+        Please use the language that the customer uses to respond. If the customer asks in Japanese, answer in Japanese.
         Answer clearly and directly based only on the available product information above. 
         If a product is listed, provide its price and prescription requirement. If it's not listed, politely mention that the product is not available.
         Do NOT refer customers to the website unless the product is truly not found.

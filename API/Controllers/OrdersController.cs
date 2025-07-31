@@ -58,35 +58,35 @@ public class OrdersController(ICartService cartService, IUnitOfWork unit,
         unit.Repository<Order>().Add(order);
         if (await unit.Complete())
         {
-            var user = await userManager.FindByEmailAsync(email);
+        //     var user = await userManager.FindByEmailAsync(email);
 
-            var placeHolders = new List<KeyValuePair<string, string>>()
-        {
-            new("{{UserName}}", user.FirstName),
-            new("{{OrderId}}", order.Id.ToString()),
-            new("{{OrderStatus}}", order.Status.ToString()),
-            new("{{OrderStatusMessage}}", order.Status == OrderStatus.StockIssue 
-                                   ? "We received your payment, but some items are out of stock. Our team will contact you."
-                                   : "Your order has been successfully placed."),
-            new("{{OrderDate}}", order.OrderDate.ToString("f")),
-            new("{{PhoneNumber}}", order.ShippingAddress.PhoneNumber ?? "N/A"),
-            new("{{Email}}", order.BuyerEmail),
-            new("{{Subtotal}}", order.Subtotal.ToString("C")),
-            new("{{Discount}}", "-£0.00"), 
-            new("{{ShippingPrice}}", order.DeliveryMethod.Price.ToString("C")),
-            new("{{Total}}", order.GetTotal().ToString("C")),
-            new("{{OrderItems}}", string.Join("", order.OrderItems.Select(item =>
-            $"<tr>" +
-            $"<td><img src='{item.ItemOrdered.PictureUrl}' width='40' height='40' />{item.ItemOrdered.ProductName}</td>" +
-            $"<td>{item.Quantity}</td>" +
-            $"<td>{item.Price:C}</td>" +
-            $"</tr>")))
-         };
-             await emailService.SendOrderConfirmationEmail(new UserEmailOptions
-        {
-            ToEmails = new List<string> { order.BuyerEmail },
-            PlaceHolders = placeHolders
-        });
+        //     var placeHolders = new List<KeyValuePair<string, string>>()
+        // {
+        //     new("{{UserName}}", user.FirstName),
+        //     new("{{OrderId}}", order.Id.ToString()),
+        //     new("{{OrderStatus}}", order.Status.ToString()),
+        //     new("{{OrderStatusMessage}}", order.Status == OrderStatus.StockIssue 
+        //                            ? "We received your payment, but some items are out of stock. Our team will contact you."
+        //                            : "Your order has been successfully placed."),
+        //     new("{{OrderDate}}", order.OrderDate.ToString("f")),
+        //     new("{{PhoneNumber}}", order.ShippingAddress.PhoneNumber ?? "N/A"),
+        //     new("{{Email}}", order.BuyerEmail),
+        //     new("{{Subtotal}}", order.Subtotal.ToString("C")),
+        //     new("{{Discount}}", "-£0.00"), 
+        //     new("{{ShippingPrice}}", order.DeliveryMethod.Price.ToString("C")),
+        //     new("{{Total}}", order.GetTotal().ToString("C")),
+        //     new("{{OrderItems}}", string.Join("", order.OrderItems.Select(item =>
+        //     $"<tr>" +
+        //     $"<td><img src='{item.ItemOrdered.PictureUrl}' width='40' height='40' />{item.ItemOrdered.ProductName}</td>" +
+        //     $"<td>{item.Quantity}</td>" +
+        //     $"<td>{item.Price:C}</td>" +
+        //     $"</tr>")))
+        //  };
+        //      await emailService.SendOrderConfirmationEmail(new UserEmailOptions
+        // {
+        //     ToEmails = new List<string> { order.BuyerEmail },
+        //     PlaceHolders = placeHolders
+        // });
             return order;
         }
         return BadRequest("Problem creating order");

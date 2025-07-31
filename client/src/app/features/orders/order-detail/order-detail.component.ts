@@ -28,7 +28,7 @@ import { AdminService } from '../../../core/services/admin.service';
 export class OrderDetailComponent implements OnInit {
   private orderService = inject(OrderService);
   private activatedRoute = inject(ActivatedRoute);
-  private accountService = inject(AccountService);
+  accountService = inject(AccountService);
   private adminService = inject(AdminService);
   private router = inject(Router);
   order?: Order;
@@ -54,5 +54,16 @@ export class OrderDetailComponent implements OnInit {
       next: order => this.order = order
     })
   }
+
+  markAsDelivered(id: number) {
+  this.orderService.markOrderAsDelivered(id).subscribe({
+    next: () => {
+      this.order!.status = 'Delivered';
+      this.router.navigateByUrl('/admin');
+    },
+    error: err => console.error('Failed to mark as delivered', err)
+  });
+}
+
 
 }

@@ -11,7 +11,8 @@
                         <th class="text-center px-6 py-3">Email</th>
                         <th class="text-left">First Name</th>
                         <th class="text-left">Last Name</th>
-                        <th class="text-left">Email Confirmed</th>       
+                        <th class="text-left">Email Confirmed</th>  
+                        <th class="text-left">Role</th>      
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -21,6 +22,7 @@
                             <td>{{user.firstName}}</td>
                             <td>{{user.lastName}}</td>
                             <td>{{user.emailConfirmed ? "Yes" : "No"}}</td>
+                            <td>{{user.roles}}</td>
                         </tr>
                     }
                 </tbody>

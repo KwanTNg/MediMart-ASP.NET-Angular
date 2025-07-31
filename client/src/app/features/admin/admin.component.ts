@@ -4,6 +4,8 @@ import { OrderManagementComponent } from "./order-management/order-management.co
 import { OrderItemComponent } from "./order-item/order-item.component";
 import { UserManagementComponent } from "./user-management/user-management.component";
 import { ActivatedRoute } from '@angular/router';
+import { InventoryManagementComponent } from './inventory-management/inventory-management.component';
+import { IsAdminDirective } from '../../shared/directives/is-admin.directive';
 
 @Component({
   selector: 'app-admin',
@@ -11,7 +13,9 @@ import { ActivatedRoute } from '@angular/router';
     MatTabsModule,
     OrderManagementComponent,
     OrderItemComponent,
-    UserManagementComponent
+    InventoryManagementComponent,
+    UserManagementComponent,
+    IsAdminDirective
 ],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.scss'
@@ -31,6 +35,9 @@ export class AdminComponent implements OnInit {
           break;
         case 'user-management':
           this.selectedTabIndex = 2;
+          break;
+        case 'inventory-management':
+          this.selectedTabIndex = 3;
           break;
         default:
           this.selectedTabIndex = 0;

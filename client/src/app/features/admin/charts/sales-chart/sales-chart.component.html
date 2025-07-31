@@ -1,6 +1,6 @@
-<div class="p-4 bg-white rounded shadow">
+<div class="p-4 bg-white rounded border shadow">
   <h2 class="text-xl font-semibold mb-4">Sales Over Time</h2>
-  <canvas baseChart
+  <canvas baseChart [ngClass]="isInDashboard ? 'w-full h-auto max-h-[20vh]' : 'w-full h-auto max-h-[73vh]'"
     [data]="lineChartData"
     [labels]="chartLabels"
     [options]="chartOptions"

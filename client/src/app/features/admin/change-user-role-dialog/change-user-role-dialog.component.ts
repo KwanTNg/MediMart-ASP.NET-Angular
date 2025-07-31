@@ -27,7 +27,7 @@ export class ChangeUserRoleDialogComponent {
 
   email: string = this.data.email;
   selectedRole: string = '';
-  roles: string[] = ['Pharmacist', 'Admin', 'Patient'];
+  roles: string[] = ['Pharmacist', 'Director', 'Analyst', 'Admin', 'Patient'];
 
   submit() {
     this.dialogRef.close({

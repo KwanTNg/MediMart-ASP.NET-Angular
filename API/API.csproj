@@ -20,10 +20,4 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.1" />
   </ItemGroup>
 
-
-
-  <ItemGroup>
-    <Folder Include="SeedData/" />
-  </ItemGroup>
-
 </Project>

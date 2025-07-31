@@ -36,7 +36,7 @@ export class OrderManagementComponent implements OnInit {
   orderParams = new OrderParams();
   orders: Order[] = []
   totalItems = 0;
-  statusOptions = ['All', 'PaymentReceived', 'PaymentMismatch', 'StockIssue', 'Pending']
+  statusOptions = ['All', 'PaymentReceived', 'PaymentMismatch', 'StockIssue', 'Pending', 'Delivered']
   
   ngOnInit(): void {
     this.loadOrders();

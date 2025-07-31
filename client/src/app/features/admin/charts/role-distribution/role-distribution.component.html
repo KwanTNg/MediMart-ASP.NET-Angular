@@ -1,0 +1,14 @@
+<div class="p-4 bg-white rounded border shadow">
+  <h2 class="text-xl font-semibold mb-4">Users by Role</h2>
+  <canvas baseChart [ngClass]="isInDashboard ? 'w-full h-auto max-h-[20vh]' : 'w-full h-auto max-h-[73vh]'"
+    [data]="{
+      labels: roleLabels,
+      datasets: [{
+        data: roleData,
+        backgroundColor: ['#4ade80','#60a5fa','#f472b6','#facc15', '#A020F0']
+      }]
+    }"
+    [type]="roleChartType"
+    [options]="roleChartOptions">
+  </canvas>
+</div>

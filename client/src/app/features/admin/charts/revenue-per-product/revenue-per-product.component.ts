@@ -2,11 +2,13 @@ import { Component, OnInit, inject } from '@angular/core';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartType, ChartOptions } from 'chart.js';
 import { AnalyticsService } from '../../../../core/services/analytics.service';
+import { NgClass } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-revenue-per-product',
   imports: [
-    NgChartsModule
+    NgChartsModule, NgClass
   ],
   templateUrl: './revenue-per-product.component.html',
   styleUrl: './revenue-per-product.component.scss'
@@ -34,8 +36,11 @@ export class RevenuePerProductComponent implements OnInit {
   };
 
   private analyticsService = inject(AnalyticsService);
+  private router = inject(Router);
+  isInDashboard = false;
 
   ngOnInit(): void {
+    this.isInDashboard = this.router.url === '/chart';
     this.analyticsService.getRevenuePerProduct().subscribe(data => {
       this.chartData = {
         labels: data.map(d => d.productName),

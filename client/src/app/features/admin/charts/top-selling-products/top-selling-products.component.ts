@@ -2,10 +2,12 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ChartOptions, ChartType } from 'chart.js';
 import { NgChartsModule } from 'ng2-charts';
 import { AnalyticsService } from '../../../../core/services/analytics.service';
+import { NgClass } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-top-selling-products',
-  imports: [NgChartsModule],
+  imports: [NgChartsModule, NgClass],
   templateUrl: './top-selling-products.component.html',
   styleUrl: './top-selling-products.component.scss'
 })
@@ -41,8 +43,13 @@ export class TopSellingProductsComponent implements OnInit {
   };
 
   private analyticsService = inject(AnalyticsService);
+  private router = inject(Router);
+  isInDashboard = false;
+  
 
   ngOnInit(): void {
+    this.isInDashboard = this.router.url === '/chart';
+    
     this.analyticsService.getTopSellingProducts().subscribe(data => {
       console.log(data);
       this.chartData = {

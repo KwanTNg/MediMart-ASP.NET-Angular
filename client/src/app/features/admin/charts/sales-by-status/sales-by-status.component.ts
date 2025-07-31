@@ -2,17 +2,22 @@ import { Component, OnInit, inject } from '@angular/core';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartType, ChartOptions } from 'chart.js';
 import { AnalyticsService } from '../../../../core/services/analytics.service';
+import { Router } from '@angular/router';
+import { NgClass } from '@angular/common';
 
 
 @Component({
   selector: 'app-sales-by-status',
   imports: [
-    NgChartsModule
+    NgChartsModule, NgClass
   ],
   templateUrl: './sales-by-status.component.html',
   styleUrl: './sales-by-status.component.scss'
 })
 export class SalesByStatusComponent implements OnInit {
+  private router = inject(Router);
+  isInDashboard = false;
+
   chartData: any = {
   labels: [],
   datasets: []
@@ -42,6 +47,8 @@ export class SalesByStatusComponent implements OnInit {
   private analyticsService = inject(AnalyticsService);
 
   ngOnInit(): void {
+    this.isInDashboard = this.router.url === '/chart';
+
     this.analyticsService.getSalesByStatus().subscribe(data => {
       console.log('API data:', data);
       this.chartData = {

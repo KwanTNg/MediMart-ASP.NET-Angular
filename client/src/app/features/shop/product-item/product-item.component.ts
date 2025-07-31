@@ -7,6 +7,7 @@ import { MatButton } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 import { CartService } from '../../../core/services/cart.service';
 import { IsAdminDirective } from '../../../shared/directives/is-admin.directive';
+import { AccountService } from '../../../core/services/account.service';
 
 @Component({
   selector: 'app-product-item',
@@ -27,4 +28,5 @@ import { IsAdminDirective } from '../../../shared/directives/is-admin.directive'
 export class ProductItemComponent {
   @Input() product?: Product
   cartService = inject(CartService);
+  accountService = inject(AccountService);
 }

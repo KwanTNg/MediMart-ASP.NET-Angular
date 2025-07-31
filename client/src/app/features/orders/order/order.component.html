@@ -2,8 +2,10 @@
     @if (userEmail) {
         <div class="flex justify-between mb-2">
             <button mat-stroked-button (click)="goBackToUserManagement()" >Back to User Management</button>
+            @if (accountService.currentUser()?.roles === "Admin") {
             <button mat-stroked-button (click)="goToMessages(userId!)">View Message Thread</button>
             <button mat-stroked-button (click)="changeUserRole()">Change Role</button>
+            }
         </div>
     }
     <h2 class="font-semibold text-2xl mb-6 text-center">{{userEmail ? userEmail + "'s orders" : "My orders"}}</h2>

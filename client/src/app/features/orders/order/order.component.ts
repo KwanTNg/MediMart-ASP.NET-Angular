@@ -8,6 +8,7 @@ import { MatButton } from '@angular/material/button';
 import { SnackbarService } from '../../../core/services/snackbar.service';
 import { ChangeUserRoleDialogComponent } from '../../admin/change-user-role-dialog/change-user-role-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { AccountService } from '../../../core/services/account.service';
 
 
 @Component({
@@ -24,6 +25,7 @@ import { MatDialog } from '@angular/material/dialog';
 export class OrderComponent implements OnInit {
   private orderService = inject(OrderService);
   private adminService = inject(AdminService);
+  accountService = inject(AccountService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private snack = inject(SnackbarService);

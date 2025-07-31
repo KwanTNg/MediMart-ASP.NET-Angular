@@ -1,0 +1,8 @@
+<div class="p-4 shadow rounded border bg-white">
+  <h3 class="text-xl font-semibold mb-4">On-Time Dispatch Rate</h3>
+  <canvas baseChart [ngClass]="isInDashboard ? 'w-full h-auto max-h-[20vh]' : 'w-full h-auto max-h-[73vh]'"
+    [data]="chartData"
+    [type]="chartType"
+    [options]="chartOptions">
+  </canvas>
+</div>

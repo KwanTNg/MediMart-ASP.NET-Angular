@@ -11,6 +11,7 @@ export type Order = {
   status: string
   paymentIntentId: string
   total: number
+  deliveryDate?: string;
 }
 
 export type ShippingAddress = {

@@ -73,6 +73,9 @@ namespace Infrastructure.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -214,6 +217,9 @@ namespace Infrastructure.Migrations
                     b.Property<string>("BuyerEmail")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeliveryDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("DeliveryMethodId")
                         .HasColumnType("int");
@@ -406,6 +412,18 @@ namespace Infrastructure.Migrations
                             Id = "3c8f59e7-56de-4bc5-bf71-2e29b1a70000",
                             Name = "Pharmacist",
                             NormalizedName = "PHARMACIST"
+                        },
+                        new
+                        {
+                            Id = "3c8f59e7-56de-4bc5-bf71-2e29b1a70001",
+                            Name = "Analyst",
+                            NormalizedName = "ANALYST"
+                        },
+                        new
+                        {
+                            Id = "3c8f59e7-56de-4bc5-bf71-2e29b1a70002",
+                            Name = "Director",
+                            NormalizedName = "DIRECTOR"
                         },
                         new
                         {

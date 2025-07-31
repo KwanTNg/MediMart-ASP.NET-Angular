@@ -15,6 +15,7 @@ import { ProductUpdateDialogComponent } from '../product-update-dialog/product-u
 import { SnackbarService } from '../../../core/services/snackbar.service';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { IsAdminDirective } from '../../../shared/directives/is-admin.directive';
+import { AccountService } from '../../../core/services/account.service';
 
 @Component({
   selector: 'app-product-details',
@@ -40,6 +41,7 @@ export class ProductDetailsComponent implements OnInit {
   private dialog = inject(MatDialog);
   private snack = inject(SnackbarService);
   private router = inject(Router);
+  accountService = inject(AccountService);
   product?: Product;
   quantityInCart = 0;
   quantity = 0;

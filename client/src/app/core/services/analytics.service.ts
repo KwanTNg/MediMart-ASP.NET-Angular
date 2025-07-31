@@ -44,6 +44,31 @@ getRevenuePerProduct(): Observable<RevenuePerProduct[]> {
   });
 }
 
+getDeliveryDistribution() {
+  return this.http.get<{ deliveryType: string, count: number }[]>(
+    this.baseUrl + 'analytics/delivery-distribution', { withCredentials: true });
+}
+
+getOnTimeDispatch() {
+  return this.http.get<{
+    eligibleOrders: number,
+    onTimeDeliveries: number,
+    onTimeRate: number
+  }>(this.baseUrl + 'analytics/on-time-dispatch-rate', { withCredentials: true });
+}
+
+getAverageDeliveryTime() {
+  return this.http.get<number>(
+    this.baseUrl + 'analytics/average-delivery-time', { withCredentials: true });
+}
+
+getRoleDistribution() {
+  return this.http.get<Record<string, number>>(this.baseUrl + 'analytics/role-distribution', { withCredentials: true });
+}
+
+getRegistrationsOverTime() {
+  return this.http.get<{ date: string, count: number }[]>(this.baseUrl + 'analytics/registrations-over-time', { withCredentials: true });
+}
 
 
 }

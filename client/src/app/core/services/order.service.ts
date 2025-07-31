@@ -23,5 +23,10 @@ export class OrderService {
     return this.http.get<Order>(this.baseUrl + 'orders/' + id, {withCredentials: true});
   }
 
+  markOrderAsDelivered(id: number) {
+  return this.http.put(this.baseUrl + 'admin/orders/' + id + '/deliver', {}, { withCredentials: true });
+}
+
+
   
 }
