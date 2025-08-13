@@ -1,13 +1,22 @@
 import { Component, inject } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { MatCard } from '@angular/material/card';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AccountService } from '../../../core/services/account.service';
 import { SnackbarService } from '../../../core/services/snackbar.service';
 import { TextInputComponent } from '../../../shared/components/text-input/text-input.component';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { NgClass, NgIf } from '@angular/common';
+
+export function matchPasswords(password: string, confirmPassword: string): ValidatorFn {
+  return (control: AbstractControl) => {
+    const pass = control.get(password)?.value;
+    const confirmPass = control.get(confirmPassword)?.value;
+    return pass === confirmPass ? null : { passwordMismatch: true };
+  };
+}
 
 @Component({
   selector: 'app-register',
@@ -17,11 +26,15 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatButton,
     TextInputComponent,
     MatCheckbox,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    RouterLink,
+    NgClass,
+    NgIf
 ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
+
 export class RegisterComponent {
   private fb = inject(FormBuilder);
   private accountService = inject(AccountService);
@@ -35,12 +48,17 @@ export class RegisterComponent {
     lastName: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     password: ['', Validators.required],
+    confirmPassword: ['', Validators.required],
     agree: [false, Validators.requiredTrue]
-  });
+  }, { validators: matchPasswords('password', 'confirmPassword') });
 
   onSubmit() {
+    if (this.registerForm.invalid) return;
     this.loading = true;
-    this.accountService.register(this.registerForm.value).subscribe({
+
+    // We don't need to send confirmPassword to backend
+    const { confirmPassword, ...formValue } = this.registerForm.value;
+    this.accountService.register(formValue).subscribe({
       next: () => {
         this.snack.success('Registration successful - you can now login');
         const email = this.registerForm.get('email')?.value;
@@ -62,5 +80,13 @@ export class RegisterComponent {
       this.loading = false;
     }
   })
+}
+
+loginWithGoogle() {
+  window.location.href = this.accountService.loginWithGoogleUrl(); 
+}
+
+loginWithGitHub() {
+  window.location.href = this.accountService.loginWithGitHubUrl(); 
 }
 }

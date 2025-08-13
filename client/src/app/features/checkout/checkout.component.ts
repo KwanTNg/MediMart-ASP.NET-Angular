@@ -180,36 +180,74 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     }
   }
 
-  async confirmPayment(stepper: MatStepper) {
-    this.loading = true;
-    try {
-      if (this.confirmationToken) {
-        const result = await this.stripeService.confirmPayment(this.confirmationToken);
-        if (result.paymentIntent?.status === 'succeeded') {
-          const order = await this.createOrderModel();
-          const orderResult = await firstValueFrom(this.orderService.createOrder(order));
-          if (!orderResult) {
-            throw new Error('Order creation failed');
-          }
-          this.orderService.orderComplete = true;
-          //if sucess, remove the cart and delivery method
-          this.cartService.deleteCart();
-          this.cartService.selectedDelivery.set(null);
+  // async confirmPayment(stepper: MatStepper) {
+  //   this.loading = true;
+  //   try {
+  //     if (this.confirmationToken) {
+  //       const result = await this.stripeService.confirmPayment(this.confirmationToken);
+  //       if (result.paymentIntent?.status === 'succeeded') {
+  //         const order = await this.createOrderModel();
+  //         const orderResult = await firstValueFrom(this.orderService.createOrder(order));
+  //         if (!orderResult) {
+  //           throw new Error('Order creation failed');
+  //         }
+  //         this.orderService.orderComplete = true;
+  //         //if sucess, remove the cart and delivery method
+  //         this.cartService.deleteCart();
+  //         this.cartService.selectedDelivery.set(null);
 
-          this.router.navigateByUrl('/checkout/success');
+  //         this.router.navigateByUrl('/checkout/success');
         
-        } else if (result.error) {
-            throw new Error(result.error.message);
-        } else {
-          throw new Error('Something went wrong');
-        }
-      }
-    } catch (error: any) {
-      this.snackbar.error(error.message || 'Something went wrong');
-      //if error, redirect to previos step
-      stepper.previous();
-    } finally {
-      this.loading = false;
+  //       } else if (result.error) {
+  //           throw new Error(result.error.message);
+  //       } else {
+  //         throw new Error('Something went wrong');
+  //       }
+  //     }
+  //   } catch (error: any) {
+  //     this.snackbar.error(error.message || 'Something went wrong');
+  //     //if error, redirect to previos step
+  //     stepper.previous();
+  //   } finally {
+  //     this.loading = false;
+  //   }
+  // }
+  async confirmPayment(stepper: MatStepper) {
+  this.loading = true;
+  try {
+    if (!this.confirmationToken) {
+      throw new Error('Payment not initialized');
     }
+
+    // Step 1 – Create the order BEFORE confirming payment
+    const order = await this.createOrderModel();
+    const createdOrder = await firstValueFrom(this.orderService.createOrder(order));
+    if (!createdOrder) {
+      throw new Error('Order creation failed');
+    }
+
+    // Step 2 – Confirm payment with Stripe
+    const paymentResult = await this.stripeService.confirmPayment(this.confirmationToken);
+
+    if (paymentResult.error) {
+      throw new Error(paymentResult.error.message);
+    }
+
+    // Stripe will send webhook → backend updates order status
+    this.orderService.orderComplete = true;
+
+    // Step 3 – Clear cart & navigate to success page
+    this.cartService.deleteCart();
+    this.cartService.selectedDelivery.set(null);
+    this.router.navigateByUrl('/checkout/success');
+
+  } catch (error: any) {
+    this.snackbar.error(error.message || 'Something went wrong');
+    // If payment fails, keep order as AwaitingPayment until it expires or is retried
+    stepper.previous();
+  } finally {
+    this.loading = false;
   }
+}
+
 }

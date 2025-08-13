@@ -3,9 +3,9 @@
         <div class="px-4 w-full">
             <div class="flex justify-between items-center align-middle">
                 <h2 class="text-2xl text-center font-semibold">Order summary for order #{{order.id}}</h2>
-                @if (accountService.currentUser()?.roles === "Admin" && order.status !== 'Delivered') {
-                <button mat-stroked-button (click)="markAsDelivered(order!.id)">
-                    Mark as Delivered
+                @if (accountService.currentUser()?.roles === "Admin" && order.status !== 'Dispatched') {
+                <button mat-stroked-button (click)="markAsDispatched(order!.id)">
+                    Mark as Dispatched
                 </button>
             }
                 <button (click)="onReturnClick()" mat-stroked-button>{{buttonText}}</button>

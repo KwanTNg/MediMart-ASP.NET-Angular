@@ -5,6 +5,9 @@ import { OrderParams } from '../../shared/models/orderParams';
 import { Pagination } from '../../shared/models/pagination';
 import { Order, OrderItem } from '../../shared/models/order';
 import { ChangeUserRoleDto } from '../../shared/models/changeUserRoleDto';
+import { ContactRequest } from '../../shared/models/contactRequest';
+import { ContactMessageParams } from '../../shared/models/contactMessageParams';
+import { ContactMessage } from '../../shared/models/contactMessage';
 
 @Injectable({
   providedIn: 'root'
@@ -43,5 +46,16 @@ export class AdminService {
 
   changeUserRole(dto: ChangeUserRoleDto) {
     return this.http.post(this.baseUrl + 'account/change-role', dto, {withCredentials: true});
+  }
+
+  getContactMessages(contactMessageParams: ContactMessageParams) {
+    let params = new HttpParams();
+    params = params.append('pageIndex', contactMessageParams.pageNumber);
+    params = params.append('pageSize', contactMessageParams.pageSize);
+    return this.http.get<Pagination<ContactMessage>>(this.baseUrl + 'admin/contact-messages/', {params, withCredentials: true});
+  }
+
+  sendContactMessage(formData: FormData) {
+    return this.http.post(this.baseUrl + 'contact/send', formData);
   }
 }

@@ -63,7 +63,10 @@ initializeShop() {
 
 getProducts() {
   this.shopService.getProducts(this.shopParams).subscribe({
-      next: response => this.products = response,
+      next: response => {
+        this.products = response;
+        this.shopService.lastProductList = response.data;
+      },
       error: error => this.snack.error("Too Many Requests!"),
   })
 }

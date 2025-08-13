@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AccountService } from '../../../../core/services/account.service';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
@@ -10,6 +10,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCard } from '@angular/material/card';
 
+export function matchPasswords(password: string, confirmPassword: string): ValidatorFn {
+  return (control: AbstractControl) => {
+    const pass = control.get(password)?.value;
+    const confirmPass = control.get(confirmPassword)?.value;
+    return pass === confirmPass ? null : { passwordMismatch: true };
+  };
+}
 
 @Component({
   selector: 'app-reset-password',
@@ -25,8 +32,9 @@ export class ResetPasswordComponent implements OnInit {
   private snack = inject(SnackbarService);
 
  resetForm = this.fb.group({
-    newPassword: ['', [Validators.required, Validators.minLength(6)]]
-  });
+    newPassword: ['', [Validators.required, Validators.minLength(8)]],
+    confirmPassword: ['', [Validators.required]]
+  }, { validators: matchPasswords('newPassword', 'confirmPassword')});
 
   userId = '';
   token = '';
@@ -39,10 +47,12 @@ export class ResetPasswordComponent implements OnInit {
   onSubmit() {
     if (!this.resetForm.valid || !this.userId || !this.token) return;
 
+    const { confirmPassword, ...formValue } = this.resetForm.value;
+
     const model = {
       userId: this.userId,
       token: this.token,
-      newPassword: this.resetForm.value.newPassword!
+      newPassword: formValue.newPassword!
     };
 
     this.accountService.resetPassword(model).subscribe({

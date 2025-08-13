@@ -25,7 +25,7 @@
             @if (accountService.currentUser()) {
                 <button mat-button [matMenuTriggerFor]="loginedMenu" class="custom-badge">
                     <mat-icon>arrow_drop_down_circle</mat-icon>
-                    <span>{{accountService.currentUser()?.firstName ?? accountService.currentUser()?.email}}</span>
+                    <span>{{accountService.currentUser()?.firstName?.trim() ? accountService.currentUser()?.firstName : accountService.currentUser()?.email}}</span>
                 </button>
             } @else {
             <button routerLink="/account/login" mat-stroked-button class="text-sm lg:text-base w-28">Login</button>
@@ -41,8 +41,12 @@
   <button mat-menu-item routerLink="/delivery" routerLinkActive="active">Delivery</button>
   <button mat-menu-item routerLink="/faq" routerLinkActive="active">FAQ</button>
   <button mat-menu-item routerLink="/contactus" routerLinkActive="active">Contact Us</button>
-  <button mat-menu-item *appIsAdmin routerLink="/admin" routerLinkActive="active">Management</button>
-  <button mat-menu-item *appIsAdmin routerLink="/chart" routerLinkActive="active">Data Visualisation</button>
+  @if (accountService.currentUser()?.roles === "Admin" || accountService.currentUser()?.roles === "Director") {
+  <button mat-menu-item routerLink="/admin" routerLinkActive="active">Management</button>
+  }
+  @if (accountService.currentUser()?.roles === "Admin" || accountService.currentUser()?.roles === "Director" || accountService.currentUser()?.roles === "Analyst") {
+  <button mat-menu-item routerLink="/chart" routerLinkActive="active">Data Visualisation</button>
+  }
 </mat-menu>
 
 <mat-menu #loginedMenu="matMenu" class="px-5">

@@ -7,20 +7,27 @@ using API.Extensions;
 using Core.Entities;
 using Core.Specifications;
 using Microsoft.AspNetCore.Identity;
+using Infrastructure.Services;
 
 namespace API.Controllers;
 
 [Authorize]
-public class OrdersController(ICartService cartService, IUnitOfWork unit,
+public class OrdersController(ICartService cartService, IUnitOfWork unit, IPaymentService paymentService,
     UserManager<AppUser> userManager, IEmailService emailService) : BaseApiController
 {
     [HttpPost]
     public async Task<ActionResult<Order>> CreateOrder(CreateOrderDto orderDto)
     {
         var email = User.GetEmail();
+        // Step 1: Check if the cart exists and has a PaymentIntentId
         var cart = await cartService.GetCartAsync(orderDto.CartId);
-        if (cart == null) return BadRequest("Cart not found");
-        if (cart.PaymentIntentId == null) return BadRequest("No payment intent for this order.");
+        if (cart == null || string.IsNullOrEmpty(cart.PaymentIntentId))
+            return BadRequest("Cart or PaymentIntent not found");
+
+        // Step 2: Check for existing order wuth same PaymentIntentId
+        var existingOrderSpec = new OrderSpecification(cart.PaymentIntentId, true);
+        var existingOrder = await unit.Repository<Order>().GetEntityWithSpec(existingOrderSpec);
+        if (existingOrder != null) return Ok(existingOrder);
 
         var items = new List<OrderItem>();
         foreach (var item in cart.Items)
@@ -52,7 +59,8 @@ public class OrdersController(ICartService cartService, IUnitOfWork unit,
             Subtotal = items.Sum(x => x.Price * x.Quantity),
             PaymentSummary = orderDto.PaymentSummary,
             PaymentIntentId = cart.PaymentIntentId,
-            BuyerEmail = email
+            BuyerEmail = email,
+            Status = OrderStatus.AwaitingPayment
         };
 
         unit.Repository<Order>().Add(order);

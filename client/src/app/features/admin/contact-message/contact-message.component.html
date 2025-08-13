@@ -1,0 +1,57 @@
+<div class="mx-auto mt-10 min-h-screen">
+        <div class="flex justify-between items-center mt-2 max-w-screen-2xl mx-auto">
+             <h2 class="font-semibold text-2xl mb-6 text-center mt-7">Contact Messages</h2>
+                
+        </div>
+    <div class="flex flex-col">
+        <div class="w-full">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr class="uppercase text-gray-600 text-sm">
+                        <th class="text-center px-6 py-3">Created At</th>
+                        <th class="text-left">Name</th>
+                        <th class="text-left">Email</th>
+                        <th class="text-left">Message</th>  
+                        <th class="text-left">Attachment</th>      
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @for (contactMessage of contactMessages?.data; track contactMessage.id) {
+                        <tr class="hover:bg-gray-100">
+                            <th class="text-left px-6 py-3">{{contactMessage.createdAt | date: 'medium'}}</th>
+                            <td>{{contactMessage.name}}</td>
+                            <td>{{contactMessage.email}}</td>
+                            <td>{{contactMessage.message}}</td>
+                            <td class="py-1">
+                                <ng-container *ngIf="contactMessage.attachmentUrl">
+                                    <a [href]="contactMessage.attachmentUrl" target="_blank" class="text-blue-600 underline">
+                                    <ng-container [ngSwitch]="getFileType(contactMessage.attachmentUrl)">
+                                        <img *ngSwitchCase="'image'" [src]="contactMessage.attachmentUrl" alt="Preview" class="h-24 md:h-32 lg:h-40 w-auto rounded shadow-sm" />
+                                        <span *ngSwitchCase="'pdf'">📄 View PDF</span>
+                                        <span *ngSwitchCase="'doc'">📝 View Document</span>
+                                        <span *ngSwitchCase="'excel'">📊 View Spreadsheet</span>
+                                        <span *ngSwitchDefault>📎 Download File</span>
+                                    </ng-container>
+                                    </a>
+                                </ng-container>
+                            </td>
+                            
+                        </tr>
+                    }
+                </tbody>
+            </table>
+                    <mat-paginator 
+                        class="custom-card"
+                        [pageSizeOptions]="[10, 20, 100]"
+                        [length]="contactMessages?.count"
+                        [pageSize]="contactMessageParams.pageSize"
+                        (page) = onPageChange($event)
+                        showFirstLastButtons
+                        >
+                    </mat-paginator>
+        </div>
+    </div>
+</div>
+
+
+

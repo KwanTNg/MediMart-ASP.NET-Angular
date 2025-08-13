@@ -18,7 +18,6 @@ import { OrderComponent } from './features/orders/order/order.component';
 import { OrderDetailComponent } from './features/orders/order-detail/order-detail.component';
 import { orderCompleteGuard } from './core/guards/order-complete.guard';
 import { OrderManagementComponent } from './features/admin/order-management/order-management.component';
-import { adminGuard } from './core/guards/admin.guard';
 import { ChartSummaryComponent } from './features/admin/charts/chart-summary/chart-summary.component';
 import { OrderItemComponent } from './features/admin/order-item/order-item.component';
 import { ConfirmEmailComponent } from './features/account/email/confirm-email/confirm-email.component';
@@ -42,6 +41,8 @@ import { OnTimeDispatchRateComponent } from './features/admin/charts/on-time-dis
 import { AverageDeliveryTimeComponent } from './features/admin/charts/average-delivery-time/average-delivery-time.component';
 import { RoleDistributionComponent } from './features/admin/charts/role-distribution/role-distribution.component';
 import { RegistrationsOverTimeComponent } from './features/admin/charts/registrations-over-time/registrations-over-time.component';
+import { TermsComponent } from './features/terms/terms.component';
+import { PrivacyComponent } from './features/privacy/privacy.component';
 
 export const routes: Routes = [
     {path: '', component: ShopComponent},
@@ -85,5 +86,7 @@ export const routes: Routes = [
     {path: 'average-delivery-time', component: AverageDeliveryTimeComponent},
     {path: 'role-distribution', component: RoleDistributionComponent},
     {path: 'registrations-over-time', component: RegistrationsOverTimeComponent},
+    {path: 'terms', component: TermsComponent},
+    {path: 'privacy', component: PrivacyComponent},
     {path: '**', redirectTo: 'not-found', pathMatch: 'full'}
 ];

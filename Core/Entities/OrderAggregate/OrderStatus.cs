@@ -7,5 +7,6 @@ public enum OrderStatus
     PaymentFailed,
     PaymentMismatch,
     StockIssue,
-    Delivered
+    Dispatched,
+    AwaitingPayment
 }

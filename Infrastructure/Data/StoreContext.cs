@@ -17,6 +17,7 @@ public class StoreContext(DbContextOptions options) : IdentityDbContext<AppUser>
     public DbSet<OrderItem> OrderItems { get; set; }
     public DbSet<Message> Messages { get; set; }
     public DbSet<Photo> Photos { get; set; }
+    public DbSet<ContactMessage> ContactMessages { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

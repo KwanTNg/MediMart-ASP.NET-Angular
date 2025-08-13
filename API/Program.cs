@@ -14,6 +14,7 @@ using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.SignalR;
 using Core.Settings;
+using Azure.Communication.Email;
 //Infrastructure references Core
 //API references both Infrastructure and Core
 
@@ -23,6 +24,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+string emailConnStr = builder.Configuration["COMMUNICATION_SERVICES_CONNECTION_STRING"]
+    ?? throw new InvalidOperationException("Email connection string is missing.");
+builder.Services.AddSingleton(new EmailClient(emailConnStr));
 builder.Services.AddDbContext<StoreContext>(opt =>
 {
     opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -45,26 +49,48 @@ builder.Services.AddSingleton<IResponseCacheService, ResponseCacheService>();
 builder.Services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
 builder.Services.AddScoped<IPhotoService, PhotoService>();
 builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["TokenKey"] ?? throw new Exception("TokenKey missing"))
-            ),
-            ValidateIssuer = false,
-            ValidateAudience = false
-        };
-    });
-
-
-builder.Services.AddAuthorization();
-builder.Services.AddIdentityApiEndpoints<AppUser>()
+// builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//     .AddJwtBearer(options =>
+//     {
+//         options.TokenValidationParameters = new TokenValidationParameters
+//         {
+//             ValidateIssuerSigningKey = true,
+//             IssuerSigningKey = new SymmetricSecurityKey(
+//                 Encoding.UTF8.GetBytes(builder.Configuration["TokenKey"] ?? throw new Exception("TokenKey missing"))
+//             ),
+//             ValidateIssuer = false,
+//             ValidateAudience = false
+//         };
+//     });
+builder.Services
+    .AddIdentityApiEndpoints<AppUser>()
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<StoreContext>()
     .AddDefaultTokenProviders();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SameSite = SameSiteMode.None; // For Angular cross-site
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // HTTPS only
+    options.SlidingExpiration = true;
+});
+builder.Services.AddAuthentication()
+    .AddGoogle(googleOptions =>
+    {
+        googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"]!;
+        googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
+        googleOptions.SignInScheme = IdentityConstants.ExternalScheme;
+    })
+    .AddGitHub(githubOptions =>
+    {
+        githubOptions.ClientId = builder.Configuration["Authentication:GitHub:ClientId"]!;
+        githubOptions.ClientSecret = builder.Configuration["Authentication:GitHub:ClientSecret"]!;
+        githubOptions.Scope.Add("user:email");
+        githubOptions.SignInScheme = IdentityConstants.ExternalScheme;
+    });
+
+builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IEmailService, EmailService>();

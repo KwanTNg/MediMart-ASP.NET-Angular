@@ -1,4 +1,4 @@
 USE medimart;
 UPDATE AspNetUsers
-SET EmailConfirmed = 1
-WHERE Email = 'admin@medimart.com';
+SET emailconfirmed = 1
+WHERE Email = 'kwanng.developer@gmail.com';

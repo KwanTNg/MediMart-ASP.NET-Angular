@@ -16,7 +16,7 @@ public class AnalyticsController(IUnitOfWork unit, UserManager<AppUser> userMana
     [HttpGet("sales-over-time")]
     public async Task<ActionResult<List<SalesOverTimeDto>>> GetSalesOverTime()
     {
-        var spec = new OrderSpecification(OrderStatus.Delivered);
+        var spec = new OrderSpecification(OrderStatus.Dispatched);
         
         var orders = await unit.Repository<Order>()
             .ListAsync(spec);
@@ -43,7 +43,7 @@ public class AnalyticsController(IUnitOfWork unit, UserManager<AppUser> userMana
     public async Task<ActionResult<List<TopSellingProductDto>>> GetTopSellingProducts()
     {
         var orders = await unit.Repository<Order>()
-            .ListAsync(new OrderSpecification(OrderStatus.Delivered));
+            .ListAsync(new OrderSpecification(OrderStatus.Dispatched));
 
         var productSales = orders
             .SelectMany(o => o.OrderItems)
@@ -93,7 +93,7 @@ public class AnalyticsController(IUnitOfWork unit, UserManager<AppUser> userMana
     public async Task<ActionResult<List<RevenuePerProductDto>>> GetRevenuePerProduct()
     {
         var orders = await unit.Repository<Order>()
-            .ListAsync(new OrderSpecification(OrderStatus.Delivered));
+            .ListAsync(new OrderSpecification(OrderStatus.Dispatched));
 
         var revenueByProduct = orders
             .SelectMany(o => o.OrderItems.Select(oi => new
@@ -116,7 +116,7 @@ public class AnalyticsController(IUnitOfWork unit, UserManager<AppUser> userMana
     [HttpGet("delivery-distribution")]
     public async Task<ActionResult<List<DeliveryDistributionDto>>> GetDeliveryDistribution()
     {
-        var spec = new OrderSpecification(OrderStatus.Delivered);
+        var spec = new OrderSpecification(OrderStatus.Dispatched);
         var orders = await unit.Repository<Order>().ListAsync(spec);
 
         var distribution = orders
@@ -142,7 +142,7 @@ public class AnalyticsController(IUnitOfWork unit, UserManager<AppUser> userMana
     [HttpGet("on-time-dispatch-rate")]
 public async Task<ActionResult<OnTimeDispatchDto>> GetOnTimeDispatchRate()
 {
-    var spec = new OrderSpecification(OrderStatus.Delivered);
+    var spec = new OrderSpecification(OrderStatus.Dispatched);
     var orders = await unit.Repository<Order>().ListAsync(spec);
 
     var eligible = orders.ToList();
@@ -181,7 +181,7 @@ public async Task<ActionResult<OnTimeDispatchDto>> GetOnTimeDispatchRate()
     [HttpGet("average-delivery-time")]
     public async Task<ActionResult<double>> GetAverageDeliveryTime()
     {
-        var spec = new OrderSpecification(OrderStatus.Delivered);
+        var spec = new OrderSpecification(OrderStatus.Dispatched);
         var orders = await unit.Repository<Order>().ListAsync(spec);
 
         var avgDays = orders

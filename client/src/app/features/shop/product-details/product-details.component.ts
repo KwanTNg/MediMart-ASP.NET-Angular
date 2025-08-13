@@ -16,6 +16,8 @@ import { SnackbarService } from '../../../core/services/snackbar.service';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { IsAdminDirective } from '../../../shared/directives/is-admin.directive';
 import { AccountService } from '../../../core/services/account.service';
+import { ProductItemComponent } from "../product-item/product-item.component";
+import { ShopParams } from '../../../shared/models/shopParams';
 
 @Component({
   selector: 'app-product-details',
@@ -28,8 +30,9 @@ import { AccountService } from '../../../core/services/account.service';
     MatLabel,
     CurrencyPipe,
     FormsModule,
-    IsAdminDirective
-  ],
+    IsAdminDirective,
+    ProductItemComponent
+],
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.scss'
 })
@@ -41,30 +44,64 @@ export class ProductDetailsComponent implements OnInit {
   private dialog = inject(MatDialog);
   private snack = inject(SnackbarService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   accountService = inject(AccountService);
+  encodeURIComponent = encodeURIComponent;
+  productUrl = '';
   product?: Product;
   quantityInCart = 0;
   quantity = 0;
+  relatedProducts: Product[] = [];
+  shopParams = new ShopParams();
 
   ngOnInit(): void {
-    this.loadProduct();
+    this.productUrl = window.location.href; // current page URL
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
+      if (!id) return;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // Load selected product
+      this.shopService.getProduct(+id).subscribe(prod => {
+        this.product = prod;
+
+        if (this.shopService.lastProductList?.length) {
+          this.relatedProducts = this.shopService.lastProductList
+            .filter(p => p.id !== prod.id && p.category === prod.category)
+            .slice(0, 5);
+        }
+        else {
+          // Fallback: fetch all products from API
+          this.shopService.getProducts(this.shopParams).subscribe(all => {
+            this.relatedProducts = all.data
+              .filter(p => p.id !== prod.id && p.category === prod.category)
+              .slice(0, 5);
+          });
+        }
+        this.updateQuantityInCart();
+      });
+    });
+  
+
+    // this.loadProduct();
     this.cartService.cartChanges?.subscribe(() => {
     this.updateQuantityInCart();
   });
   }
 
-  loadProduct() {
-    const id = this.activatedRoute.snapshot.paramMap.get('id');
-    if (!id) return;
-    this.shopService.getProduct(+id).subscribe({
-      next: product => {
-        this.product = product,
-        console.log(this.product);
-        this.updateQuantityInCart();
-      },
-      error: error => console.log(error)
-    })
-  }
+  // loadProduct() {
+  //   const id = this.activatedRoute.snapshot.paramMap.get('id');
+  //   if (!id) return;
+  //   this.shopService.getProduct(+id).subscribe({
+  //     next: product => {
+  //       this.product = product,
+  //       // Remove current product from related list
+  //       this.relatedProducts = this.relatedProducts.filter(p => p.id !== product.id).slice(0, 5);
+  //       this.updateQuantityInCart();
+  //     },
+  //     error: error => console.log(error)
+  //   })
+  // }
 
   updateCart() {
     if (!this.product) return;

@@ -127,6 +127,11 @@ export class AccountService {
   return this.http.post(this.baseUrl + 'account/reset-password', model);
 }
 
+  loginWithGoogleUrl() {
+    return this.baseUrl + 'account/external-login?provider=Google&returnUrl=/';
+  }
 
-  
+    loginWithGitHubUrl() {
+    return this.baseUrl + 'account/external-login?provider=GitHub&returnUrl=/';
+  }
 }

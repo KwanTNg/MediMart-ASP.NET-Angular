@@ -39,7 +39,7 @@ export class OrderDetailComponent implements OnInit {
   }
 
   onReturnClick() {
-    this.accountService.isAdmin()
+    this.accountService.currentUser()?.roles === "Admin" || this.accountService.currentUser()?.roles === "Director"
       ? this.router.navigateByUrl('/admin')
       : this.router.navigateByUrl('/orders')
   }
@@ -47,7 +47,7 @@ export class OrderDetailComponent implements OnInit {
   loadOrder() {
     const id = this.activatedRoute.snapshot.paramMap.get('id');
     if(!id) return;
-    const loadOrderData = this.accountService.isAdmin()
+    const loadOrderData = this.accountService.currentUser()?.roles === "Admin" || this.accountService.currentUser()?.roles === "Director"
       ? this.adminService.getOrder(+id)
       : this.orderService.getOrderDetailed(+id);
     loadOrderData.subscribe({
@@ -55,13 +55,13 @@ export class OrderDetailComponent implements OnInit {
     })
   }
 
-  markAsDelivered(id: number) {
-  this.orderService.markOrderAsDelivered(id).subscribe({
+  markAsDispatched(id: number) {
+  this.orderService.markOrderAsDispatched(id).subscribe({
     next: () => {
-      this.order!.status = 'Delivered';
+      this.order!.status = 'Dispatched';
       this.router.navigateByUrl('/admin');
     },
-    error: err => console.error('Failed to mark as delivered', err)
+    error: err => console.error('Failed to mark as dispatched', err)
   });
 }
 

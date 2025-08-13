@@ -4,7 +4,7 @@ import { MatCard, MatCardActions, MatCardContent } from '@angular/material/card'
 import { CurrencyPipe, NgClass, NgIf } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
-import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { CartService } from '../../../core/services/cart.service';
 import { IsAdminDirective } from '../../../shared/directives/is-admin.directive';
 import { AccountService } from '../../../core/services/account.service';
@@ -18,7 +18,6 @@ import { AccountService } from '../../../core/services/account.service';
     MatCardActions,
     MatIcon,
     MatButton,
-    RouterLink,
     IsAdminDirective,
     NgClass
   ],
@@ -27,6 +26,19 @@ import { AccountService } from '../../../core/services/account.service';
 })
 export class ProductItemComponent {
   @Input() product?: Product
+  @Input() allProducts?: Product[];
   cartService = inject(CartService);
   accountService = inject(AccountService);
+  private router = inject(Router);
+
+goToProduct(product: Product) {
+    // Scroll instantly before navigation for immediate feedback
+    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+    this.router.navigate(['product/', product.id]).then(() => {
+      // Ensure smooth scroll finishes after view updates
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 0);
+    });;
+  }
 }

@@ -2,3 +2,8 @@
     background-color: white;
     box-shadow: 0 2px 4px rgba(106, 169, 236, 0.2);
 }
+
+::ng-deep .password-mismatch .mat-mdc-text-field-wrapper {
+  border: 1px solid #ef4444 !important; /* Tailwind's red-500 */
+  border-radius: 0.375rem; /* match rounded-md */
+}

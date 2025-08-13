@@ -5,7 +5,8 @@ import { OrderItemComponent } from "./order-item/order-item.component";
 import { UserManagementComponent } from "./user-management/user-management.component";
 import { ActivatedRoute } from '@angular/router';
 import { InventoryManagementComponent } from './inventory-management/inventory-management.component';
-import { IsAdminDirective } from '../../shared/directives/is-admin.directive';
+import { AccountService } from '../../core/services/account.service';
+import { ContactMessageComponent } from "./contact-message/contact-message.component";
 
 @Component({
   selector: 'app-admin',
@@ -15,13 +16,14 @@ import { IsAdminDirective } from '../../shared/directives/is-admin.directive';
     OrderItemComponent,
     InventoryManagementComponent,
     UserManagementComponent,
-    IsAdminDirective
+    ContactMessageComponent
 ],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.scss'
 })
 export class AdminComponent implements OnInit {
   private route = inject(ActivatedRoute);
+  accountService = inject(AccountService);
   selectedTabIndex = 0;
 
   ngOnInit(): void {
@@ -33,11 +35,14 @@ export class AdminComponent implements OnInit {
         case 'order-items':
           this.selectedTabIndex = 1;
           break;
-        case 'user-management':
+        case 'inventory-management':
           this.selectedTabIndex = 2;
           break;
-        case 'inventory-management':
+        case 'user-management':
           this.selectedTabIndex = 3;
+          break;
+        case 'contact-messages':
+          this.selectedTabIndex = 4;
           break;
         default:
           this.selectedTabIndex = 0;

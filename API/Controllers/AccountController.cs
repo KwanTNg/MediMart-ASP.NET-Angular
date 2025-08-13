@@ -46,6 +46,56 @@ public class AccountController(SignInManager<AppUser> signInManager,
         return Ok();
     }
 
+    [HttpGet("external-login")]
+    public IActionResult ExternalLogin(string provider, string returnUrl = "/")
+    {
+        var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { returnUrl });
+        var properties = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+        return Challenge(properties, provider);
+    }
+
+    [HttpGet("external-login-callback")]
+    public async Task<IActionResult> ExternalLoginCallback(string returnUrl = "/")
+    {
+        var info = await signInManager.GetExternalLoginInfoAsync();
+        if (info == null) return Redirect(configuration.GetSection("Application:AppDomain").Value + "login?error=external-login-failed");
+
+        // Try to sign in the user with this external login
+        var result = await signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false);
+        if (result.Succeeded)
+            return Redirect(configuration.GetSection("Application:AppDomain").Value);
+
+        // If the user does not have an account, create one
+        var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+        var user = await userManager.FindByEmailAsync(email);
+
+        if (user == null)
+        {
+            user = new AppUser
+            {
+                UserName = email,
+                Email = email,
+                FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName) ?? "",
+                LastName = info.Principal.FindFirstValue(ClaimTypes.Surname) ?? "",
+                EmailConfirmed = true
+            };
+            var createResult = await userManager.CreateAsync(user);
+            if (!createResult.Succeeded)
+            {
+                return BadRequest("Failed to create user");
+            }
+            var roleResult = await signInManager.UserManager.AddToRoleAsync(user, "Patient");
+            if (!roleResult.Succeeded)
+            {
+                return BadRequest("Failed to assign role");
+            }
+        }
+        await userManager.AddLoginAsync(user, info);
+        await signInManager.SignInAsync(user, false);
+        return Redirect(configuration.GetSection("Application:AppDomain").Value);
+    }
+
+
     [Authorize]
     [HttpGet("enable-2fa")]
     public async Task<IActionResult> Enable2FA()
@@ -165,6 +215,9 @@ public class AccountController(SignInManager<AppUser> signInManager,
     {
         if (User.Identity?.IsAuthenticated == false) return NoContent();
         var user = await signInManager.UserManager.GetUserByEmailWithAddress(User);
+
+        if (user == null)
+        return NotFound("User not found.");
 
         return Ok(new
         {

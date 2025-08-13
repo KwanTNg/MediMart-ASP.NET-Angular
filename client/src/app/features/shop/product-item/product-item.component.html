@@ -1,5 +1,5 @@
 @if (product) {
-<mat-card class="aspect-square w-full flex product-card" appearance="raised" routerLink="/product/{{product.id}}">
+<mat-card class="aspect-square w-full flex product-card" appearance="raised" (click)="goToProduct(product)">
     <img class="w-full aspect-square object-cover" src="{{product.pictureUrl}}" alt="{{product.name}}">
     <mat-card-content class="mt-1">
         <p class="text-sm font-semibold uppercase">{{product.name}}</p>

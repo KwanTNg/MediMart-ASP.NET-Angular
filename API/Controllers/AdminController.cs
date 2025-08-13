@@ -32,18 +32,18 @@ public class AdminController(IUnitOfWork unit, UserManager<AppUser> userManager)
         return order.ToDto();
     }
 
-    [HttpPut("orders/{id:int}/deliver")]
-    public async Task<ActionResult> MarkOrderAsDelivered(int id)
+    [HttpPut("orders/{id:int}/dispatch")]
+    public async Task<ActionResult> MarkOrderAsDispatched(int id)
     {
         var spec = new OrderSpecification(id);
         var order = await unit.Repository<Order>().GetEntityWithSpec(spec);
 
         if (order == null) return NotFound("Order not found");
 
-        if (order.Status == OrderStatus.Delivered)
-            return BadRequest("Order is already marked as delivered");
+        if (order.Status == OrderStatus.Dispatched)
+            return BadRequest("Order is already marked as dispatched");
 
-        order.Status = OrderStatus.Delivered;
+        order.Status = OrderStatus.Dispatched;
         order.DeliveryDate = DateTime.UtcNow;
 
         unit.Repository<Order>().Update(order);
@@ -64,10 +64,18 @@ public class AdminController(IUnitOfWork unit, UserManager<AppUser> userManager)
             specParams.PageSize, o => o.ToDto());
     }
 
+    [HttpGet("contact-messages")]
+    public async Task<ActionResult<IReadOnlyList<ContactMessage>>> GetContactMessages([FromQuery] PagingParams specParams)
+    {
+        var spec = new ContactMessageSpecification(specParams);
+        return await CreatePagedResult(unit.Repository<ContactMessage>(), spec, specParams.PageIndex,
+            specParams.PageSize, x => x);
+    }
+
     [HttpGet("users")]
     public async Task<ActionResult> GetUsers([FromQuery] UserSpecParams specParams)
     {
-        var roles = new[] { "patient", "pharmacist", "analyst", "director" };
+        var roles = new[] { "patient", "pharmacist", "analyst", "director", "admin" };
         var users = new List<AppUser>();
 
         foreach (var role in roles)

@@ -44,8 +44,52 @@
                     <p class="mt-6 text-gray-500">
                         {{product.description}}
                     </p>
+                    <div class="flex items-center gap-4 mt-6">
+                        <!-- Facebook -->
+                        <a 
+                            [href]="'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(productUrl)" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            aria-label="Share on Facebook">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="#1877F2" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M22 12C22 6.477 17.523 2 12 2S2 6.477 2 12c0 5.002 3.657 9.128 8.438 9.878v-6.988H7.898v-2.89h2.54V9.845c0-2.507 1.493-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.465h-1.26c-1.243 0-1.63.771-1.63 1.562v1.875h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 17.002 22 12Z"/>
+                            </svg>
+                        </a>
+
+                        <!-- Twitter / X -->
+                        <a 
+                            [href]="'https://twitter.com/intent/tweet?url=' + encodeURIComponent(productUrl) + '&text=' + encodeURIComponent(product.name)" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            aria-label="Share on Twitter">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="#000000" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M21.538 7.197a8.44 8.44 0 0 1-2.356.646 4.115 4.115 0 0 0 1.804-2.27 8.276 8.276 0 0 1-2.605.98A4.108 4.108 0 0 0 16.616 6c-2.27 0-4.107 1.837-4.107 4.107 0 .322.036.636.107.936A11.648 11.648 0 0 1 3.216 6.2a4.096 4.096 0 0 0-.556 2.066c0 1.425.726 2.68 1.83 3.418a4.093 4.093 0 0 1-1.86-.513v.052c0 1.99 1.417 3.649 3.296 4.026a4.11 4.11 0 0 1-1.854.07c.522 1.63 2.037 2.816 3.833 2.85A8.24 8.24 0 0 1 2 19.54a11.616 11.616 0 0 0 6.29 1.842c7.548 0 11.675-6.253 11.675-11.675 0-.178-.004-.355-.012-.531a8.34 8.34 0 0 0 2.047-2.129Z"/>
+                            </svg>
+                        </a>
+
+                        <!-- WhatsApp -->
+                        <a 
+                            [href]="'https://api.whatsapp.com/send?text=' + encodeURIComponent(product.name + ' ' + productUrl)" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            aria-label="Share on WhatsApp">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="#25D366" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20.52 3.48A11.93 11.93 0 0 0 12 0C5.37 0 0 5.37 0 12c0 2.115.55 4.17 1.59 6L0 24l6.25-1.64A11.94 11.94 0 0 0 12 24c6.63 0 12-5.37 12-12 0-3.2-1.25-6.21-3.48-8.52ZM12 22c-1.86 0-3.67-.49-5.26-1.42l-.38-.22-3.7.97.99-3.6-.25-.37A9.93 9.93 0 0 1 2 12C2 6.49 6.49 2 12 2s10 4.49 10 10-4.49 10-10 10Zm5.44-7.56c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.66.15s-.76.97-.93 1.17c-.17.2-.34.22-.64.07-.3-.15-1.26-.46-2.4-1.47a9.06 9.06 0 0 1-1.68-2.07c-.17-.3-.02-.46.13-.61.13-.13.3-.34.45-.51.15-.17.2-.29.3-.49.1-.2.05-.37-.02-.51-.07-.15-.66-1.59-.91-2.18-.24-.58-.48-.5-.66-.51-.17 0-.37-.01-.57-.01-.2 0-.51.07-.78.37-.27.3-1.02.99-1.02 2.41 0 1.41 1.04 2.77 1.18 2.96.15.2 2.06 3.15 5 4.42.7.3 1.24.48 1.66.61.7.22 1.34.19 1.85.12.56-.08 1.77-.72 2.02-1.42.25-.7.25-1.29.17-1.42-.08-.13-.27-.21-.57-.36Z"/>
+                            </svg>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
+    @if (relatedProducts.length) {
+        <section class="mt-2">
+             <h2 class="text-2xl mb-4">Related Products</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+             @for (related of relatedProducts; track related.id) {
+                <app-product-item [product]="related" [allProducts]="relatedProducts"></app-product-item>
+                            }
+            </div>
+        </section>
+    }
 }

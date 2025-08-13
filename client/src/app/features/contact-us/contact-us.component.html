@@ -35,21 +35,41 @@
 
     <!-- Contact Form -->
     <div class="bg-white p-6 rounded-xl shadow-sm">
-      <form class="space-y-4">
+      <form class="space-y-4" [formGroup]="contactForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
         <div>
           <label for="name" class="block text-base font-medium text-gray-700">Name</label>
-          <input type="text" id="name" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary" placeholder="Your full name" />
+          <input formControlName="name" type="text" id="name" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary" placeholder="Your full name" />
         </div>
         <div>
           <label for="email" class="block text-base font-medium text-gray-700">Email</label>
-          <input type="email" id="email" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary" placeholder="you@example.com" />
+          <input formControlName="email" type="email" id="email" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary" placeholder="you@example.com" />
         </div>
         <div>
           <label for="message" class="block text-base font-medium text-gray-700">Message</label>
-          <textarea id="message" rows="4" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary" placeholder="How can we help you?"></textarea>
+          <textarea formControlName="message" id="message" rows="4" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary" placeholder="How can we help you?"></textarea>
         </div>
-        <button type="submit" class="text-blue-800 w-full bg-primary  font-semibold py-2 px-4 rounded-md hover:bg-primary/90 transition">
-          Send Message
+  <!-- File Upload -->
+  <div>
+    <label for="file" class="block text-base font-medium text-gray-700">Attachment (optional)</label>
+    <input type="file" id="file" (change)="onFileSelected($event)"
+      accept=".doc,.docx,.xlsx,.xls,.png,.pdf,.jpg,.jpeg"
+      class="mt-1 block w-full text-sm text-gray-500
+             file:mr-4 file:py-2 file:px-4
+             file:rounded-md file:border-0
+             file:text-sm file:font-semibold
+             file:bg-blue-600 file:text-white
+             hover:file:bg-blue-700" />
+    <p class="text-xs text-gray-500 mt-1">Allowed: DOC, DOCX, XLSX, XLS, PNG, PDF, JPG, JPEG. Max 1 MB.</p>
+  </div>
+        <div class="mt-3">
+        <re-captcha
+          (resolved)="onCaptchaResolved($event)"
+          siteKey="6LftEKArAAAAALe4ZfyFjhH_vkx8sm_QD_AR6htn"
+        ></re-captcha>
+        </div>
+        <button [disabled]="contactForm.invalid || loading" mat-flat-button type="submit" class="w-full py-2 mt-4">
+          <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+          <span *ngIf="!loading">Send Message</span>
         </button>
       </form>
     </div>
@@ -66,6 +86,19 @@
       123 Health Avenue, Aberdeen, AB10 1HW<br />
       United Kingdom
     </p>
+    <!-- Google Map -->
+    <div class="mt-2 flex justify-center">
+    <div class="w-full md:w-3/4 lg:w-2/3 aspect-video rounded-xl overflow-hidden">
+      <iframe
+        class="w-full h-full"
+        style="border:0"
+        loading="lazy"
+        allowfullscreen
+        referrerpolicy="no-referrer-when-downgrade"
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1171.2949286625374!2d-2.0992132261663055!3d57.14807342449136!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48840e3cf7c3be09%3A0x94ab073256a2e3c4!2sAberdeen%20AB10%201HW!5e0!3m2!1sen!2suk!4v1754907430498!5m2!1sen!2suk" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+    </div>
   </div>
 </section>
 

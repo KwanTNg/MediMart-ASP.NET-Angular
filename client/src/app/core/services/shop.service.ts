@@ -17,6 +17,7 @@ brands: string[] = [];
 categories: string[] = [];
 symptomIds: number[] = [];
 symptoms: Symptom[] = [];
+lastProductList?: Product[];
 
 getProducts(shopParams: ShopParams) {
   let params = new HttpParams();

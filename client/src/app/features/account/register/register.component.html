@@ -12,14 +12,52 @@
         <app-text-input label="Last name" formControlName="lastName" />
         <app-text-input label="Email address" formControlName="email" />
         <app-text-input label="Password" formControlName="password" type="password" />
+        <app-text-input label="Confirm Password" formControlName="confirmPassword" type="password" [ngClass]="{
+            'password-mismatch': registerForm.hasError('passwordMismatch') &&
+                         registerForm.get('confirmPassword')?.touched &&
+                         registerForm.get('confirmPassword')?.value
+            }"
+        />
+        <div *ngIf="registerForm.hasError('passwordMismatch') 
+             && registerForm.get('confirmPassword')?.touched
+             && registerForm.get('confirmPassword')?.value" 
+            class="text-red-600 text-sm mb-2">
+            Passwords do not match
+        </div>
         <div class="flex justify-end">
-                    <mat-checkbox formControlName="agree"
-                        >
-                        I am at least 18 years old and that I agree to the Terms and Policies and Privacy Policy.
-                    </mat-checkbox>
-                </div>  
+            <mat-checkbox formControlName="agree">
+                I am at least 18 years old and that I agree to the <a class="text-blue-600" routerLink="/terms">Terms and Policies</a> and <a class="text-blue-600" routerLink="/privacy">Privacy Policy</a>.
+            </mat-checkbox>
+        </div>  
         <button [disabled]="registerForm.invalid" mat-flat-button type="submit" class="w-full py-2 mt-4">Register</button>
     </form>
+    <div class="social-login-buttons flex flex-col gap-4 mt-4">
+        <button mat-stroked-button color="primary" (click)="loginWithGoogle()" class="flex items-center gap-2">
+        <!-- Inline Google SVG icon -->
+            <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="24"
+            viewBox="0 0 48 48"
+            width="24"
+            class="inline-block"
+            >
+            <path fill="#EA4335" d="M24 9.5c3.54 0 6.58 1.23 8.83 3.24l6.6-6.6C33.67 2.87 29.15 1 24 1 14.77 1 6.64 6.62 3.18 14.84l7.7 5.98C12.38 15.33 17.63 9.5 24 9.5z"/>
+            <path fill="#4285F4" d="M46.5 24c0-1.47-.12-2.88-.35-4.25H24v8.06h12.7c-.55 2.95-2.19 5.45-4.68 7.12l7.17 5.58C43.96 35.25 46.5 30.96 46.5 24z"/>
+            <path fill="#FBBC05" d="M10.88 29.82a14.94 14.94 0 01-.79-4.25c0-1.48.27-2.9.77-4.25L3.18 14.84C1.23 18.17 0 22.94 0 28c0 5.08 1.23 9.86 3.18 13.21l7.7-5.98z"/>
+            <path fill="#34A853" d="M24 46.5c6.15 0 11.67-2.03 15.56-5.5l-7.17-5.58c-2.15 1.46-4.9 2.3-8.39 2.3-6.37 0-11.62-4.83-12.54-11.18l-7.7 5.98C6.64 41.38 14.77 46.5 24 46.5z"/>
+            <path fill="none" d="M0 0h48v48H0z"/>
+            </svg>
+            Register with Google
+        </button>
+
+        <button mat-stroked-button color="primary" (click)="loginWithGitHub()" class="flex items-center gap-2">
+            <!-- Inline GitHub SVG icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" class="inline-block" fill="currentColor">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 0C5.372 0 0 5.372 0 12c0 5.302 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577v-2.234c-3.338.726-4.033-1.415-4.033-1.415-.546-1.387-1.333-1.757-1.333-1.757-1.089-.745.083-.73.083-.73 1.205.084 1.84 1.236 1.84 1.236 1.07 1.834 2.807 1.304 3.492.997.108-.775.418-1.305.76-1.605-2.665-.304-5.467-1.332-5.467-5.931 0-1.31.469-2.381 1.236-3.221-.124-.303-.536-1.523.117-3.176 0 0 1.008-.322 3.301 1.23a11.52 11.52 0 013.003-.403c1.018.004 2.044.137 3.003.403 2.291-1.552 3.297-1.23 3.297-1.23.655 1.653.244 2.873.12 3.176.77.84 1.234 1.911 1.234 3.221 0 4.609-2.807 5.625-5.479 5.921.43.37.813 1.102.813 2.222v3.293c0 .321.216.694.825.576C20.565 21.796 24 17.298 24 12c0-6.628-5.372-12-12-12z"/>
+            </svg>
+            Register with GitHub
+        </button>
+    </div>
 </mat-card>
                         }
 

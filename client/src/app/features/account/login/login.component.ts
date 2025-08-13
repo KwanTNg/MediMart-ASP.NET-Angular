@@ -7,7 +7,8 @@ import { MatInput } from '@angular/material/input';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AccountService } from '../../../core/services/account.service';
 import { SnackbarService } from '../../../core/services/snackbar.service';
-import { NgIf } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,8 @@ import { NgIf } from '@angular/common';
     MatFormField,
     MatInput,
     MatLabel,
-    MatButton
+    MatButton,
+    MatIconModule
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
@@ -28,6 +30,7 @@ export class LoginComponent {
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
   private snack = inject(SnackbarService);
+  baseUrl = environment.apiUrl;
   returnUrl = '/';
   remainingAttempts: number | null = null;
   maxAttempts = 3;
@@ -74,5 +77,13 @@ export class LoginComponent {
   toForgotPassword() {
     this.router.navigateByUrl('/forgot-password');
   }
+
+  loginWithGoogle() {
+  window.location.href = this.accountService.loginWithGoogleUrl(); 
+}
+
+loginWithGitHub() {
+  window.location.href = this.accountService.loginWithGitHubUrl(); 
+}
 
 }

@@ -62,54 +62,50 @@ public class PaymentsController(IPaymentService paymentService, IOrderService or
 
     private async Task HandlePaymentIntentSucceeded(PaymentIntent intent)
     {
-        if (intent.Status == "succeeded")
+        if (intent.Status != "succeeded") return;
+
+        var spec = new OrderSpecification(intent.Id, true);
+        var order = await unit.Repository<Order>().GetEntityWithSpec(spec);
+
+        if (order == null)
         {
-            var spec = new OrderSpecification(intent.Id, true);
-            var order = await unit.Repository<Order>().GetEntityWithSpec(spec)
-            ?? throw new Exception("Order not found");
-            
-            var connectionId = NotificationHub.GetConnectionIdByEmail(order.BuyerEmail);
+            logger.LogWarning("Payment succeeded but no matching order found for PaymentIntent {Id}. Will retry.", intent.Id);
+            return; // Stripe will retry later
+        }
 
-            //check if the amount in stripe is same as in the database
-            if ((long)(order.GetTotal() * 100) != intent.Amount)
+        var connectionId = NotificationHub.GetConnectionIdByEmail(order.BuyerEmail);
+
+        if ((long)(order.GetTotal() * 100) != intent.Amount)
+        {
+            order.Status = OrderStatus.PaymentMismatch;
+        }
+        else
+        {
+            try
             {
-                //it will update in db
-                order.Status = OrderStatus.PaymentMismatch;
+                await orderService.ConfirmOrderAndReduceStockAsync(order);
             }
-            else
+            catch (InvalidOperationException ex)
             {
-                try
+                logger.LogError(ex, "Stock issue after payment succeeded");
+                order.Status = OrderStatus.StockIssue;
+                await unit.Complete();
+
+                if (!string.IsNullOrEmpty(connectionId))
                 {
-                    await orderService.ConfirmOrderAndReduceStockAsync(order);
+                    await hubContext.Clients.Client(connectionId).SendAsync("OrderStockIssue", ex.Message);
                 }
-                catch (InvalidOperationException ex)
-                {
-                    logger.LogError(ex, "Stock issue after payment succeeded");
-
-                    // Update order status and persist
-                    order.Status = OrderStatus.StockIssue;
-                    await unit.Complete();
-
-                    // Notify user via SignalR
-                    
-                    if (!string.IsNullOrEmpty(connectionId))
-                    {
-                        await hubContext.Clients.Client(connectionId).SendAsync("OrderStockIssue", ex.Message);
-                    }
-            
-                }
-
-            }
-            
-            await unit.Complete();
-
-            //TODO: SignalR
-            if (!string.IsNullOrEmpty(connectionId))
-            {
-                await hubContext.Clients.Client(connectionId).SendAsync("OrderCompleteNotification", order.ToDto());
             }
         }
+
+        await unit.Complete();
+
+        if (!string.IsNullOrEmpty(connectionId))
+        {
+            await hubContext.Clients.Client(connectionId).SendAsync("OrderCompleteNotification", order.ToDto());
+        }
     }
+
 
     private Event ConstructStripeEvent(string json)
     {
@@ -120,7 +116,7 @@ public class PaymentsController(IPaymentService paymentService, IOrderService or
         catch (Exception ex)
         {
             logger.LogError(ex, "Failed to constrcut stripe event");
-            throw new StripeException("Invalid signature");
+            throw new StripeException("Invalid signature", ex);
         }
     }
 
