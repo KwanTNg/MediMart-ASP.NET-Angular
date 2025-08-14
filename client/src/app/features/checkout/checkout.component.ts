@@ -139,7 +139,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         expYear: card.exp_year
       },
       deliveryMethodId:cart.deliveryMethodId,
-      shippingAddress
+      shippingAddress,
+      discount: this.cartService.totals()?.discount
     }
   }
 
@@ -173,45 +174,12 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         const result = await this.stripeService.createConfirmationToken();
         if (result.error) throw new Error(result.error.message);
         this.confirmationToken = result.confirmationToken;
-        console.log(this.confirmationToken)
       }
     } catch (error: any) {
       this.snackbar.error(error.message);
     }
   }
 
-  // async confirmPayment(stepper: MatStepper) {
-  //   this.loading = true;
-  //   try {
-  //     if (this.confirmationToken) {
-  //       const result = await this.stripeService.confirmPayment(this.confirmationToken);
-  //       if (result.paymentIntent?.status === 'succeeded') {
-  //         const order = await this.createOrderModel();
-  //         const orderResult = await firstValueFrom(this.orderService.createOrder(order));
-  //         if (!orderResult) {
-  //           throw new Error('Order creation failed');
-  //         }
-  //         this.orderService.orderComplete = true;
-  //         //if sucess, remove the cart and delivery method
-  //         this.cartService.deleteCart();
-  //         this.cartService.selectedDelivery.set(null);
-
-  //         this.router.navigateByUrl('/checkout/success');
-        
-  //       } else if (result.error) {
-  //           throw new Error(result.error.message);
-  //       } else {
-  //         throw new Error('Something went wrong');
-  //       }
-  //     }
-  //   } catch (error: any) {
-  //     this.snackbar.error(error.message || 'Something went wrong');
-  //     //if error, redirect to previos step
-  //     stepper.previous();
-  //   } finally {
-  //     this.loading = false;
-  //   }
-  // }
   async confirmPayment(stepper: MatStepper) {
   this.loading = true;
   try {

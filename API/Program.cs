@@ -93,6 +93,7 @@ builder.Services.AddAuthentication()
 builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped<ICouponService, CouponService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.Configure<SMTP>(builder.Configuration.GetSection("SMTPConfig"));
 builder.Services.Configure<IdentityOptions>(options =>

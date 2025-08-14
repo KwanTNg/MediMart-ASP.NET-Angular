@@ -51,12 +51,16 @@ export class StripeService {
 
   createOrUpdatePaymentIntent(){
     const cart = this.cartService.cart();
+    const hasClientSecret = !!cart?.clientSecret;
     if (!cart) throw new Error('Invalid or missing cart ID');
     console.log('Creating payment intent for cart ID:', cart.id);
     //what we get back is payment intent id and client secret
     return this.http.post<Cart>(this.baseUrl + 'payments/' + cart.id, {}, { withCredentials: true }).pipe(
-      map(cart => {
-        this.cartService.setCart(cart);
+      map(async cart => {
+        if (!hasClientSecret) {
+          await firstValueFrom(this.cartService.setCart(cart));
+          return cart;
+        }
         return cart;
       })
     )

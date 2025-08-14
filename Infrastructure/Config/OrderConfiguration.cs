@@ -17,6 +17,7 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
             o => (OrderStatus)Enum.Parse(typeof(OrderStatus), o)
         );
         builder.Property(x => x.Subtotal).HasColumnType("decimal(18,2)");
+        builder.Property(x => x.Discount).HasColumnType("decimal(18,2)");
         //one to many relatiohship
         //if we deletes the order, with also delete the items
         builder.HasMany(x => x.OrderItems).WithOne().OnDelete(DeleteBehavior.Cascade);

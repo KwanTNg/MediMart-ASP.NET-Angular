@@ -1,9 +1,9 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Cart, CartItem } from '../../shared/models/cart';
+import { Cart, CartItem, Coupon } from '../../shared/models/cart';
 import { Product } from '../../shared/models/product';
-import { firstValueFrom, map } from 'rxjs';
+import { firstValueFrom, map, tap } from 'rxjs';
 import { SnackbarService } from './snackbar.service';
 import { AccountService } from './account.service';
 import { DeliveryMethod } from '../../shared/models/deliveryMethod';
@@ -31,16 +31,29 @@ export class CartService {
     const cart = this.cart();
     const delivery = this.selectedDelivery();
     if (!cart) return null;
-    const subtotal = cart.items.reduce((sum, item) => sum + item.price * item.quantity, 0)
+    const subtotal = cart.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+    let discountValue = 0;
+    if (cart.coupon) {
+      if (cart.coupon.amountOff) {
+        discountValue = cart.coupon.amountOff;
+      } else if (cart.coupon.percentOff) {
+        discountValue = subtotal * (cart.coupon.percentOff / 100);
+      }
+    }
     const shipping = delivery ? delivery.price : 0;
-    const discount = 0;
+    const total = subtotal + shipping - discountValue
     return {
       subtotal,
       shipping,
-      discount,
-      total: subtotal + shipping - discount 
-    }   
+      discount: discountValue,
+      total 
+    };   
   })
+
+  applyDiscount(code: string) {
+    return this.http.get<Coupon>(this.baseUrl + 'coupons/' + code);
+  }
 
   private cartSubject = new BehaviorSubject<Cart | null>(null);
   cartChanges = this.cartSubject.asObservable();
@@ -55,12 +68,12 @@ export class CartService {
   }
 
   setCart(cart: Cart) {
-    return this.http.post<Cart>(this.baseUrl + 'cart', cart).subscribe({
-          next: updatedCart => {this.cartSubject.next(updatedCart);
-            this.cart?.set(updatedCart);
-          },
-          error: error => console.error('Error updating cart:', error)
-    })
+    return this.http.post<Cart>(this.baseUrl + 'cart', cart).pipe(
+      tap(updatedCart => {
+        this.cartSubject.next(updatedCart);
+        this.cart?.set(updatedCart);
+      })
+    )
   }
 
 async addItemToCart(item: CartItem | Product, quantity = 1) {
@@ -101,11 +114,11 @@ async addItemToCart(item: CartItem | Product, quantity = 1) {
   }
 
   cart.items = this.addOrUpdateItem(cart.items, item, quantity);
-  this.setCart(cart);
+  await firstValueFrom(this.setCart(cart));
 }
 
 
-  removeItemFromCart(productId: number, quantity = 1) {
+  async removeItemFromCart(productId: number, quantity = 1) {
     const cart = this.cart();
     if (!cart) return;
     const index = cart.items.findIndex(x => x.productId === productId);
@@ -122,7 +135,7 @@ async addItemToCart(item: CartItem | Product, quantity = 1) {
         this.deleteCart();
       } else {
         //update the cart
-        this.setCart(cart);
+        await firstValueFrom(this.setCart(cart));
       }
     }
   }

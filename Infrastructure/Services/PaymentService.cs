@@ -11,79 +11,102 @@ public class PaymentService(IConfiguration config, ICartService cartService, IUn
     {
         StripeConfiguration.ApiKey = config["StripeSettings:SecretKey"];
 
-        var cart = await cartService.GetCartAsync(cartId);
-        if (cart == null) return null;
+        var cart = await cartService.GetCartAsync(cartId)
+            ?? throw new Exception("Cart unavailable");
 
-        decimal shippingPrice = 0m;
+        var shippingPrice = await GetShippingPriceAsync(cart) ?? 0;
+        await ValidateCartItemsInCartAsync(cart);
 
-        if (cart.DeliveryMethodId.HasValue)
+        var subtotal = CalculateSubtotal(cart);
+
+        if (cart.Coupon != null)
         {
-            var deliveryMethod = await unit.Repository<DeliveryMethod>()
-                .GetByIdAsync(cart.DeliveryMethodId.Value);
-            if (deliveryMethod == null) return null;
-            shippingPrice = deliveryMethod.Price;
+            subtotal = await ApplyDiscountAsync(cart.Coupon, subtotal);
         }
 
-        // Sync item prices with product catalog
-        foreach (var item in cart.Items)
-        {
-            var product = await unit.Repository<Core.Entities.Product>().GetByIdAsync(item.ProductId);
-            if (product == null) return null;
+        var total = subtotal + shippingPrice;
+        await CreateOrUpdatePaymentIntentAsync(cart, total);
+        await cartService.SetCartAsync(cart);
+        return cart;
+    }
 
-            if (item.Price != product.Price)
-            {
-                item.Price = product.Price;
-            }
-
-            if (product.QuantityInStock < item.Quantity)
-            {
-                return null;
-            }
-        }
-
-        var amount = (long)cart.Items.Sum(x => x.Quantity * x.Price * 100) + (long)(shippingPrice * 100);
-
+    private async Task CreateOrUpdatePaymentIntentAsync(ShoppingCart cart, long total)
+    {
         var service = new PaymentIntentService();
-        PaymentIntent intent;
-
         if (string.IsNullOrEmpty(cart.PaymentIntentId))
         {
-            // Create new PaymentIntent
-            var createOptions = new PaymentIntentCreateOptions
+            var options = new PaymentIntentCreateOptions
             {
-                Amount = amount,
+                Amount = total,
                 Currency = "gbp",
                 PaymentMethodTypes = ["card"]
             };
-
-            intent = await service.CreateAsync(createOptions);
+            var intent = await service.CreateAsync(options);
             cart.PaymentIntentId = intent.Id;
             cart.ClientSecret = intent.ClientSecret;
         }
         else
         {
-            // Check existing intent status before updating
-            intent = await service.GetAsync(cart.PaymentIntentId);
-
-            if (intent.Status is "requires_payment_method" or "requires_confirmation" or "requires_action")
+            var options = new PaymentIntentUpdateOptions
             {
-                var updateOptions = new PaymentIntentUpdateOptions
-                {
-                    Amount = amount
-                };
+                Amount = total
+            };
+            await service.UpdateAsync(cart.PaymentIntentId, options);
+        }
+    }
 
-                intent = await service.UpdateAsync(cart.PaymentIntentId, updateOptions);
+    private async Task<long> ApplyDiscountAsync(AppCoupon appCoupon, long amount)
+    {
+        var couponService = new Stripe.CouponService();
+        var coupon = await couponService.GetAsync(appCoupon.CouponId);
+        if (coupon.AmountOff.HasValue)
+        {
+            amount -= (long)(coupon.AmountOff * 100);
+        }
+        if (coupon.PercentOff.HasValue)
+        {
+            var discount = amount * (coupon.PercentOff.Value / 100);
+            amount -= (long)discount;
+        }
+        return amount;
+    }
+    private long CalculateSubtotal(ShoppingCart cart)
+    {
+        var itemTotal = cart.Items.Sum(x => x.Quantity * x.Price * 100);
+        return (long)itemTotal;
+    }
+
+    // Sync item prices with product catalog
+    private async Task ValidateCartItemsInCartAsync(ShoppingCart cart)
+    {
+        foreach (var item in cart.Items)
+        {
+            var productItem = await
+                unit.Repository<Core.Entities.Product>()
+                    .GetByIdAsync(item.ProductId)
+                        ?? throw new Exception("Problem getting product in cart");
+            if (item.Price != productItem.Price)
+            {
+                item.Price = productItem.Price;
             }
-            else if (intent.Status == "succeeded")
+            if (productItem.QuantityInStock < item.Quantity)
             {
-                // Optionally: return as-is or create new intent
-                // You could also throw an exception or log it depending on your flow
-                return cart; // Don't update succeeded intents
+                throw new Exception("Insufficient stock!");
             }
         }
-
-        await cartService.SetCartAsync(cart);
-        return cart;
+    }
+    private async Task<long?> GetShippingPriceAsync(ShoppingCart cart)
+    {
+        if (cart.DeliveryMethodId.HasValue)
+        {
+            var deliveryMethod = await unit.Repository<DeliveryMethod>()
+                .GetByIdAsync((int)cart.DeliveryMethodId)
+                    ?? throw new Exception("Problem with delivery method");
+            return (long)(deliveryMethod.Price * 100);
+        }
+        return null;
     }
 }
+
+
 

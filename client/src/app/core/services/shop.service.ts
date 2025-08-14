@@ -78,7 +78,7 @@ getSymptoms() {
   if (this.symptoms.length > 0) return;
   return this.http.get<Symptom[]>(this.baseUrl + 'symptoms').subscribe({
     next: response => {this.symptoms = response
-    console.log(this.symptoms)}
+    }
   })
 }
 
