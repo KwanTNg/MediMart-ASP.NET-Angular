@@ -58,4 +58,8 @@ export class AdminService {
   sendContactMessage(formData: FormData) {
     return this.http.post(this.baseUrl + 'contact/send', formData);
   }
+
+  refundOrder(id: number) {
+    return this.http.post(this.baseUrl + 'admin/orders/refund/' + id, {}, {withCredentials: true});
+  }
 }

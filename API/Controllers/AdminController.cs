@@ -13,7 +13,7 @@ using Stripe;
 namespace API.Controllers;
 
 [Authorize(Roles = "Admin,Director")]
-public class AdminController(IUnitOfWork unit, UserManager<AppUser> userManager) : BaseApiController
+public class AdminController(IUnitOfWork unit, UserManager<AppUser> userManager, IPaymentService paymentService) : BaseApiController
 {
     [HttpGet("orders")]
     public async Task<ActionResult<IReadOnlyList<OrderDto>>> GetOrders([FromQuery] OrderSpecParams specParams)
@@ -40,8 +40,8 @@ public class AdminController(IUnitOfWork unit, UserManager<AppUser> userManager)
 
         if (order == null) return NotFound("Order not found");
 
-        if (order.Status == OrderStatus.Dispatched)
-            return BadRequest("Order is already marked as dispatched");
+        if (order.Status == OrderStatus.Dispatched || order.Status == OrderStatus.Refunded)
+            return BadRequest("Order is already marked as dispatched or refunded");
 
         order.Status = OrderStatus.Dispatched;
         order.DeliveryDate = DateTime.UtcNow;
@@ -157,6 +157,22 @@ public class AdminController(IUnitOfWork unit, UserManager<AppUser> userManager)
         return Ok(ordersToReturn);
     }
 
-
+    [HttpPost("orders/refund/{id:int}")]
+    public async Task<ActionResult<OrderDto>> RefundOrder(int id)
+    {
+        var spec = new OrderSpecification(id);
+        var order = await unit.Repository<Order>().GetEntityWithSpec(spec);
+        if (order == null) return BadRequest("No order with that id");
+        if (order.Status == OrderStatus.Pending || order.Status == OrderStatus.AwaitingPayment || order.Status == OrderStatus.Refunded)
+            return BadRequest("Payment not received for this order or is already refunded");
+        var result = await paymentService.RefundPayment(order.PaymentIntentId);
+        if (result == "succeeded")
+        {
+            order.Status = OrderStatus.Refunded;
+            await unit.Complete();
+            return order.ToDto();
+        }
+        return BadRequest("Problem refunding order");
+    }
 
 }

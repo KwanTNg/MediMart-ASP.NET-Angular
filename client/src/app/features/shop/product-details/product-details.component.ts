@@ -38,10 +38,8 @@ import { ShopParams } from '../../../shared/models/shopParams';
 })
 export class ProductDetailsComponent implements OnInit {
   private shopService = inject(ShopService);
-  private activatedRoute = inject(ActivatedRoute);
   private cartService = inject(CartService);
   private dialogService = inject(MatDialog);
-  private dialog = inject(MatDialog);
   private snack = inject(SnackbarService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
@@ -89,20 +87,6 @@ export class ProductDetailsComponent implements OnInit {
   });
   }
 
-  // loadProduct() {
-  //   const id = this.activatedRoute.snapshot.paramMap.get('id');
-  //   if (!id) return;
-  //   this.shopService.getProduct(+id).subscribe({
-  //     next: product => {
-  //       this.product = product,
-  //       // Remove current product from related list
-  //       this.relatedProducts = this.relatedProducts.filter(p => p.id !== product.id).slice(0, 5);
-  //       this.updateQuantityInCart();
-  //     },
-  //     error: error => console.log(error)
-  //   })
-  // }
-
   updateCart() {
     if (!this.product) return;
     if (this.quantity > this.quantityInCart) {
@@ -138,7 +122,7 @@ export class ProductDetailsComponent implements OnInit {
   }
 
 removeProduct(id: number) {
-  const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+  const dialogRef = this.dialogService.open(ConfirmDialogComponent, {
     width: '350px',
     data: {
       title: 'Confirm Delete',
