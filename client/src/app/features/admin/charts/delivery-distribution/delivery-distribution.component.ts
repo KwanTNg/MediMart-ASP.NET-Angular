@@ -30,7 +30,7 @@ export class DeliveryDistributionComponent implements OnInit {
     responsive: true,
     plugins: {
       legend: {
-        position: 'top'
+        position: 'right'
       },
       title: {
         display: true,

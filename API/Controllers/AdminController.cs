@@ -44,7 +44,7 @@ public class AdminController(IUnitOfWork unit, UserManager<AppUser> userManager,
             return BadRequest("Order is already marked as dispatched or refunded");
 
         order.Status = OrderStatus.Dispatched;
-        order.DeliveryDate = DateTime.UtcNow;
+        order.DispatchDate = DateTime.UtcNow;
 
         unit.Repository<Order>().Update(order);
 

@@ -19,7 +19,7 @@ export class RevenuePerProductComponent implements OnInit {
   chartOptions: ChartOptions = {
     responsive: true,
     plugins: {
-      legend: { position: 'right' },
+      legend: { position: 'bottom' },
       title: {
         display: true,
         text: 'Revenue Contribution per Product'

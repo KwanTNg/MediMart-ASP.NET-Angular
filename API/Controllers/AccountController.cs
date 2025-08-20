@@ -64,17 +64,23 @@ public class AccountController(SignInManager<AppUser> signInManager,
         var result = await signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false);
         if (result.Succeeded)
             return Redirect(configuration.GetSection("Application:AppDomain").Value);
+        
+        if (result.RequiresTwoFactor)
+        {
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+            return Redirect(configuration.GetSection("Application:AppDomain").Value + "two-factor-auth?email=" + email);
+        }
 
         // If the user does not have an account, create one
-        var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-        var user = await userManager.FindByEmailAsync(email);
+        var emailAddress = info.Principal.FindFirstValue(ClaimTypes.Email);
+        var user = await userManager.FindByEmailAsync(emailAddress);
 
         if (user == null)
         {
             user = new AppUser
             {
-                UserName = email,
-                Email = email,
+                UserName = emailAddress,
+                Email = emailAddress,
                 FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName) ?? "",
                 LastName = info.Principal.FindFirstValue(ClaimTypes.Surname) ?? "",
                 EmailConfirmed = true
@@ -91,6 +97,11 @@ public class AccountController(SignInManager<AppUser> signInManager,
             }
         }
         await userManager.AddLoginAsync(user, info);
+        // after creation, enforce 2FA if enabled
+        if (user.TwoFactorEnabled)
+        {
+            return Redirect(configuration.GetSection("Application:AppDomain").Value + "twofactor?email=" + emailAddress);
+        }
         await signInManager.SignInAsync(user, false);
         return Redirect(configuration.GetSection("Application:AppDomain").Value);
     }

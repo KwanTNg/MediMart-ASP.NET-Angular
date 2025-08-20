@@ -120,10 +120,10 @@ public class AnalyticsController(IUnitOfWork unit, UserManager<AppUser> userMana
         var orders = await unit.Repository<Order>().ListAsync(spec);
 
         var distribution = orders
-            .Where(o => o.DeliveryDate != null)
+            .Where(o => o.DispatchDate != null)
              .Select(o => new
              {
-                 DaysToDeliver = (o.DeliveryDate!.Value.Date - o.OrderDate.Date).Days
+                 DaysToDeliver = (o.DispatchDate!.Value.Date - o.OrderDate.Date).Days
              })
             .GroupBy(x =>
                 x.DaysToDeliver == 0 ? "Same-day" :
@@ -140,57 +140,71 @@ public class AnalyticsController(IUnitOfWork unit, UserManager<AppUser> userMana
     }
 
     [HttpGet("on-time-dispatch-rate")]
-public async Task<ActionResult<OnTimeDispatchDto>> GetOnTimeDispatchRate()
-{
-    var spec = new OrderSpecification(OrderStatus.Dispatched);
-    var orders = await unit.Repository<Order>().ListAsync(spec);
-
-    var eligible = orders.ToList();
-
-    var onTime = eligible.Count(o =>
-    {
-        if (o.DeliveryDate == null) return false;
-
-        var orderTime = o.OrderDate.TimeOfDay;
-        var orderDate = o.OrderDate.Date;
-        var deliveryDate = o.DeliveryDate.Value.Date;
-
-        // If ordered before 2 PM, must be delivered same day
-        if (orderTime < new TimeSpan(14, 0, 0))
-        {
-            return deliveryDate == orderDate;
-        }
-        // If ordered after 2 PM, must be delivered the next day
-        else
-        {
-            return deliveryDate == orderDate.AddDays(1);
-        }
-    });
-
-    var dto = new OnTimeDispatchDto
-    {
-        EligibleOrders = eligible.Count,
-        OnTimeDeliveries = onTime,
-        OnTimeRate = eligible.Count == 0 ? 0 : (double)onTime / eligible.Count * 100
-    };
-
-    return Ok(dto);
-}
-
-
-    [HttpGet("average-delivery-time")]
-    public async Task<ActionResult<double>> GetAverageDeliveryTime()
+    public async Task<ActionResult<OnTimeDispatchDto>> GetOnTimeDispatchRate()
     {
         var spec = new OrderSpecification(OrderStatus.Dispatched);
         var orders = await unit.Repository<Order>().ListAsync(spec);
 
-        var avgDays = orders
-        .Where(o => o.DeliveryDate != null)
-        .Select(o => (o.DeliveryDate!.Value.Date - o.OrderDate.Date).TotalDays)
-        .DefaultIfEmpty(0)
-        .Average();
+        var eligible = orders.ToList();
 
-        return Ok(Math.Round(avgDays, 2));
+        var onTime = eligible.Count(o =>
+        {
+            if (o.DispatchDate == null) return false;
+
+            var orderTime = o.OrderDate.TimeOfDay;
+            var orderDate = o.OrderDate.Date;
+            var dispatchDate = o.DispatchDate.Value.Date;
+
+            // If ordered before 2 PM, must be delivered same day
+            if (orderTime < new TimeSpan(14, 0, 0))
+            {
+                return dispatchDate == orderDate;
+            }
+            // If ordered after 2 PM, must be delivered the next day
+            else
+            {
+                return dispatchDate == orderDate.AddDays(1);
+            }
+        });
+
+        var dto = new OnTimeDispatchDto
+        {
+            EligibleOrders = eligible.Count,
+            OnTimeDeliveries = onTime,
+            OnTimeRate = eligible.Count == 0 ? 0 : (double)onTime / eligible.Count * 100
+        };
+
+        return Ok(dto);
+    }
+
+
+    [HttpGet("dispatch-time-distribution")]
+    public async Task<ActionResult<object>> GetDispatchTimeDistribution()
+    {
+        var spec = new OrderSpecification(OrderStatus.Dispatched);
+        var orders = await unit.Repository<Order>().ListAsync(spec);
+
+        var dispatchTimes = orders
+            .Where(o => o.DispatchDate != null)
+            .Select(o => (o.DispatchDate!.Value - o.OrderDate).TotalHours)
+            .ToList();
+        var buckets = new List<DispatchTimeBucket>
+       {
+            new DispatchTimeBucket { Label = "0-12h", Min = 0, Max = 12 },
+            new DispatchTimeBucket { Label = "12-24h", Min = 12, Max = 24 },
+            new DispatchTimeBucket { Label = "1-2d", Min = 24, Max = 48 },
+            new DispatchTimeBucket { Label = "2-3d", Min = 48, Max = 72 },
+            new DispatchTimeBucket { Label = "3-5d", Min = 72, Max = 120 },
+            new DispatchTimeBucket { Label = "5d+", Min = 120, Max = double.MaxValue }
+        };
+        var result = buckets.Select(b => new
+        {
+            label = b.Label,
+            count = dispatchTimes.Count(t => t >= b.Min && t < b.Max)
+        });
+
+        return Ok(result);
+
     }
 
     [HttpGet("role-distribution")]

@@ -25,7 +25,7 @@ export class RoleDistributionComponent implements OnInit {
   roleChartOptions: ChartOptions = {
     responsive: true,
     plugins: {
-      legend: { position: 'top' },
+      legend: { position: 'bottom' },
       title: { display: true, text: 'Users by Role' }
     }
   };

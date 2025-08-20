@@ -57,9 +57,9 @@ getOnTimeDispatch() {
   }>(this.baseUrl + 'analytics/on-time-dispatch-rate', { withCredentials: true });
 }
 
-getAverageDeliveryTime() {
-  return this.http.get<number>(
-    this.baseUrl + 'analytics/average-delivery-time', { withCredentials: true });
+getDispatchTimeDistribution() {
+  return this.http.get<any[]>(
+    this.baseUrl + 'analytics/dispatch-time-distribution', { withCredentials: true });
 }
 
 getRoleDistribution() {

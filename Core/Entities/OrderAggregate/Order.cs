@@ -13,7 +13,7 @@ public class Order : BaseEntity, IDtoConvertible
     public decimal Discount { get; set; }
     public OrderStatus Status { get; set; } = OrderStatus.Pending;
     public required string PaymentIntentId { get; set; }
-    public DateTime? DeliveryDate { get; set; }
+    public DateTime? DispatchDate { get; set; }
     public decimal GetTotal()
     {
         return Subtotal - Discount + DeliveryMethod.Price;

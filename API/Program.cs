@@ -7,9 +7,6 @@ using Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.SignalR;
@@ -49,19 +46,6 @@ builder.Services.AddSingleton<IResponseCacheService, ResponseCacheService>();
 builder.Services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
 builder.Services.AddScoped<IPhotoService, PhotoService>();
 builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
-// builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-//     .AddJwtBearer(options =>
-//     {
-//         options.TokenValidationParameters = new TokenValidationParameters
-//         {
-//             ValidateIssuerSigningKey = true,
-//             IssuerSigningKey = new SymmetricSecurityKey(
-//                 Encoding.UTF8.GetBytes(builder.Configuration["TokenKey"] ?? throw new Exception("TokenKey missing"))
-//             ),
-//             ValidateIssuer = false,
-//             ValidateAudience = false
-//         };
-//     });
 builder.Services
     .AddIdentityApiEndpoints<AppUser>()
     .AddRoles<IdentityRole>()
@@ -115,7 +99,6 @@ builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
     options.TokenLifespan = TimeSpan.FromMinutes(30);
 });
 builder.Services.AddSignalR();
-// builder.Services.AddSingleton<PresenceTracker>();
 builder.Services.AddHttpClient();
 builder.Services.AddRateLimiter(options =>
 {
